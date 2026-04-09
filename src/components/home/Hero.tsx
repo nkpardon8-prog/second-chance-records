@@ -5,6 +5,12 @@ import InlineEditor from "@/components/admin/InlineEditor";
 export default function Hero() {
   return (
     <section className="relative min-h-screen bg-base text-cream grain-overlay flex items-center torn-edge overflow-hidden">
+      {/* Mt. Tabor background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/mt-tabor.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-base/70" />
       <div className="max-w-5xl mx-auto px-6 py-20 text-center relative z-10">
         <h1 className="font-heading text-7xl md:text-8xl lg:text-9xl tracking-tight leading-none uppercase">
           Second Chance Records
