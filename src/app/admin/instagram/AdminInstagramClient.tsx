@@ -1,7 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-import { togglePostVisibility } from "@/lib/actions/instagram";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { togglePostVisibility, triggerSync } from "@/lib/actions/instagram";
 import Button from "@/components/ui/Button";
 import type { InstagramPost } from "@/types";
 
@@ -10,7 +11,10 @@ interface AdminInstagramClientProps {
 }
 
 export default function AdminInstagramClient({ posts }: AdminInstagramClientProps) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [syncing, startSyncTransition] = useTransition();
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
   function handleToggle(id: number) {
     startTransition(async () => {
@@ -19,16 +23,34 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
   }
 
   function handleSync() {
-    alert("Instagram sync triggered. This runs via a scheduled function.");
+    setSyncMessage(null);
+    startSyncTransition(async () => {
+      try {
+        const count = await triggerSync();
+        setSyncMessage(`Synced ${count} new post${count !== 1 ? "s" : ""}`);
+        router.refresh();
+      } catch (err) {
+        setSyncMessage(
+          `Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`
+        );
+      }
+    });
   }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-heading text-2xl text-cream tracking-wide">Instagram Feed</h2>
-        <Button size="sm" onClick={handleSync} disabled={pending}>
-          {pending ? "Syncing..." : "Sync Now"}
-        </Button>
+        <div className="flex items-center gap-3">
+          {syncMessage && (
+            <span className={`text-sm font-mono ${syncMessage.startsWith("Sync failed") ? "text-brick" : "text-forest"}`}>
+              {syncMessage}
+            </span>
+          )}
+          <Button size="sm" onClick={handleSync} disabled={syncing}>
+            {syncing ? "Syncing..." : "Sync Now"}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -69,7 +91,7 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
         ))}
         {posts.length === 0 && (
           <p className="text-sm text-kraft/70 col-span-full text-center py-8">
-            No Instagram posts synced yet.
+            No Instagram posts synced yet. Click &quot;Sync Now&quot; to pull from Instagram.
           </p>
         )}
       </div>

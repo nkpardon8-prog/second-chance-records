@@ -40,11 +40,11 @@ export default async function InstagramFeed() {
             Follow us on Instagram for the latest updates!
           </p>
           <ExternalLink
-            href="https://www.instagram.com/secondchancerecords"
+            href="https://www.instagram.com/second_chance_recordspdx/"
             showIcon
             className="font-mono text-brick"
           >
-            @secondchancerecords
+            @second_chance_recordspdx
           </ExternalLink>
         </div>
       )}
