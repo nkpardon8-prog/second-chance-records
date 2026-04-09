@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getSettingsByGroup } from "@/lib/actions/settings";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GoogleMap from "@/components/visit/GoogleMap";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "Visit | Second Chance Records",
@@ -35,7 +36,7 @@ export default async function VisitPage() {
             <h3 className="font-heading text-xl uppercase tracking-tight mb-4">
               Store Info
             </h3>
-            <address className="not-italic text-cream/70 leading-relaxed space-y-3 font-sans">
+            <address className="not-italic text-cream leading-relaxed space-y-3 font-sans">
               <div>
                 <p className="font-mono text-xs text-gold uppercase tracking-wider">Address</p>
                 <p>{address}</p>
@@ -51,7 +52,7 @@ export default async function VisitPage() {
               <div>
                 <p className="font-mono text-xs text-gold uppercase tracking-wider">Hours</p>
                 <p className="font-mono text-sm">{hours}</p>
-                <p className="font-mono text-xs text-muted">Mon - Wed: Closed</p>
+                <p className="font-mono text-xs text-kraft/70">Mon - Wed: Closed</p>
               </div>
             </address>
           </div>
@@ -60,16 +61,16 @@ export default async function VisitPage() {
             <h3 className="font-heading text-xl uppercase tracking-tight mb-4">
               Getting Here
             </h3>
-            <div className="text-cream/70 space-y-3 text-sm font-sans">
-              <p>
-                We are located on East Burnside Street near 57th Avenue. Look for Suite 104.
-              </p>
-              <p>
-                Free street parking is available on Burnside and surrounding side streets.
-              </p>
-              <p>
-                TriMet Bus Line 20 stops within a block of the store.
-              </p>
+            <div className="text-cream space-y-3 text-sm font-sans">
+              <InlineEditor pageSlug="visit" sectionKey="getting-here-location" content="We are located on East Burnside Street near 57th Avenue. Look for Suite 104.">
+                <p>We are located on East Burnside Street near 57th Avenue. Look for Suite 104.</p>
+              </InlineEditor>
+              <InlineEditor pageSlug="visit" sectionKey="getting-here-parking" content="Free street parking is available on Burnside and surrounding side streets.">
+                <p>Free street parking is available on Burnside and surrounding side streets.</p>
+              </InlineEditor>
+              <InlineEditor pageSlug="visit" sectionKey="getting-here-transit" content="TriMet Bus Line 20 stops within a block of the store.">
+                <p>TriMet Bus Line 20 stops within a block of the store.</p>
+              </InlineEditor>
             </div>
           </div>
         </div>

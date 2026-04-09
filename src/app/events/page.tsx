@@ -3,6 +3,7 @@ import { getEvents } from "@/lib/actions/events";
 import SectionHeading from "@/components/ui/SectionHeading";
 import EventCard from "@/components/events/EventCard";
 import PastEventsToggle from "./PastEventsToggle";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "Events | Second Chance Records",
@@ -45,9 +46,11 @@ export default async function EventsPage() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-muted py-8 mb-12 font-mono">
-            No upcoming events right now. Check back soon!
-          </p>
+          <InlineEditor pageSlug="events" sectionKey="no-events-message" content="No upcoming events right now. Check back soon!">
+            <p className="text-center text-base/60 py-8 mb-12 font-mono">
+              No upcoming events right now. Check back soon!
+            </p>
+          </InlineEditor>
         )}
 
         {past.length > 0 && <PastEventsToggle events={past} />}

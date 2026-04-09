@@ -3,6 +3,8 @@ import { Bebas_Neue, Space_Mono, Work_Sans, Permanent_Marker } from "next/font/g
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
+import { getSession } from "@/lib/auth";
+import { AdminProvider } from "@/components/context/AdminContext";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -74,11 +76,14 @@ const jsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+  const isAdmin = session.isLoggedIn === true;
+
   return (
     <html
       lang="en"
@@ -104,10 +109,12 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-full flex flex-col bg-kraft text-base font-sans">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <BackToTop />
+        <AdminProvider isAdmin={isAdmin}>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <BackToTop />
+        </AdminProvider>
       </body>
     </html>
   );

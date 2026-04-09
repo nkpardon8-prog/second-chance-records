@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getFeaturedRecords } from "@/lib/actions/records";
 import ExternalLink from "@/components/ui/ExternalLink";
 import DiscogsSection from "@/components/shop/DiscogsSection";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "Shop | Second Chance Records",
@@ -26,9 +27,11 @@ export default async function ShopPage() {
       <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
         <div className="max-w-5xl mx-auto px-6">
           <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Shop</h1>
-          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
-            Restored vinyl, ready for a second spin
-          </p>
+          <InlineEditor pageSlug="shop" sectionKey="shop-subtitle" content="Restored vinyl, ready for a second spin">
+            <p className="font-mono text-sm text-kraft/70 uppercase tracking-wider mt-2">
+              Restored vinyl, ready for a second spin
+            </p>
+          </InlineEditor>
           <div className="mt-8">
             <ExternalLink
               href="https://www.discogs.com/seller/SecondChance_Records/profile"

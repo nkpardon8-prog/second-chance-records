@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getPageContent } from "@/lib/actions/content";
 import { getResources } from "@/lib/actions/resources";
-import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "Mission | Second Chance Records",
@@ -44,21 +44,25 @@ export default async function MissionPage() {
       <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Our Mission</h1>
-          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+          <p className="font-mono text-sm text-kraft/70 uppercase tracking-wider mt-2">
             Second chances for humans &amp; hi-fi
           </p>
           {content.length > 0 ? (
             <div className="prose prose-lg prose-invert mx-auto mt-8 font-sans">
               {content.map((block) => (
-                <div key={block.id} dangerouslySetInnerHTML={{ __html: block.content }} />
+                <InlineEditor key={block.id} contentId={block.id} content={block.content}>
+                  <div dangerouslySetInnerHTML={{ __html: block.content }} />
+                </InlineEditor>
               ))}
             </div>
           ) : (
-            <p className="text-lg text-cream/70 max-w-2xl mx-auto mt-8 font-sans leading-relaxed">
-              Second Chance Records is more than a record store. We believe everyone and everything
-              deserves a second chance. From restoring discarded vinyl to supporting our community,
-              we put that belief into practice every day.
-            </p>
+            <InlineEditor pageSlug="mission" sectionKey="mission-statement" content="Second Chance Records is more than a record store. We believe everyone and everything deserves a second chance. From restoring discarded vinyl to supporting our community, we put that belief into practice every day.">
+              <p className="text-lg text-cream max-w-2xl mx-auto mt-8 font-sans leading-relaxed">
+                Second Chance Records is more than a record store. We believe everyone and everything
+                deserves a second chance. From restoring discarded vinyl to supporting our community,
+                we put that belief into practice every day.
+              </p>
+            </InlineEditor>
           )}
         </div>
       </section>
@@ -75,7 +79,7 @@ export default async function MissionPage() {
                   <h4 className="font-heading text-lg uppercase text-brick mb-2">
                     {pillar.title}
                   </h4>
-                  <p className="text-sm text-cream/70 font-sans">{pillar.description}</p>
+                  <p className="text-sm text-cream font-sans">{pillar.description}</p>
                 </div>
               ))}
             </div>
@@ -98,7 +102,7 @@ export default async function MissionPage() {
                         {resource.name}
                       </ExternalLink>
                       {resource.description && (
-                        <p className="mt-1 text-sm text-cream/70 font-sans">
+                        <p className="mt-1 text-sm text-cream font-sans">
                           {resource.description}
                         </p>
                       )}

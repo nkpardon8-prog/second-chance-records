@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ExternalLink from "@/components/ui/ExternalLink";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export default function Hero() {
   return (
@@ -8,12 +9,16 @@ export default function Hero() {
         <h1 className="font-heading text-7xl md:text-8xl lg:text-9xl tracking-tight leading-none uppercase">
           Second Chance Records
         </h1>
-        <p className="font-accent text-xl md:text-2xl text-gold mt-4">
-          Second chances for humans &amp; hi-fi
-        </p>
-        <p className="font-sans text-cream/70 text-lg max-w-2xl mx-auto mt-6">
-          A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.
-        </p>
+        <InlineEditor pageSlug="home" sectionKey="hero-tagline" content="Second chances for humans &amp; hi-fi">
+          <p className="font-accent text-xl md:text-2xl text-gold mt-4">
+            Second chances for humans &amp; hi-fi
+          </p>
+        </InlineEditor>
+        <InlineEditor pageSlug="home" sectionKey="hero-description" content="A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.">
+          <p className="font-sans text-cream/90 text-lg max-w-2xl mx-auto mt-6">
+            A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.
+          </p>
+        </InlineEditor>
         <div className="flex flex-wrap gap-4 justify-center mt-10">
           <ExternalLink
             href="https://www.discogs.com/seller/SecondChance_Records/profile"

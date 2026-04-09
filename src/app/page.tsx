@@ -4,7 +4,7 @@ import InstagramFeed from "@/components/home/InstagramFeed";
 import QuickLinks from "@/components/home/QuickLinks";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Link from "next/link";
+import InlineEditor from "@/components/admin/InlineEditor";
 import { db } from "@/lib/db";
 import { news } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
@@ -41,7 +41,7 @@ export default async function Home() {
                       year: "numeric",
                     })}
                   </p>
-                  <p className="mt-3 text-cream/70 text-sm line-clamp-3 font-sans">
+                  <p className="mt-3 text-cream text-sm line-clamp-3 font-sans">
                     {post.content}
                   </p>
                 </div>
@@ -55,10 +55,14 @@ export default async function Home() {
 
       <section className="bg-base text-cream py-12 px-6 grain-overlay">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="font-heading text-3xl uppercase tracking-tight">Stay in the Loop</h2>
-          <p className="mt-3 text-lg text-cream/70 max-w-xl mx-auto font-sans">
-            New arrivals, events, and community news delivered to your inbox.
-          </p>
+          <InlineEditor pageSlug="home" sectionKey="newsletter-heading" as="div" content="Stay in the Loop">
+            <h2 className="font-heading text-3xl uppercase tracking-tight">Stay in the Loop</h2>
+          </InlineEditor>
+          <InlineEditor pageSlug="home" sectionKey="newsletter-description" content="New arrivals, events, and community news delivered to your inbox.">
+            <p className="mt-3 text-lg text-cream max-w-xl mx-auto font-sans">
+              New arrivals, events, and community news delivered to your inbox.
+            </p>
+          </InlineEditor>
           <div className="mt-8 flex justify-center">
             <NewsletterSignup />
           </div>

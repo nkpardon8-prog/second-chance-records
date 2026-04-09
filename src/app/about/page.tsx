@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPageContent } from "@/lib/actions/content";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "About | Second Chance Records",
@@ -42,7 +43,9 @@ export default async function AboutPage() {
         {content.length > 0 ? (
           <div className="prose prose-lg mx-auto mb-12 font-sans leading-relaxed">
             {content.map((block) => (
-              <div key={block.id} dangerouslySetInnerHTML={{ __html: block.content }} />
+              <InlineEditor key={block.id} contentId={block.id} content={block.content}>
+                <div dangerouslySetInnerHTML={{ __html: block.content }} />
+              </InlineEditor>
             ))}
           </div>
         ) : (
@@ -51,11 +54,13 @@ export default async function AboutPage() {
               <h3 className="font-heading text-2xl uppercase tracking-tight text-base mb-4">
                 Tasha&apos;s Story
               </h3>
-              <p className="text-base/70 leading-relaxed font-sans">
-                Second Chance Records was born from a simple idea: everyone deserves a second chance
-                &mdash; people and records alike. Founded in Portland, Oregon, we specialize in
-                restoring and curating vinyl records while building a welcoming space for our community.
-              </p>
+              <InlineEditor pageSlug="about" sectionKey="tashas-story" content="Second Chance Records was born from a simple idea: everyone deserves a second chance — people and records alike. Founded in Portland, Oregon, we specialize in restoring and curating vinyl records while building a welcoming space for our community.">
+                <p className="text-base leading-relaxed font-sans">
+                  Second Chance Records was born from a simple idea: everyone deserves a second chance
+                  &mdash; people and records alike. Founded in Portland, Oregon, we specialize in
+                  restoring and curating vinyl records while building a welcoming space for our community.
+                </p>
+              </InlineEditor>
               <blockquote className="font-accent text-2xl text-brick border-l-4 border-gold pl-6 my-8">
                 Everyone deserves a second chance &mdash; people and records alike.
               </blockquote>
@@ -65,11 +70,13 @@ export default async function AboutPage() {
               <h3 className="font-heading text-2xl uppercase tracking-tight text-base mb-4">
                 Record Restoration
               </h3>
-              <p className="text-base/70 leading-relaxed font-sans">
-                Every record that comes through our doors gets a second chance. We carefully clean,
-                grade, and restore vinyl records so they can be enjoyed again. From deep cleaning to
-                sleeve replacement, we bring each record back to its best possible condition.
-              </p>
+              <InlineEditor pageSlug="about" sectionKey="record-restoration" content="Every record that comes through our doors gets a second chance. We carefully clean, grade, and restore vinyl records so they can be enjoyed again. From deep cleaning to sleeve replacement, we bring each record back to its best possible condition.">
+                <p className="text-base leading-relaxed font-sans">
+                  Every record that comes through our doors gets a second chance. We carefully clean,
+                  grade, and restore vinyl records so they can be enjoyed again. From deep cleaning to
+                  sleeve replacement, we bring each record back to its best possible condition.
+                </p>
+              </InlineEditor>
             </section>
           </>
         )}

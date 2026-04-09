@@ -31,7 +31,7 @@ export default function ContactPage() {
               <h3 className="font-heading text-lg uppercase tracking-tight mb-3">
                 Store Info
               </h3>
-              <address className="not-italic font-mono text-sm text-cream/70 leading-relaxed space-y-2">
+              <address className="not-italic font-mono text-sm text-cream leading-relaxed space-y-2">
                 <p>5744 E Burnside St, Suite 104</p>
                 <p>Portland, OR 97215</p>
                 <p>
@@ -51,9 +51,9 @@ export default function ContactPage() {
               <h3 className="font-heading text-lg uppercase tracking-tight mb-3">
                 Hours
               </h3>
-              <div className="font-mono text-sm text-cream/70 space-y-1">
+              <div className="font-mono text-sm text-cream space-y-1">
                 <p>Thu - Sun: 12pm - 8pm</p>
-                <p className="text-muted">Mon - Wed: Closed</p>
+                <p className="text-kraft/70">Mon - Wed: Closed</p>
               </div>
             </div>
           </div>

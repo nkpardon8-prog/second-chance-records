@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getReviews } from "@/lib/actions/reviews";
 import ReviewCard from "@/components/reviews/ReviewCard";
 import ExternalLink from "@/components/ui/ExternalLink";
+import InlineEditor from "@/components/admin/InlineEditor";
 
 export const metadata: Metadata = {
   title: "Reviews | Second Chance Records",
@@ -22,7 +23,7 @@ export default async function ReviewsPage() {
       <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
         <div className="max-w-5xl mx-auto px-6">
           <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Reviews</h1>
-          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+          <p className="font-mono text-sm text-kraft/70 uppercase tracking-wider mt-2">
             What our community says
           </p>
         </div>
@@ -43,15 +44,17 @@ export default async function ReviewsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted py-8 mb-12 font-mono">
+            <p className="text-center text-base/60 py-8 mb-12 font-mono">
               Reviews coming soon!
             </p>
           )}
 
           <div className="text-center space-y-4">
-            <p className="text-lg text-base/70 font-sans">
-              Had a great experience? We&apos;d love to hear from you!
-            </p>
+            <InlineEditor pageSlug="reviews" sectionKey="review-cta" content="Had a great experience? We'd love to hear from you!">
+              <p className="text-lg text-base font-sans">
+                Had a great experience? We&apos;d love to hear from you!
+              </p>
+            </InlineEditor>
             <div className="flex flex-wrap justify-center gap-4">
               <ExternalLink
                 href="https://www.google.com/maps/place/Second+Chance+Records"
