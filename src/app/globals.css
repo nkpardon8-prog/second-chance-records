@@ -24,34 +24,41 @@
    BASE STYLES
    ============================================ */
 
-html {
-  scroll-behavior: smooth;
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
-  background-color: var(--color-kraft);
-  color: var(--color-base);
-  font-family: var(--font-sans), system-ui, sans-serif;
-}
+  body {
+    background-color: var(--color-kraft);
+    color: var(--color-base);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading), system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-}
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
 
-::selection {
-  background: #C2452D;
-  color: #F5E6D0;
-}
+  ::selection {
+    background: #C2452D;
+    color: #F5E6D0;
+  }
 
-/* ============================================
-   LINKS
-   ============================================ */
+  a {
+    color: inherit;
+    transition: color 0.2s ease;
+  }
 
-a {
-  color: inherit;
-  transition: color 0.2s ease;
+  input, textarea, select {
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #C2452D;
+    outline-offset: 2px;
+  }
 }
 
 /* ============================================
@@ -147,17 +154,4 @@ a {
   background: #C2452D;
 }
 
-/* ============================================
-   FORM DEFAULTS
-   ============================================ */
-
-/* On kraft backgrounds */
-input, textarea, select {
-  font-family: var(--font-sans), system-ui, sans-serif;
-}
-
-/* Focus ring */
-*:focus-visible {
-  outline: 2px solid #C2452D;
-  outline-offset: 2px;
-}
+/* Form defaults and focus ring are in @layer base above */
