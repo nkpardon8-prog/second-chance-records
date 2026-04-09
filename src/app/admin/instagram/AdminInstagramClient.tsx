@@ -25,14 +25,12 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
   function handleSync() {
     setSyncMessage(null);
     startSyncTransition(async () => {
-      try {
-        const count = await triggerSync();
-        setSyncMessage(`Synced ${count} new post${count !== 1 ? "s" : ""}`);
+      const result = await triggerSync();
+      if (result.error) {
+        setSyncMessage(`Sync failed: ${result.error}`);
+      } else {
+        setSyncMessage(`Synced ${result.count} new post${result.count !== 1 ? "s" : ""}`);
         router.refresh();
-      } catch (err) {
-        setSyncMessage(
-          `Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`
-        );
       }
     });
   }

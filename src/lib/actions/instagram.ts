@@ -41,11 +41,23 @@ export async function togglePostVisibility(id: number) {
   revalidatePath("/admin/instagram");
 }
 
-export async function triggerSync() {
+export async function triggerSync(): Promise<{ count: number; error?: string }> {
   const session = await getSession();
-  if (!session.isLoggedIn) throw new Error("Unauthorized");
+  if (!session.isLoggedIn) return { count: 0, error: "Unauthorized" };
 
-  const scraped = await scrapeInstagramPosts();
+  let scraped;
+  try {
+    scraped = await scrapeInstagramPosts();
+  } catch (err) {
+    return {
+      count: 0,
+      error: `Apify scrape failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+
+  if (!scraped.length) {
+    return { count: 0, error: "Apify returned 0 posts" };
+  }
 
   let synced = 0;
   for (const post of scraped) {
@@ -56,7 +68,13 @@ export async function triggerSync() {
       .then((rows) => rows[0]);
     if (existing) continue;
 
-    const permanentUrl = await uploadFromUrl(post.imageUrl, post.instagramId);
+    let permanentUrl;
+    try {
+      permanentUrl = await uploadFromUrl(post.imageUrl, post.instagramId);
+    } catch (err) {
+      console.error(`Image upload failed for ${post.instagramId}:`, err);
+      continue;
+    }
 
     await db.insert(instagramPosts).values({
       instagramId: post.instagramId,
@@ -72,5 +90,5 @@ export async function triggerSync() {
   revalidatePath("/");
   revalidatePath("/admin/instagram");
 
-  return synced;
+  return { count: synced };
 }
