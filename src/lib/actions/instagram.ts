@@ -5,8 +5,6 @@ import { instagramPosts } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { scrapeInstagramPosts } from "@/lib/apify";
-import { uploadFromUrl } from "@/lib/image-store";
 
 export async function getInstagramPosts(limit?: number) {
   const query = db
@@ -45,55 +43,33 @@ export async function triggerSync(): Promise<{ count: number; error?: string }> 
   const session = await getSession();
   if (!session.isLoggedIn) return { count: 0, error: "Unauthorized" };
 
-  let scraped;
+  // Trigger the Netlify scheduled function which has a longer timeout
+  // and handles the full Apify scrape + image upload + DB insert pipeline
   try {
-    scraped = await scrapeInstagramPosts();
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || "https://second-chance-records.netlify.app";
+    const res = await fetch(`${siteUrl}/.netlify/functions/sync-instagram`, {
+      method: "GET",
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      return { count: 0, error: `Sync function failed: ${res.status} ${text}` };
+    }
+
+    const text = await res.text();
+    // Parse "Fetched X posts, synced Y new" from the response
+    const match = text.match(/synced (\d+) new/);
+    const count = match ? parseInt(match[1], 10) : 0;
+
+    revalidatePath("/");
+    revalidatePath("/admin/instagram");
+
+    return { count };
   } catch (err) {
     return {
       count: 0,
-      error: `Apify scrape failed: ${err instanceof Error ? err.message : String(err)}`,
+      error: `Sync failed: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
-
-  if (!scraped.length) {
-    return { count: 0, error: "Apify returned 0 posts" };
-  }
-
-  let synced = 0;
-  for (const post of scraped) {
-    try {
-      const existing = await db
-        .select()
-        .from(instagramPosts)
-        .where(eq(instagramPosts.instagramId, post.instagramId))
-        .then((rows) => rows[0]);
-      if (existing) continue;
-
-      // Try blob storage first, fall back to direct IG URL
-      let imageUrl = post.imageUrl;
-      try {
-        imageUrl = await uploadFromUrl(post.imageUrl, post.instagramId);
-      } catch {
-        // Blob storage failed — use direct Instagram CDN URL as fallback
-      }
-
-      await db.insert(instagramPosts).values({
-        instagramId: post.instagramId,
-        imageUrl,
-        caption: post.caption,
-        permalink: post.permalink,
-        likesCount: post.likesCount,
-        postedAt: new Date(post.postedAt),
-      });
-      synced++;
-    } catch (err) {
-      console.error(`Failed to sync post ${post.instagramId}:`, err);
-      continue;
-    }
-  }
-
-  revalidatePath("/");
-  revalidatePath("/admin/instagram");
-
-  return { count: synced };
 }

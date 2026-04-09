@@ -24,9 +24,9 @@ export interface ScrapedPost {
 export async function scrapeInstagramPosts(
   limit = 20,
 ): Promise<ScrapedPost[]> {
-  // Start the actor run via REST API (avoids apify-client bundling issues)
+  // Start the actor run and wait for it to finish (waitForFinish in seconds)
   const runRes = await fetch(
-    `${APIFY_BASE}/acts/apify~instagram-scraper/runs?token=${APIFY_TOKEN}`,
+    `${APIFY_BASE}/acts/apify~instagram-scraper/runs?token=${APIFY_TOKEN}&waitForFinish=120`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,23 +41,11 @@ export async function scrapeInstagramPosts(
   );
 
   if (!runRes.ok) {
-    throw new Error(`Apify run start failed: ${runRes.status} ${await runRes.text()}`);
+    throw new Error(`Apify run failed: ${runRes.status} ${await runRes.text()}`);
   }
 
   const runData = await runRes.json();
-  const runId = runData.data?.id;
-  if (!runId) throw new Error("No run ID returned from Apify");
-
-  // Wait for the run to finish (poll every 5 seconds)
-  let status = runData.data?.status;
-  while (status === "RUNNING" || status === "READY") {
-    await new Promise((r) => setTimeout(r, 5000));
-    const pollRes = await fetch(
-      `${APIFY_BASE}/actor-runs/${runId}?token=${APIFY_TOKEN}`,
-    );
-    const pollData = await pollRes.json();
-    status = pollData.data?.status;
-  }
+  const status = runData.data?.status;
 
   if (status !== "SUCCEEDED") {
     throw new Error(`Apify run finished with status: ${status}`);
