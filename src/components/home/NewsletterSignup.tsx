@@ -33,7 +33,7 @@ export default function NewsletterSignup() {
 
   if (status === "success") {
     return (
-      <p className="text-sm font-medium text-[var(--color-secondary)]">
+      <p className="text-sm font-mono text-forest">
         {message}
       </p>
     );
@@ -47,18 +47,18 @@ export default function NewsletterSignup() {
         placeholder="your@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="flex-1 rounded-lg border border-[var(--color-background)]/30 bg-[var(--color-white)]/10 px-3 py-2 text-sm text-inherit placeholder:text-inherit/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/40"
+        className="flex-1 rounded-sm bg-white/10 border border-white/20 px-4 py-2.5 text-sm font-sans text-cream placeholder:text-cream/40 focus:outline-none focus:ring-1 focus:ring-gold/40 focus:border-gold/40"
         aria-label="Email address"
       />
       <button
         type="submit"
         disabled={status === "loading"}
-        className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-[var(--color-white)] transition-colors hover:bg-[var(--color-accent)]/90 disabled:opacity-50"
+        className="rounded-sm bg-gold text-base hover:bg-gold/90 px-5 py-2.5 font-mono uppercase text-sm tracking-wider transition-colors disabled:opacity-50"
       >
         {status === "loading" ? "..." : "Subscribe"}
       </button>
       {status === "error" && (
-        <p className="text-xs text-red-400 mt-1">{message}</p>
+        <p className="text-xs text-brick mt-1 font-mono">{message}</p>
       )}
     </form>
   );

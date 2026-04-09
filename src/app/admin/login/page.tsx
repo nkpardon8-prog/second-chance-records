@@ -18,9 +18,9 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-        <h1 className="text-xl font-semibold text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-base px-4">
+      <div className="w-full max-w-sm bg-card rounded-sm border border-white/5 p-8">
+        <h1 className="font-heading text-2xl text-cream text-center mb-6 tracking-wide">
           Second Chance Records Admin
         </h1>
         <form action={handleSubmit} className="space-y-4">
@@ -30,6 +30,7 @@ export default function AdminLoginPage() {
             type="email"
             required
             autoComplete="email"
+            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
           />
           <Input
             label="Password"
@@ -37,9 +38,10 @@ export default function AdminLoginPage() {
             type="password"
             required
             autoComplete="current-password"
+            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
           />
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-sm text-brick">{error}</p>
           )}
           <Button type="submit" className="w-full" disabled={pending}>
             {pending ? "Signing in..." : "Sign In"}

@@ -27,15 +27,15 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Community Resources</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Community Resources</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Resource"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Resource</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Resource</h3>
           <ItemForm
             fields={resourceFields}
             onSubmit={async (fd) => {
@@ -49,8 +49,8 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Resource</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Resource</h3>
           <ItemForm
             fields={resourceFields}
             initialValues={{
@@ -72,11 +72,11 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
         {resources.map((r) => (
           <div
             key={r.id}
-            className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3"
+            className="flex items-center justify-between bg-card border border-white/5 rounded-sm p-3"
           >
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm">{r.name}</p>
-              <p className="text-xs text-gray-500 truncate">{r.url}</p>
+              <p className="font-medium text-sm text-cream">{r.name}</p>
+              <p className="text-xs text-muted truncate">{r.url}</p>
             </div>
             <div className="flex gap-1 shrink-0">
               <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setShowAdd(false); }}>
@@ -85,7 +85,7 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-red-600"
+                className="text-brick hover:text-brick/80"
                 onClick={() => {
                   if (confirm("Delete this resource?")) deleteResource(r.id);
                 }}
@@ -96,7 +96,7 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
           </div>
         ))}
         {resources.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">No resources yet.</p>
+          <p className="text-sm text-muted text-center py-8">No resources yet.</p>
         )}
       </div>
     </div>

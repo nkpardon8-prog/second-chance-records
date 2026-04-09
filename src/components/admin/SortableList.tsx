@@ -62,13 +62,13 @@ export default function SortableList<T extends SortableItem>({
       {items.map((item, index) => (
         <div
           key={item.id}
-          className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-3"
+          className="flex items-center gap-2 bg-card border border-white/5 rounded-sm p-3"
         >
           <div className="flex flex-col gap-0.5">
             <button
               onClick={() => moveUp(index)}
               disabled={index === 0}
-              className="text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs leading-none"
+              className="text-brick hover:text-brick/80 disabled:opacity-30 text-xs leading-none"
               aria-label="Move up"
             >
               &#9650;
@@ -76,7 +76,7 @@ export default function SortableList<T extends SortableItem>({
             <button
               onClick={() => moveDown(index)}
               disabled={index === items.length - 1}
-              className="text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs leading-none"
+              className="text-brick hover:text-brick/80 disabled:opacity-30 text-xs leading-none"
               aria-label="Move down"
             >
               &#9660;
@@ -93,7 +93,7 @@ export default function SortableList<T extends SortableItem>({
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-red-600 hover:text-red-700"
+                className="text-brick hover:text-brick/80"
                 onClick={() => onDelete(item.id)}
               >
                 Delete
@@ -103,7 +103,7 @@ export default function SortableList<T extends SortableItem>({
         </div>
       ))}
       {items.length === 0 && (
-        <p className="text-sm text-gray-500 text-center py-8">No items yet.</p>
+        <p className="text-sm text-muted text-center py-8">No items yet.</p>
       )}
     </div>
   );

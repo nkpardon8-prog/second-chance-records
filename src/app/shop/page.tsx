@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getFeaturedRecords } from "@/lib/actions/records";
-import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
 import DiscogsSection from "@/components/shop/DiscogsSection";
 
@@ -23,23 +22,31 @@ export default async function ShopPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading subtitle="Restored vinyl, ready for a second spin">
-        Shop
-      </SectionHeading>
+    <>
+      <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
+        <div className="max-w-5xl mx-auto px-6">
+          <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Shop</h1>
+          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+            Restored vinyl, ready for a second spin
+          </p>
+          <div className="mt-8">
+            <ExternalLink
+              href="https://www.discogs.com/seller/SecondChance_Records/profile"
+              className="inline-flex items-center justify-center rounded-sm bg-brick text-cream px-8 py-3.5 font-mono uppercase text-sm tracking-wider hover:bg-brick/90 transition-colors"
+            >
+              Browse Our Full Inventory on Discogs
+            </ExternalLink>
+          </div>
+        </div>
+      </section>
 
-      <div className="text-center mb-12">
-        <ExternalLink
-          href="https://www.discogs.com/seller/SecondChance_Records/profile"
-          className="inline-flex items-center justify-center rounded-lg bg-[var(--color-accent)] px-7 py-3 text-lg font-medium text-[var(--color-white)] transition-colors hover:bg-[var(--color-accent)]/90"
-        >
-          Browse Our Full Inventory on Discogs
-        </ExternalLink>
+      <div className="bg-kraft py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <DiscogsSection title="New Arrivals" records={newArrivals} />
+          <DiscogsSection title="Staff Picks" records={staffPicks} />
+          <DiscogsSection title="Local Artists" records={localArtists} />
+        </div>
       </div>
-
-      <DiscogsSection title="New Arrivals" records={newArrivals} />
-      <DiscogsSection title="Staff Picks" records={staffPicks} />
-      <DiscogsSection title="Local Artists" records={localArtists} />
-    </div>
+    </>
   );
 }

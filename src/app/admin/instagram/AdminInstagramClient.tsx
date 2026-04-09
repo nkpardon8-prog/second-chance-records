@@ -25,7 +25,7 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Instagram Feed</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Instagram Feed</h2>
         <Button size="sm" onClick={handleSync} disabled={pending}>
           {pending ? "Syncing..." : "Sync Now"}
         </Button>
@@ -35,11 +35,11 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
         {posts.map((post) => (
           <div
             key={post.id}
-            className={`bg-white border rounded-lg overflow-hidden ${
-              post.isVisible ? "border-gray-200" : "border-gray-200 opacity-50"
+            className={`bg-card border rounded-sm overflow-hidden ${
+              post.isVisible ? "border-white/5" : "border-white/5 opacity-50"
             }`}
           >
-            <div className="aspect-square bg-gray-100 relative">
+            <div className="aspect-square bg-white/5 relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.imageUrl}
@@ -48,11 +48,11 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
               />
             </div>
             <div className="p-2">
-              <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+              <p className="text-xs text-cream/70 line-clamp-2 mb-2">
                 {post.caption?.slice(0, 100) ?? "No caption"}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted font-mono">
                   {post.postedAt ? new Date(post.postedAt).toLocaleDateString() : ""}
                 </span>
                 <Button
@@ -68,7 +68,7 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
           </div>
         ))}
         {posts.length === 0 && (
-          <p className="text-sm text-gray-500 col-span-full text-center py-8">
+          <p className="text-sm text-muted col-span-full text-center py-8">
             No Instagram posts synced yet.
           </p>
         )}

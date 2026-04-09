@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getPartners } from "@/lib/actions/partners";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
 
 export const metadata: Metadata = {
@@ -36,69 +35,110 @@ const socialLinks = [
 export default async function CommunityPage() {
   const allPartners = await getPartners();
 
+  const cherryBombs = allPartners.find(
+    (p) => p.name.toLowerCase().includes("cherry bomb")
+  );
+  const otherPartners = allPartners.filter((p) => p.id !== cherryBombs?.id);
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading subtitle="Connect with us and our community">
-        Community
-      </SectionHeading>
+    <div className="bg-kraft min-h-screen">
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <SectionHeading subtitle="Connect with us and our community">
+          Community
+        </SectionHeading>
 
-      <section className="mb-16">
-        <h3 className="font-heading text-2xl font-bold text-[var(--color-primary)] text-center mb-8">
-          Find Us Online
-        </h3>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {socialLinks.map((link) => (
-            <Card key={link.name} className="text-center">
-              <ExternalLink
-                href={link.url}
-                showIcon
-                className="font-heading text-xl font-bold text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
-              >
-                {link.name}
-              </ExternalLink>
-              <p className="mt-2 text-sm text-[var(--color-primary)]/60">
-                {link.description}
-              </p>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {allPartners.length > 0 && (
-        <section>
-          <h3 className="font-heading text-2xl font-bold text-[var(--color-primary)] text-center mb-8">
-            Community Partners
+        <section className="mb-16">
+          <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+            Find Us Online
           </h3>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {allPartners.map((partner) => (
-              <Card key={partner.id} className="flex flex-col">
-                {partner.logoUrl && (
-                  <div className="h-16 mb-4 flex items-center">
-                    <img
-                      src={partner.logoUrl}
-                      alt={partner.name}
-                      className="max-h-full max-w-full object-contain"
-                      loading="lazy"
-                    />
-                  </div>
-                )}
+          <div className="grid gap-6 sm:grid-cols-3">
+            {socialLinks.map((link) => (
+              <div key={link.name} className="bg-card text-cream p-8 rounded-sm border border-white/5 hover:border-brick/30 transition-colors text-center">
                 <ExternalLink
-                  href={partner.url}
+                  href={link.url}
                   showIcon
-                  className="font-heading text-lg font-bold text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+                  className="font-heading text-xl text-brick hover:text-gold transition-colors"
                 >
-                  {partner.name}
+                  {link.name}
                 </ExternalLink>
-                {partner.description && (
-                  <p className="mt-2 text-sm text-[var(--color-primary)]/70 flex-1">
-                    {partner.description}
-                  </p>
-                )}
-              </Card>
+                <p className="mt-2 text-sm text-cream/70 font-sans">
+                  {link.description}
+                </p>
+              </div>
             ))}
           </div>
         </section>
-      )}
+
+        {cherryBombs && (
+          <section className="mb-16 bg-base text-cream p-8 md:p-12 rounded-sm grain-overlay relative">
+            <div className="relative z-10 text-center">
+              {cherryBombs.logoUrl && (
+                <div className="h-20 mb-6 flex items-center justify-center">
+                  <img
+                    src={cherryBombs.logoUrl}
+                    alt={cherryBombs.name}
+                    className="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <h3 className="font-heading text-2xl uppercase tracking-tight text-brick">
+                {cherryBombs.name}
+              </h3>
+              {cherryBombs.description && (
+                <p className="mt-3 text-cream/70 font-sans max-w-xl mx-auto">
+                  {cherryBombs.description}
+                </p>
+              )}
+              <div className="mt-4">
+                <ExternalLink
+                  href={cherryBombs.url}
+                  showIcon
+                  className="text-brick hover:text-gold font-mono"
+                >
+                  Learn more
+                </ExternalLink>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {otherPartners.length > 0 && (
+          <section>
+            <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+              Community Partners
+            </h3>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {otherPartners.map((partner) => (
+                <div key={partner.id} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors flex flex-col">
+                  {partner.logoUrl && (
+                    <div className="h-16 mb-4 flex items-center">
+                      <img
+                        src={partner.logoUrl}
+                        alt={partner.name}
+                        className="max-h-full max-w-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <ExternalLink
+                    href={partner.url}
+                    showIcon
+                    className="font-heading text-lg text-brick hover:text-gold transition-colors"
+                  >
+                    {partner.name}
+                  </ExternalLink>
+                  {partner.description && (
+                    <p className="mt-2 text-sm text-cream/70 flex-1 font-sans">
+                      {partner.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

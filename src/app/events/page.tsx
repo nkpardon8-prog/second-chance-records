@@ -23,33 +23,35 @@ export default async function EventsPage() {
   const past = allEvents.filter((e) => e.date < today).reverse();
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading subtitle="Live music, listening parties, and more">
-        Events
-      </SectionHeading>
+    <div className="bg-kraft min-h-screen">
+      <div className="max-w-4xl mx-auto px-6 py-16">
+        <SectionHeading subtitle="Live music, listening parties, and more">
+          Events
+        </SectionHeading>
 
-      {upcoming.length > 0 ? (
-        <div className="space-y-6 mb-12">
-          {upcoming.map((event) => (
-            <EventCard
-              key={event.id}
-              title={event.title}
-              date={event.date}
-              time={event.time}
-              description={event.description}
-              artistName={event.artistName}
-              artistUrl={event.artistUrl}
-              imageUrl={event.imageUrl}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-[var(--color-primary)]/60 py-8 mb-12">
-          No upcoming events right now. Check back soon!
-        </p>
-      )}
+        {upcoming.length > 0 ? (
+          <div className="space-y-6 mb-12">
+            {upcoming.map((event) => (
+              <EventCard
+                key={event.id}
+                title={event.title}
+                date={event.date}
+                time={event.time}
+                description={event.description}
+                artistName={event.artistName}
+                artistUrl={event.artistUrl}
+                imageUrl={event.imageUrl}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-muted py-8 mb-12 font-mono">
+            No upcoming events right now. Check back soon!
+          </p>
+        )}
 
-      {past.length > 0 && <PastEventsToggle events={past} />}
+        {past.length > 0 && <PastEventsToggle events={past} />}
+      </div>
     </div>
   );
 }

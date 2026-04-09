@@ -30,15 +30,15 @@ export default function AdminPartnersClient({ partners }: AdminPartnersClientPro
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Partners</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Partners</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Partner"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Partner</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Partner</h3>
           <ItemForm
             fields={partnerFields}
             onSubmit={async (fd) => {
@@ -52,8 +52,8 @@ export default function AdminPartnersClient({ partners }: AdminPartnersClientPro
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Partner</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Partner</h3>
           <ItemForm
             fields={partnerFields}
             initialValues={{
@@ -76,8 +76,8 @@ export default function AdminPartnersClient({ partners }: AdminPartnersClientPro
         items={partners}
         renderItem={(p) => (
           <div>
-            <p className="font-medium text-sm">{p.name}</p>
-            <p className="text-xs text-gray-500 truncate">{p.url}</p>
+            <p className="font-medium text-sm text-cream">{p.name}</p>
+            <p className="text-xs text-muted truncate">{p.url}</p>
           </div>
         )}
         onReorder={reorderPartners}

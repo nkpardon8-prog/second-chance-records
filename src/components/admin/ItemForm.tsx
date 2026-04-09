@@ -70,13 +70,14 @@ export default function ItemForm({
               onChange={(e) =>
                 setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
               }
+              className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
             />
           );
         }
         if (field.type === "select") {
           return (
             <div key={field.name} className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-[var(--color-primary)]">
+              <label className="font-mono uppercase text-xs tracking-wider text-muted">
                 {field.label}
               </label>
               <select
@@ -86,11 +87,11 @@ export default function ItemForm({
                 onChange={(e) =>
                   setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
                 }
-                className="rounded-lg border border-[var(--color-primary)]/20 bg-white px-3 py-2 text-sm"
+                className="rounded-sm border border-white/10 bg-white/5 px-3 py-2 text-sm text-cream focus:border-brick focus:ring-1 focus:ring-brick/20 focus:outline-none"
               >
-                <option value="">Select...</option>
+                <option value="" className="bg-card text-cream">Select...</option>
                 {field.options?.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
+                  <option key={opt.value} value={opt.value} className="bg-card text-cream">
                     {opt.label}
                   </option>
                 ))}
@@ -100,7 +101,7 @@ export default function ItemForm({
         }
         if (field.type === "checkbox") {
           return (
-            <label key={field.name} className="flex items-center gap-2 text-sm">
+            <label key={field.name} className="flex items-center gap-2 text-sm text-cream">
               <input
                 type="checkbox"
                 name={field.name}
@@ -108,7 +109,7 @@ export default function ItemForm({
                 onChange={(e) =>
                   setValues((prev) => ({ ...prev, [field.name]: e.target.checked }))
                 }
-                className="rounded"
+                className="rounded-sm accent-brick"
               />
               {field.label}
             </label>
@@ -125,6 +126,7 @@ export default function ItemForm({
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
             }
+            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
           />
         );
       })}
@@ -137,7 +139,7 @@ export default function ItemForm({
             Cancel
           </Button>
         )}
-        {success && <span className="text-sm text-green-600">Saved</span>}
+        {success && <span className="text-sm text-forest">Saved</span>}
       </div>
     </form>
   );

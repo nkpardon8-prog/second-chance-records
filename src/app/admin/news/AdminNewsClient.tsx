@@ -35,15 +35,15 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">News</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">News</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Post"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Post</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Post</h3>
           <ItemForm
             fields={newsFields}
             onSubmit={async (fd) => {
@@ -57,8 +57,8 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Post</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Post</h3>
           <ItemForm
             fields={newsFields}
             initialValues={{
@@ -80,18 +80,18 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
         {news.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3"
+            className="flex items-center justify-between bg-card border border-white/5 rounded-sm p-3"
           >
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm truncate">{item.title}</p>
-              <p className="text-xs text-gray-500">
+              <p className="font-medium text-sm text-cream truncate">{item.title}</p>
+              <p className="text-xs text-muted">
                 {item.publishedAt
                   ? new Date(item.publishedAt).toLocaleDateString()
                   : "No date"}
                 {" - "}
                 <span
                   className={
-                    item.isPublished ? "text-green-600" : "text-yellow-600"
+                    item.isPublished ? "text-forest" : "text-gold"
                   }
                 >
                   {item.isPublished ? "Published" : "Draft"}
@@ -108,7 +108,7 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-red-600"
+                className="text-brick hover:text-brick/80"
                 onClick={() => {
                   if (confirm("Delete this post?")) deleteNews(item.id);
                 }}
@@ -119,7 +119,7 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
           </div>
         ))}
         {news.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">No news posts yet.</p>
+          <p className="text-sm text-muted text-center py-8">No news posts yet.</p>
         )}
       </div>
     </div>

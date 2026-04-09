@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FAF7F2" />
-      <stop offset="100%" stop-color="#C45D3E" />
+      <stop offset="0%" stop-color="#1A1A1A" />
+      <stop offset="100%" stop-color="#242424" />
     </linearGradient>
   </defs>
   <rect width="1200" height="600" fill="url(#bg)" />
-  <text x="600" y="300" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-size="48" fill="#fff" font-weight="bold">Second Chance Records</text>
+  <text x="600" y="300" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="48" fill="#FFFFFF" font-weight="bold" letter-spacing="8">SECOND CHANCE RECORDS</text>
 </svg>

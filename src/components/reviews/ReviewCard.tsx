@@ -1,5 +1,3 @@
-import Card from "@/components/ui/Card";
-
 interface ReviewCardProps {
   quote: string;
   author: string;
@@ -16,12 +14,12 @@ function StarRating({ rating }: { rating: number }) {
           width="16"
           height="16"
           viewBox="0 0 16 16"
-          fill={i < rating ? "var(--color-accent)" : "none"}
-          stroke="var(--color-accent)"
+          className={i < rating ? "text-gold fill-gold" : "text-gold fill-none"}
+          stroke="currentColor"
           strokeWidth="1.5"
           aria-hidden="true"
         >
-          <path d="M8 1.5l1.85 3.75 4.15.6-3 2.93.71 4.12L8 10.88 4.29 12.9l.71-4.12-3-2.93 4.15-.6L8 1.5z" />
+          <path d="M8 1.5l1.85 3.75 4.15.6-3 2.93.71 4.12L8 10.88 4.29 12.9l.71-4.12-3-2.93 4.15-.6L8 1.5z" fill={i < rating ? "currentColor" : "none"} />
         </svg>
       ))}
     </div>
@@ -35,17 +33,20 @@ const platformLabels: Record<string, string> = {
 
 export default function ReviewCard({ quote, author, platform, rating }: ReviewCardProps) {
   return (
-    <Card className="flex flex-col">
+    <div className="bg-card text-cream p-8 rounded-sm flex flex-col">
       {rating && <StarRating rating={rating} />}
-      <blockquote className="mt-3 text-lg leading-relaxed text-[var(--color-primary)] italic flex-1">
-        &ldquo;{quote}&rdquo;
+      <blockquote className="mt-3 flex-1">
+        <span className="text-gold text-4xl font-heading leading-none">&ldquo;</span>
+        <p className="font-sans text-lg italic text-cream/90 leading-relaxed -mt-4 ml-4">
+          {quote}
+        </p>
       </blockquote>
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-sm font-medium text-[var(--color-primary)]">{author}</span>
-        <span className="inline-flex items-center rounded-full bg-[var(--color-primary)]/5 px-3 py-1 text-xs font-medium text-[var(--color-primary)]/60">
+        <span className="font-mono text-sm text-muted">{author}</span>
+        <span className="font-mono text-xs uppercase px-2 py-0.5 rounded-sm bg-white/10">
           {platformLabels[platform] || platform}
         </span>
       </div>
-    </Card>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import Card from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
 
 interface EventCardProps {
@@ -31,19 +30,19 @@ export default function EventCard({
   imageUrl,
 }: EventCardProps) {
   return (
-    <Card className="flex flex-col sm:flex-row gap-6">
+    <div className="bg-card text-cream p-6 rounded-sm border border-white/5 flex flex-col sm:flex-row gap-6">
       {imageUrl && (
         <div className="sm:w-48 shrink-0">
           <img
             src={imageUrl}
             alt={title}
-            className="w-full h-48 sm:h-full object-cover rounded-lg"
+            className="w-full h-48 sm:h-full object-cover rounded-sm"
             loading="lazy"
           />
         </div>
       )}
       <div className="flex-1">
-        <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--color-primary)]/60 mb-2">
+        <div className="flex flex-wrap items-center gap-2 font-mono text-gold text-sm uppercase mb-2">
           <time dateTime={date}>{formatDate(date)}</time>
           {time && (
             <>
@@ -52,28 +51,28 @@ export default function EventCard({
             </>
           )}
         </div>
-        <h3 className="font-heading text-xl font-bold text-[var(--color-primary)]">{title}</h3>
+        <h3 className="font-heading text-xl uppercase tracking-tight">{title}</h3>
         {artistName && (
-          <p className="mt-1 text-sm text-[var(--color-secondary)]">
+          <p className="mt-1 text-sm">
             {artistUrl ? (
               <ExternalLink
                 href={artistUrl}
                 showIcon
-                className="hover:text-[var(--color-accent)] transition-colors"
+                className="text-brick hover:text-gold transition-colors"
               >
                 {artistName}
               </ExternalLink>
             ) : (
-              artistName
+              <span className="text-brick">{artistName}</span>
             )}
           </p>
         )}
         {description && (
-          <p className="mt-3 text-[var(--color-primary)]/70 text-sm leading-relaxed">
+          <p className="mt-3 text-cream/70 text-sm leading-relaxed font-sans">
             {description}
           </p>
         )}
       </div>
-    </Card>
+    </div>
   );
 }

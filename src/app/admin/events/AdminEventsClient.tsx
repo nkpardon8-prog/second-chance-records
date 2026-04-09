@@ -60,15 +60,15 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Events</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Events</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Event"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Event</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Event</h3>
           <ItemForm
             fields={eventFields}
             onSubmit={async (fd) => {
@@ -82,8 +82,8 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Event</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Event</h3>
           <ItemForm
             fields={eventFields}
             initialValues={{
@@ -107,18 +107,18 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
 
       {pendingReview.length > 0 && (
         <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-800 mb-3">
+          <h3 className="font-mono text-sm text-gold mb-3 uppercase tracking-wider">
             Pending Review ({pendingReview.length})
           </h3>
           <div className="space-y-2">
             {pendingReview.map((ev) => (
               <div
                 key={ev.id}
-                className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+                className="flex items-center justify-between bg-gold/10 border border-gold/20 rounded-sm p-3"
               >
                 <div>
-                  <p className="font-medium text-sm">{ev.title}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-medium text-sm text-cream">{ev.title}</p>
+                  <p className="text-xs text-muted">
                     {ev.date} {ev.time && `at ${ev.time}`}
                   </p>
                 </div>
@@ -133,7 +133,7 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-red-600"
+                    className="text-brick hover:text-brick/80"
                     onClick={() => handleDismiss(ev.id)}
                     disabled={pending}
                   >
@@ -146,13 +146,13 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
         </div>
       )}
 
-      <h3 className="text-lg font-medium text-gray-800 mb-3">Published Events</h3>
+      <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Published Events</h3>
       <SortableList
         items={published}
         renderItem={(ev) => (
           <div>
-            <p className="font-medium text-sm">{ev.title}</p>
-            <p className="text-xs text-gray-500">
+            <p className="font-medium text-sm text-cream">{ev.title}</p>
+            <p className="text-xs text-muted">
               {ev.date} {ev.time && `at ${ev.time}`}
               {ev.artistName && ` - ${ev.artistName}`}
             </p>

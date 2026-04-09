@@ -28,7 +28,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
       key: "isActive",
       label: "Status",
       render: (s) => (
-        <span className={s.isActive ? "text-green-600" : "text-gray-400"}>
+        <span className={s.isActive ? "text-forest" : "text-muted"}>
           {s.isActive ? "Active" : "Inactive"}
         </span>
       ),
@@ -48,7 +48,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
     {
       label: "Delete",
       variant: "ghost",
-      className: "text-red-600",
+      className: "text-brick hover:text-brick/80",
       onClick: (s) => {
         if (confirm("Delete this subscriber?")) {
           startTransition(async () => {
@@ -63,8 +63,8 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Subscribers</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="font-heading text-2xl text-cream tracking-wide">Subscribers</h2>
+          <p className="text-sm text-muted mt-1 font-mono">
             {subscribers.length} total subscriber{subscribers.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
         </a>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-card rounded-sm border border-white/5 p-4">
         <DataTable columns={columns} data={subscribers} actions={actions} />
       </div>
     </div>

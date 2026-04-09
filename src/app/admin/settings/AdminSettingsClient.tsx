@@ -43,17 +43,17 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Settings</h2>
+      <h2 className="font-heading text-2xl text-cream tracking-wide mb-6">Settings</h2>
 
       <div className="space-y-8">
         {grouped.map(({ group, items }) => (
           <div key={group}>
-            <h3 className="text-lg font-medium text-gray-800 mb-3">{group}</h3>
+            <h3 className="font-mono text-sm text-muted mb-3 uppercase tracking-wider">{group}</h3>
             <div className="space-y-3">
               {items.map((setting) => (
                 <div
                   key={setting.key}
-                  className="bg-white border border-gray-200 rounded-lg p-4"
+                  className="bg-card border border-white/5 rounded-sm p-4"
                 >
                   <div className="flex items-end gap-3">
                     <div className="flex-1">
@@ -66,6 +66,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                             [setting.key]: e.target.value,
                           }))
                         }
+                        className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
                       />
                     </div>
                     <Button
@@ -77,7 +78,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                     </Button>
                   </div>
                   {saved[setting.key] && (
-                    <p className="text-sm text-green-600 mt-1">Saved</p>
+                    <p className="text-sm text-forest mt-1 font-mono">Saved</p>
                   )}
                 </div>
               ))}

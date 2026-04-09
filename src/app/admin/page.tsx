@@ -48,12 +48,14 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h2>
+      <h2 className="font-heading text-2xl text-cream mb-6 tracking-wide">Dashboard</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {stats.map((stat) => (
+        {stats.map((stat, i) => (
           <Card key={stat.label}>
-            <p className="text-sm text-gray-600">{stat.label}</p>
-            <p className="text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
+            <p className="font-mono uppercase text-xs tracking-wider text-muted">{stat.label}</p>
+            <p className={`text-3xl font-bold mt-1 ${
+              i % 3 === 0 ? "text-brick" : i % 3 === 1 ? "text-gold" : "text-forest"
+            }`}>{stat.value}</p>
           </Card>
         ))}
       </div>

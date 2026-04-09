@@ -34,9 +34,9 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Contact Submissions</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Contact Submissions</h2>
         {unread > 0 && (
-          <p className="text-sm text-red-600 mt-1">{unread} unread</p>
+          <p className="text-sm text-brick mt-1 font-mono">{unread} unread</p>
         )}
       </div>
 
@@ -44,8 +44,8 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
         {submissions.map((sub) => (
           <div
             key={sub.id}
-            className={`bg-white border rounded-lg p-4 ${
-              sub.isRead ? "border-gray-200" : "border-[var(--color-accent)] bg-[var(--color-accent)]/5"
+            className={`bg-card border rounded-sm p-4 ${
+              sub.isRead ? "border-white/5" : "border-brick/30 bg-brick/5"
             }`}
           >
             <div
@@ -55,28 +55,28 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   {!sub.isRead && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] shrink-0" />
+                    <span className="w-2 h-2 rounded-full bg-brick shrink-0" />
                   )}
-                  <p className="font-medium text-sm">{sub.name}</p>
+                  <p className="font-medium text-sm text-cream">{sub.name}</p>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   {sub.email}
                   {sub.subject && ` - ${sub.subject}`}
                   {" - "}
                   {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : ""}
                 </p>
                 {expanded !== sub.id && (
-                  <p className="text-sm text-gray-600 mt-1 truncate">{sub.message}</p>
+                  <p className="text-sm text-cream/70 mt-1 truncate">{sub.message}</p>
                 )}
               </div>
-              <span className="text-gray-400 text-xs shrink-0 ml-2">
+              <span className="text-muted text-xs shrink-0 ml-2 font-mono">
                 {expanded === sub.id ? "collapse" : "expand"}
               </span>
             </div>
 
             {expanded === sub.id && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{sub.message}</p>
+              <div className="mt-3 pt-3 border-t border-white/5">
+                <p className="text-sm text-cream/70 whitespace-pre-wrap">{sub.message}</p>
                 <div className="flex gap-2 mt-3">
                   {!sub.isRead && (
                     <Button
@@ -91,7 +91,7 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-red-600"
+                    className="text-brick hover:text-brick/80"
                     onClick={() => handleDelete(sub.id)}
                     disabled={pending}
                   >
@@ -103,7 +103,7 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
           </div>
         ))}
         {submissions.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">No submissions yet.</p>
+          <p className="text-sm text-muted text-center py-8">No submissions yet.</p>
         )}
       </div>
     </div>

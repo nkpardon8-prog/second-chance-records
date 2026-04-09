@@ -10,24 +10,24 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const textareaId = id || props.name;
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col">
         {label && (
-          <label htmlFor={textareaId} className="text-sm font-medium text-[var(--color-primary)]">
+          <label htmlFor={textareaId} className="font-mono uppercase text-xs tracking-wider mb-1.5 block">
             {label}
           </label>
         )}
         <textarea
           ref={ref}
           id={textareaId}
-          className={`rounded-lg border border-[var(--color-primary)]/20 bg-[var(--color-white)] px-3 py-2 text-sm text-[var(--color-primary)] placeholder:text-[var(--color-primary)]/40 transition-colors focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 resize-y min-h-[100px] ${
-            error ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : ""
+          className={`w-full rounded-sm px-4 py-2.5 font-sans text-sm transition-colors bg-white/80 border border-base/20 text-base placeholder:text-muted focus:border-brick focus:ring-1 focus:ring-brick/20 focus:outline-none resize-y min-h-[120px] ${
+            error ? "border-brick focus:border-brick focus:ring-brick/20" : ""
           } ${className}`}
           aria-invalid={error ? "true" : undefined}
           aria-describedby={error ? `${textareaId}-error` : undefined}
           {...props}
         />
         {error && (
-          <p id={`${textareaId}-error`} className="text-xs text-red-600" role="alert">
+          <p id={`${textareaId}-error`} className="text-brick text-xs mt-1 font-mono" role="alert">
             {error}
           </p>
         )}

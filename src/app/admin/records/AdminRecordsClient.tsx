@@ -43,15 +43,15 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Featured Records</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Featured Records</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Record"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Record</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Record</h3>
           <ItemForm
             fields={recordFields}
             initialValues={{ category: activeTab }}
@@ -66,8 +66,8 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Record</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Record</h3>
           <ItemForm
             fields={recordFields}
             initialValues={{
@@ -93,10 +93,10 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
           <button
             key={cat}
             onClick={() => setActiveTab(cat)}
-            className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
+            className={`px-3 py-1.5 rounded-sm font-mono text-sm transition-colors ${
               activeTab === cat
-                ? "bg-[var(--color-accent)] text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-brick text-cream"
+                : "bg-white/5 text-cream/70 hover:bg-white/10 hover:text-cream"
             }`}
           >
             {cat}
@@ -108,8 +108,8 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
         items={filtered}
         renderItem={(rec) => (
           <div>
-            <p className="font-medium text-sm">{rec.title}</p>
-            <p className="text-xs text-gray-500">
+            <p className="font-medium text-sm text-cream">{rec.title}</p>
+            <p className="text-xs text-muted">
               {rec.artist && `${rec.artist} - `}{rec.category}
             </p>
           </div>

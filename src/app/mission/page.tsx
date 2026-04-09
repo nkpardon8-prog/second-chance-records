@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getPageContent } from "@/lib/actions/content";
 import { getResources } from "@/lib/actions/resources";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
 
 export const metadata: Metadata = {
@@ -41,68 +40,76 @@ export default async function MissionPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading subtitle="Second chances for humans & hi-fi">
-        Our Mission
-      </SectionHeading>
-
-      {content.length > 0 ? (
-        <div className="prose prose-lg mx-auto mb-12">
-          {content.map((block) => (
-            <div key={block.id} dangerouslySetInnerHTML={{ __html: block.content }} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-lg text-[var(--color-primary)]/70 max-w-2xl mx-auto mb-12">
-          Second Chance Records is more than a record store. We believe everyone and everything
-          deserves a second chance. From restoring discarded vinyl to supporting our community,
-          we put that belief into practice every day.
-        </p>
-      )}
-
-      <section className="mb-16">
-        <h3 className="font-heading text-2xl font-bold text-[var(--color-primary)] text-center mb-8">
-          Our Pillars
-        </h3>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {advocacyPillars.map((pillar) => (
-            <Card key={pillar.title}>
-              <h4 className="font-heading text-lg font-bold text-[var(--color-accent)] mb-2">
-                {pillar.title}
-              </h4>
-              <p className="text-sm text-[var(--color-primary)]/70">{pillar.description}</p>
-            </Card>
-          ))}
+    <>
+      <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
+        <div className="max-w-4xl mx-auto px-6">
+          <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Our Mission</h1>
+          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+            Second chances for humans &amp; hi-fi
+          </p>
+          {content.length > 0 ? (
+            <div className="prose prose-lg prose-invert mx-auto mt-8 font-sans">
+              {content.map((block) => (
+                <div key={block.id} dangerouslySetInnerHTML={{ __html: block.content }} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-lg text-cream/70 max-w-2xl mx-auto mt-8 font-sans leading-relaxed">
+              Second Chance Records is more than a record store. We believe everyone and everything
+              deserves a second chance. From restoring discarded vinyl to supporting our community,
+              we put that belief into practice every day.
+            </p>
+          )}
         </div>
       </section>
 
-      {resources.length > 0 && (
-        <section>
-          <h3 className="font-heading text-2xl font-bold text-[var(--color-primary)] text-center mb-8">
-            Community Resources
-          </h3>
-          <div className="space-y-4">
-            {resources.map((resource) => (
-              <Card key={resource.id} className="flex items-start gap-4">
-                <div className="flex-1">
-                  <ExternalLink
-                    href={resource.url}
-                    showIcon
-                    className="font-heading text-lg font-bold text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
-                  >
-                    {resource.name}
-                  </ExternalLink>
-                  {resource.description && (
-                    <p className="mt-1 text-sm text-[var(--color-primary)]/70">
-                      {resource.description}
-                    </p>
-                  )}
+      <div className="bg-kraft py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <section className="mb-16">
+            <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+              Our Pillars
+            </h3>
+            <div className="grid gap-6 sm:grid-cols-3">
+              {advocacyPillars.map((pillar) => (
+                <div key={pillar.title} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors">
+                  <h4 className="font-heading text-lg uppercase text-brick mb-2">
+                    {pillar.title}
+                  </h4>
+                  <p className="text-sm text-cream/70 font-sans">{pillar.description}</p>
                 </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+              ))}
+            </div>
+          </section>
+
+          {resources.length > 0 && (
+            <section>
+              <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+                Community Resources
+              </h3>
+              <div className="space-y-4">
+                {resources.map((resource) => (
+                  <div key={resource.id} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors flex items-start gap-4">
+                    <div className="flex-1">
+                      <ExternalLink
+                        href={resource.url}
+                        showIcon
+                        className="font-heading text-lg text-brick hover:text-gold transition-colors"
+                      >
+                        {resource.name}
+                      </ExternalLink>
+                      {resource.description && (
+                        <p className="mt-1 text-sm text-cream/70 font-sans">
+                          {resource.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </>
   );
 }

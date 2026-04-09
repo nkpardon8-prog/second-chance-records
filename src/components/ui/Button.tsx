@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef } from "react";
 
-type Variant = "primary" | "secondary" | "outline" | "ghost";
+type Variant = "primary" | "secondary" | "outline" | "ghost" | "dark";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -9,16 +9,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-[var(--color-accent)] text-[var(--color-white)] hover:bg-[var(--color-accent)]/90",
-  secondary: "bg-[var(--color-secondary)] text-[var(--color-white)] hover:bg-[var(--color-secondary)]/90",
-  outline: "border-2 border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-white)]",
-  ghost: "text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10",
+  primary: "bg-brick text-cream hover:bg-brick/90 font-mono uppercase text-sm tracking-wider",
+  secondary: "bg-gold text-base hover:bg-gold/90 font-mono uppercase text-sm tracking-wider",
+  outline: "border-2 border-brick text-brick hover:bg-brick hover:text-cream font-mono uppercase text-sm tracking-wider",
+  ghost: "text-cream/70 hover:text-brick font-mono uppercase text-sm tracking-wider",
+  dark: "bg-base text-cream hover:bg-card font-mono uppercase text-sm tracking-wider",
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-5 py-2.5 text-base",
-  lg: "px-7 py-3 text-lg",
+  sm: "px-3 py-1.5 text-xs",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-8 py-3.5 text-base",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -26,7 +27,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+        className={`rounded-sm transition-colors duration-200 inline-flex items-center justify-center disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
         {...props}
       >
         {children}

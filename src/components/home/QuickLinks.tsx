@@ -1,6 +1,5 @@
 import Link from "next/link";
 import ExternalLink from "@/components/ui/ExternalLink";
-import Card from "@/components/ui/Card";
 
 const links = [
   {
@@ -25,14 +24,14 @@ const links = [
 
 export default function QuickLinks() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="grid gap-6 sm:grid-cols-3">
+    <section className="bg-kraft py-16 px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {links.map((link) => (
-          <Card key={link.title} className="flex flex-col hover:shadow-md transition-shadow">
-            <h3 className="font-heading text-xl font-bold text-[var(--color-primary)]">
+          <div key={link.title} className="bg-card text-cream p-8 rounded-sm border border-white/5 hover:border-brick/30 transition-all group flex flex-col">
+            <h3 className="font-heading text-xl uppercase tracking-tight">
               {link.title}
             </h3>
-            <p className="mt-2 text-sm text-[var(--color-primary)]/60 flex-1">
+            <p className="mt-2 text-sm text-cream/70 flex-1">
               {link.description}
             </p>
             <div className="mt-4">
@@ -40,20 +39,20 @@ export default function QuickLinks() {
                 <ExternalLink
                   href={link.href}
                   showIcon
-                  className="text-sm font-medium text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+                  className="text-brick hover:text-gold text-sm font-mono group-hover:translate-x-1 transition-transform"
                 >
                   Go &rarr;
                 </ExternalLink>
               ) : (
                 <Link
                   href={link.href}
-                  className="text-sm font-medium text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+                  className="text-brick hover:text-gold text-sm font-mono inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
                   Go &rarr;
                 </Link>
               )}
             </div>
-          </Card>
+          </div>
         ))}
       </div>
     </section>

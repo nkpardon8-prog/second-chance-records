@@ -41,15 +41,15 @@ export default function AdminReviewsClient({ reviews }: AdminReviewsClientProps)
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Reviews</h2>
+        <h2 className="font-heading text-2xl text-cream tracking-wide">Reviews</h2>
         <Button size="sm" onClick={() => { setShowAdd(!showAdd); setEditing(null); }}>
           {showAdd ? "Cancel" : "Add Review"}
         </Button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">New Review</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">New Review</h3>
           <ItemForm
             fields={reviewFields}
             onSubmit={async (fd) => {
@@ -63,8 +63,8 @@ export default function AdminReviewsClient({ reviews }: AdminReviewsClientProps)
       )}
 
       {editing && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="font-medium mb-3">Edit Review</h3>
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-6">
+          <h3 className="font-mono text-sm text-cream mb-3 uppercase tracking-wider">Edit Review</h3>
           <ItemForm
             fields={reviewFields}
             initialValues={{
@@ -87,8 +87,8 @@ export default function AdminReviewsClient({ reviews }: AdminReviewsClientProps)
         items={reviews}
         renderItem={(rev) => (
           <div>
-            <p className="font-medium text-sm">&ldquo;{rev.quote.slice(0, 80)}{rev.quote.length > 80 ? "..." : ""}&rdquo;</p>
-            <p className="text-xs text-gray-500">
+            <p className="font-medium text-sm text-cream">&ldquo;{rev.quote.slice(0, 80)}{rev.quote.length > 80 ? "..." : ""}&rdquo;</p>
+            <p className="text-xs text-muted">
               {rev.author} - {rev.platform}
               {rev.rating != null && ` - ${rev.rating}/5`}
             </p>

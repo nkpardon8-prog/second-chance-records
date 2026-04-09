@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { featuredRecords } from "@/lib/db/schema";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
 import ExternalLink from "@/components/ui/ExternalLink";
 
 export default async function FeaturedRecords() {
@@ -14,43 +13,43 @@ export default async function FeaturedRecords() {
   if (records.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="bg-kraft py-16 px-6">
       <SectionHeading subtitle="Hand-picked vinyl for every ear">
         Featured Records
       </SectionHeading>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-8">
         {records.map((record) => (
-          <Card key={record.id} className="flex flex-col">
-            <div className="aspect-square rounded-lg bg-[var(--color-primary)]/5 mb-4 flex items-center justify-center">
+          <div key={record.id} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors flex flex-col">
+            <div className="aspect-square rounded-sm bg-white/5 mb-4 flex items-center justify-center overflow-hidden">
               {record.imageUrl ? (
                 <img
                   src={record.imageUrl}
                   alt={`${record.title} by ${record.artist}`}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                  <circle cx="24" cy="24" r="20" stroke="var(--color-primary)" strokeWidth="1.5" opacity="0.2" />
-                  <circle cx="24" cy="24" r="4" fill="var(--color-primary)" opacity="0.2" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
+                  <circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.2" />
                 </svg>
               )}
             </div>
-            <h3 className="font-heading text-lg font-bold text-[var(--color-primary)]">
+            <h3 className="font-heading text-lg uppercase tracking-tight text-cream">
               {record.title}
             </h3>
             {record.artist && (
-              <p className="text-sm text-[var(--color-primary)]/60 mt-1">{record.artist}</p>
+              <p className="font-mono text-xs text-gold uppercase mt-1">{record.artist}</p>
             )}
             <div className="mt-auto pt-4">
               <ExternalLink
                 href={record.discogsUrl}
                 showIcon
-                className="text-sm font-medium text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+                className="text-brick hover:text-gold text-sm font-mono"
               >
                 View on Discogs
               </ExternalLink>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
     </section>

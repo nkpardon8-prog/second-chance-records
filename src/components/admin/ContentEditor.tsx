@@ -35,19 +35,19 @@ export default function ContentEditor({ sections }: ContentEditorProps) {
   return (
     <div className="space-y-6">
       {sections.map((section) => (
-        <div key={section.id} className="bg-white rounded-lg border border-gray-200 p-4">
+        <div key={section.id} className="bg-card rounded-sm border border-white/5 p-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="font-mono uppercase text-xs tracking-wider text-muted">
               {formatKey(section.sectionKey)}
             </label>
-            <span className="text-xs text-gray-400">{section.contentType}</span>
+            <span className="text-xs text-muted">{section.contentType}</span>
           </div>
           <Textarea
             value={values[section.id]}
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [section.id]: e.target.value }))
             }
-            className="mb-3"
+            className="mb-3 bg-white/5 border-white/10 text-cream placeholder:text-muted"
           />
           <div className="flex items-center gap-3">
             <Button
@@ -58,7 +58,7 @@ export default function ContentEditor({ sections }: ContentEditorProps) {
               {pending ? "Saving..." : "Save"}
             </Button>
             {saved[section.id] && (
-              <span className="text-sm text-green-600">Saved</span>
+              <span className="text-sm text-forest">Saved</span>
             )}
           </div>
         </div>

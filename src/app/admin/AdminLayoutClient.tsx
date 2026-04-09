@@ -27,15 +27,15 @@ export default function AdminLayoutClient({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-base flex">
       <AdminSidebar unreadCount={unreadCount} />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shrink-0">
-          <h1 className="font-semibold text-gray-900 text-sm lg:text-base">
+        <header className="bg-card border-b border-white/5 px-6 py-3 flex items-center justify-between shrink-0">
+          <h1 className="font-heading text-cream text-sm lg:text-base tracking-wide">
             Second Chance Records Admin
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 hidden sm:inline">
+            <span className="text-sm text-cream/70 hidden sm:inline font-mono">
               {name || email}
             </span>
             <Button size="sm" variant="ghost" onClick={handleLogout} disabled={pending}>

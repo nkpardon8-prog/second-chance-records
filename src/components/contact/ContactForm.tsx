@@ -30,15 +30,14 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="rounded-xl bg-[var(--color-secondary)]/10 p-8 text-center">
-        <p className="text-lg font-medium text-[var(--color-secondary)]">{message}</p>
+      <div className="rounded-sm bg-forest/10 p-8 text-center">
+        <p className="text-lg font-mono text-forest">{message}</p>
       </div>
     );
   }
 
   return (
     <form ref={formRef} action={handleSubmit} className="space-y-5">
-      {/* Honeypot */}
       <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
         <input type="text" name="website" tabIndex={-1} autoComplete="off" />
       </div>
@@ -49,7 +48,7 @@ export default function ContactForm() {
       <Textarea name="message" label="Message" required placeholder="Your message..." rows={5} />
 
       {status === "error" && (
-        <p className="text-sm text-red-600" role="alert">{message}</p>
+        <p className="text-sm text-brick font-mono" role="alert">{message}</p>
       )}
 
       <Button type="submit" disabled={status === "loading"}>

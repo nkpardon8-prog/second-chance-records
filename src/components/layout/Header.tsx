@@ -22,45 +22,34 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--color-white)] border-b border-[var(--color-primary)]/10 shadow-sm">
-      <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-base">
+      {/* Top bar: logo + mobile hamburger */}
+      <div className="mx-auto max-w-7xl flex items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3 group" aria-label="Second Chance Records home">
           <svg
-            width="36"
-            height="36"
-            viewBox="0 0 36 36"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             className="shrink-0"
           >
-            <rect x="2" y="2" width="32" height="32" rx="3" stroke="var(--color-accent)" strokeWidth="2.5" />
-            <rect x="8" y="2" width="4" height="32" fill="var(--color-accent)" />
-            <rect x="16" y="2" width="4" height="32" fill="var(--color-accent)" />
-            <rect x="24" y="2" width="4" height="32" fill="var(--color-accent)" />
-            <rect x="8" y="20" width="20" height="3" fill="var(--color-background)" />
-            <path d="M28 20 L32 16" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
+            <rect x="1" y="1" width="22" height="22" rx="1" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
+            <line x1="7" y1="1" x2="7" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
+            <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
+            <line x1="17" y1="1" x2="17" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
+            <line x1="7" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
+            <path d="M17 8 L22 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-brick" />
           </svg>
-          <span className="font-heading text-lg font-bold tracking-tight text-[var(--color-primary)] sm:text-xl">
+          <span className="font-heading text-cream text-lg tracking-widest">
             Second Chance Records
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-3 py-2 text-sm font-medium text-[var(--color-primary)] rounded-md transition-colors hover:bg-[var(--color-accent)]/10 hover:text-[var(--color-accent)]"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
         <button
           type="button"
-          className="lg:hidden p-2 rounded-md text-[var(--color-primary)] hover:bg-[var(--color-accent)]/10 transition-colors"
+          className="md:hidden p-2 text-cream hover:text-brick transition-colors"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
           aria-expanded={mobileOpen}
@@ -72,6 +61,21 @@ export default function Header() {
           </svg>
         </button>
       </div>
+
+      {/* Nav bar — always visible on desktop */}
+      <nav className="hidden md:block border-t border-white/10 bg-card" aria-label="Main navigation">
+        <div className="mx-auto max-w-7xl flex items-center justify-center gap-6 px-6 py-3">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="font-mono uppercase text-xs tracking-wider text-cream hover:text-brick transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
 
       <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>

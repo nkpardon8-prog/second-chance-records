@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getReviews } from "@/lib/actions/reviews";
-import SectionHeading from "@/components/ui/SectionHeading";
 import ReviewCard from "@/components/reviews/ReviewCard";
 import ExternalLink from "@/components/ui/ExternalLink";
 
@@ -19,48 +18,57 @@ export default async function ReviewsPage() {
   const allReviews = await getReviews();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading subtitle="What our community says">
-        Reviews
-      </SectionHeading>
-
-      {allReviews.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
-          {allReviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              quote={review.quote}
-              author={review.author}
-              platform={review.platform}
-              rating={review.rating}
-            />
-          ))}
+    <>
+      <section className="bg-base text-cream py-20 grain-overlay torn-edge text-center">
+        <div className="max-w-5xl mx-auto px-6">
+          <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">Reviews</h1>
+          <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+            What our community says
+          </p>
         </div>
-      ) : (
-        <p className="text-center text-[var(--color-primary)]/60 py-8 mb-12">
-          Reviews coming soon!
-        </p>
-      )}
+      </section>
 
-      <div className="text-center space-y-4">
-        <p className="text-lg text-[var(--color-primary)]/70">
-          Had a great experience? We'd love to hear from you!
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <ExternalLink
-            href="https://www.google.com/maps/place/Second+Chance+Records"
-            className="inline-flex items-center justify-center rounded-lg bg-[var(--color-accent)] px-6 py-3 font-medium text-[var(--color-white)] transition-colors hover:bg-[var(--color-accent)]/90"
-          >
-            Review on Google
-          </ExternalLink>
-          <ExternalLink
-            href="https://www.yelp.com/biz/second-chance-records-portland"
-            className="inline-flex items-center justify-center rounded-lg border-2 border-[var(--color-accent)] px-6 py-3 font-medium text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-white)]"
-          >
-            Review on Yelp
-          </ExternalLink>
+      <div className="bg-kraft py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          {allReviews.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+              {allReviews.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  quote={review.quote}
+                  author={review.author}
+                  platform={review.platform}
+                  rating={review.rating}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted py-8 mb-12 font-mono">
+              Reviews coming soon!
+            </p>
+          )}
+
+          <div className="text-center space-y-4">
+            <p className="text-lg text-base/70 font-sans">
+              Had a great experience? We&apos;d love to hear from you!
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <ExternalLink
+                href="https://www.google.com/maps/place/Second+Chance+Records"
+                className="inline-flex items-center justify-center rounded-sm bg-brick text-cream px-6 py-3 font-mono uppercase text-sm tracking-wider hover:bg-brick/90 transition-colors"
+              >
+                Review on Google
+              </ExternalLink>
+              <ExternalLink
+                href="https://www.yelp.com/biz/second-chance-records-portland"
+                className="inline-flex items-center justify-center rounded-sm border-2 border-brick text-brick px-6 py-3 font-mono uppercase text-sm tracking-wider hover:bg-brick hover:text-cream transition-colors"
+              >
+                Review on Yelp
+              </ExternalLink>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

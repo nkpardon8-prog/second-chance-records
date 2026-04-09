@@ -1,15 +1,21 @@
 import { type HTMLAttributes } from "react";
 
+type CardVariant = "dark" | "kraft";
+
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: boolean;
+  variant?: CardVariant;
 }
 
-export default function Card({ padding = true, className = "", children, ...props }: CardProps) {
+const variantClasses: Record<CardVariant, string> = {
+  dark: "bg-card text-cream border border-white/5 rounded-sm hover:border-brick/30 transition-colors",
+  kraft: "bg-kraft text-base border border-base/10 rounded-sm hover:border-brick/30 transition-colors",
+};
+
+export default function Card({ padding = true, variant = "dark", className = "", children, ...props }: CardProps) {
   return (
     <div
-      className={`rounded-xl bg-[var(--color-white)] shadow-sm border border-[var(--color-primary)]/5 ${
-        padding ? "p-6" : ""
-      } ${className}`}
+      className={`${variantClasses[variant]} ${padding ? "p-6" : ""} ${className}`}
       {...props}
     >
       {children}

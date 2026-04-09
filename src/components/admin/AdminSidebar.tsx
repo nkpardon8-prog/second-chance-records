@@ -48,10 +48,10 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
   }
 
   const linkClasses = (href: string) =>
-    `block px-3 py-2 rounded-md text-sm transition-colors ${
+    `block px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
       isActive(href)
-        ? "bg-[var(--color-accent)] text-white font-medium"
-        : "text-gray-700 hover:bg-gray-100"
+        ? "text-brick bg-white/5 font-medium"
+        : "text-cream/70 hover:text-cream hover:bg-white/5"
     }`;
 
   const nav = (
@@ -62,10 +62,10 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
             <div key={item.label}>
               <button
                 onClick={() => setPagesOpen(!pagesOpen)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
                   pathname.startsWith("/admin/pages")
-                    ? "bg-[var(--color-accent)]/10 text-[var(--color-accent)] font-medium"
-                    : "text-gray-700 hover:bg-gray-100"
+                    ? "text-brick bg-white/5 font-medium"
+                    : "text-cream/70 hover:text-cream hover:bg-white/5"
                 }`}
               >
                 {item.label}
@@ -101,7 +101,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
             <span className="flex items-center justify-between">
               {item.label}
               {item.label === "Contact Submissions" && unreadCount > 0 && (
-                <span className="ml-2 inline-flex items-center justify-center rounded-full bg-red-500 text-white text-xs w-5 h-5">
+                <span className="ml-2 inline-flex items-center justify-center rounded-full bg-brick text-cream text-xs w-5 h-5">
                   {unreadCount}
                 </span>
               )}
@@ -115,29 +115,29 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
   return (
     <>
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-sm shadow-md"
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label="Toggle sidebar"
       >
-        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
-        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
-        <span className="block w-5 h-0.5 bg-gray-700" />
+        <span className="block w-5 h-0.5 bg-cream mb-1" />
+        <span className="block w-5 h-0.5 bg-cream mb-1" />
+        <span className="block w-5 h-0.5 bg-cream" />
       </button>
 
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/30 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 overflow-y-auto transition-transform lg:translate-x-0 ${
+        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-white/5 overflow-y-auto transition-transform lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 border-b border-gray-200 lg:hidden">
-          <span className="font-semibold text-sm">Menu</span>
+        <div className="p-4 border-b border-white/5 lg:hidden">
+          <span className="font-mono text-sm text-cream uppercase tracking-wider">Menu</span>
         </div>
         {nav}
       </aside>

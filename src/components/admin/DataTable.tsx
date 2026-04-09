@@ -77,8 +77,8 @@ export default function DataTable<T extends { id: number }>({
   return (
     <div>
       {bulkActions && selected.size > 0 && (
-        <div className="flex items-center gap-2 mb-3 p-2 bg-gray-50 rounded-lg">
-          <span className="text-sm text-gray-600">{selected.size} selected</span>
+        <div className="flex items-center gap-2 mb-3 p-2 bg-white/5 rounded-sm">
+          <span className="text-sm text-cream/70">{selected.size} selected</span>
           {bulkActions.map((action) => (
             <Button
               key={action.label}
@@ -94,20 +94,21 @@ export default function DataTable<T extends { id: number }>({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-white/5">
               {(onSelect || bulkActions) && (
                 <th className="p-2 w-8">
                   <input
                     type="checkbox"
                     checked={selected.size === data.length && data.length > 0}
                     onChange={toggleAll}
+                    className="accent-brick"
                   />
                 </th>
               )}
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="p-2 text-left font-medium text-gray-600 cursor-pointer hover:text-gray-900 select-none"
+                  className="p-2 text-left font-mono uppercase text-xs tracking-wider text-muted cursor-pointer hover:text-cream select-none"
                   onClick={() => handleSort(col.key)}
                 >
                   {col.label}
@@ -117,19 +118,20 @@ export default function DataTable<T extends { id: number }>({
                 </th>
               ))}
               {actions && actions.length > 0 && (
-                <th className="p-2 text-right font-medium text-gray-600">Actions</th>
+                <th className="p-2 text-right font-mono uppercase text-xs tracking-wider text-muted">Actions</th>
               )}
             </tr>
           </thead>
           <tbody>
             {sorted.map((item) => (
-              <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
+              <tr key={item.id} className="border-b border-white/5 hover:bg-white/5 text-cream">
                 {(onSelect || bulkActions) && (
                   <td className="p-2">
                     <input
                       type="checkbox"
                       checked={selected.has(item.id)}
                       onChange={() => toggleSelect(item.id)}
+                      className="accent-brick"
                     />
                   </td>
                 )}
@@ -163,7 +165,7 @@ export default function DataTable<T extends { id: number }>({
               <tr>
                 <td
                   colSpan={columns.length + (actions ? 1 : 0) + (onSelect || bulkActions ? 1 : 0)}
-                  className="p-8 text-center text-gray-500"
+                  className="p-8 text-center text-muted"
                 >
                   No data found.
                 </td>
