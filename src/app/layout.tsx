@@ -35,7 +35,7 @@ const permanentMarker = Permanent_Marker({
 export const metadata: Metadata = {
   title: "Second Chance Records | Portland, OR",
   description:
-    "Second Chance Records is a mission-driven vinyl record store in Portland, Oregon. Second chances for humans & hi-fi.",
+    "Second Chance Records is a mission-driven vinyl record store in Portland's Mt. Tabor neighborhood. Second chances for humans & hi-fi.",
   openGraph: {
     title: "Second Chance Records | Portland, OR",
     description:
