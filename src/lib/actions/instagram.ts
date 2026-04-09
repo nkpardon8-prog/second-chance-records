@@ -61,30 +61,35 @@ export async function triggerSync(): Promise<{ count: number; error?: string }> 
 
   let synced = 0;
   for (const post of scraped) {
-    const existing = await db
-      .select()
-      .from(instagramPosts)
-      .where(eq(instagramPosts.instagramId, post.instagramId))
-      .then((rows) => rows[0]);
-    if (existing) continue;
-
-    let permanentUrl;
     try {
-      permanentUrl = await uploadFromUrl(post.imageUrl, post.instagramId);
+      const existing = await db
+        .select()
+        .from(instagramPosts)
+        .where(eq(instagramPosts.instagramId, post.instagramId))
+        .then((rows) => rows[0]);
+      if (existing) continue;
+
+      // Try blob storage first, fall back to direct IG URL
+      let imageUrl = post.imageUrl;
+      try {
+        imageUrl = await uploadFromUrl(post.imageUrl, post.instagramId);
+      } catch {
+        // Blob storage failed — use direct Instagram CDN URL as fallback
+      }
+
+      await db.insert(instagramPosts).values({
+        instagramId: post.instagramId,
+        imageUrl,
+        caption: post.caption,
+        permalink: post.permalink,
+        likesCount: post.likesCount,
+        postedAt: new Date(post.postedAt),
+      });
+      synced++;
     } catch (err) {
-      console.error(`Image upload failed for ${post.instagramId}:`, err);
+      console.error(`Failed to sync post ${post.instagramId}:`, err);
       continue;
     }
-
-    await db.insert(instagramPosts).values({
-      instagramId: post.instagramId,
-      imageUrl: permanentUrl,
-      caption: post.caption,
-      permalink: post.permalink,
-      likesCount: post.likesCount,
-      postedAt: new Date(post.postedAt),
-    });
-    synced++;
   }
 
   revalidatePath("/");
