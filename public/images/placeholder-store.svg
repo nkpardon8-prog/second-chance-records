@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#FAF7F2" />
+  <rect x="50" y="50" width="700" height="500" rx="8" fill="#F0EBE3" stroke="#C45D3E" stroke-width="2" />
+  <text x="400" y="300" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-size="28" fill="#C45D3E">Store Photo Coming Soon</text>
+</svg>
