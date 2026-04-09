@@ -1,12 +1,13 @@
 // NOTE: All logic inlined — Netlify Functions bundle independently from Next.js.
 import type { Config } from "@netlify/functions";
-import { ApifyClient } from "apify-client";
 import { getStore } from "@netlify/blobs";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { pgTable, serial, varchar, text, integer, boolean, timestamp } from "drizzle-orm/pg-core";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+
+const APIFY_BASE = "https://api.apify.com/v2";
 
 // Inline schema (just instagram_posts table)
 const instagramPosts = pgTable("instagram_posts", {
@@ -35,14 +36,37 @@ export default async function handler() {
   const sqlClient = neon(process.env.DATABASE_URL!);
   const db = drizzle(sqlClient);
 
-  // Scrape Instagram
-  const apify = new ApifyClient({ token: process.env.APIFY_API_TOKEN! });
-  const run = await apify.actor("apify/instagram-scraper").call({
-    directUrls: ["https://www.instagram.com/second_chance_recordspdx/"],
-    resultsType: "posts",
-    resultsLimit: 20,
-  });
-  const { items } = await apify.dataset(run.defaultDatasetId).listItems();
+  // Scrape Instagram via Apify REST API (avoid SDK bundling issues)
+  const apifyToken = process.env.APIFY_API_TOKEN!;
+  const runRes = await fetch(
+    `${APIFY_BASE}/acts/apify~instagram-scraper/runs?token=${apifyToken}&waitForFinish=120`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        directUrls: ["https://www.instagram.com/second_chance_recordspdx/"],
+        resultsType: "posts",
+        resultsLimit: 20,
+      }),
+    },
+  );
+
+  if (!runRes.ok) {
+    const errText = await runRes.text();
+    return new Response(`Apify run failed: ${runRes.status} ${errText}`, { status: 500 });
+  }
+
+  const runData = await runRes.json();
+  const status = runData.data?.status;
+  if (status !== "SUCCEEDED") {
+    return new Response(`Apify run finished with status: ${status}`, { status: 500 });
+  }
+
+  const datasetId = runData.data?.defaultDatasetId;
+  const itemsRes = await fetch(
+    `${APIFY_BASE}/datasets/${datasetId}/items?token=${apifyToken}`,
+  );
+  const items = await itemsRes.json();
 
   // Set up Netlify Blobs store for image hosting
   const imageStore = getStore({ name: "images", consistency: "strong" });
