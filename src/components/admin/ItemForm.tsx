@@ -66,6 +66,7 @@ export default function ItemForm({
               label={field.label}
               name={field.name}
               required={field.required}
+              dark
               value={values[field.name] as string}
               onChange={(e) =>
                 setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
@@ -77,7 +78,7 @@ export default function ItemForm({
         if (field.type === "select") {
           return (
             <div key={field.name} className="flex flex-col gap-1.5">
-              <label className="font-mono uppercase text-xs tracking-wider text-kraft/70">
+              <label className="font-mono uppercase text-xs tracking-wider text-white">
                 {field.label}
               </label>
               <select
@@ -122,6 +123,7 @@ export default function ItemForm({
             name={field.name}
             type={field.type}
             required={field.required}
+            dark
             value={values[field.name] as string}
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [field.name]: e.target.value }))

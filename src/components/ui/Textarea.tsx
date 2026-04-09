@@ -13,7 +13,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col">
         {label && (
-          <label htmlFor={textareaId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-kraft" : "text-base"}`}>
+          <label htmlFor={textareaId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-white" : "text-base"}`}>
             {label}
           </label>
         )}
