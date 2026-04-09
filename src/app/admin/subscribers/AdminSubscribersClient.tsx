@@ -28,7 +28,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
       key: "isActive",
       label: "Status",
       render: (s) => (
-        <span className={s.isActive ? "text-forest" : "text-muted"}>
+        <span className={s.isActive ? "text-forest" : "text-kraft/70"}>
           {s.isActive ? "Active" : "Inactive"}
         </span>
       ),
@@ -64,7 +64,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="font-heading text-2xl text-cream tracking-wide">Subscribers</h2>
-          <p className="text-sm text-muted mt-1 font-mono">
+          <p className="text-sm text-kraft/70 mt-1 font-mono">
             {subscribers.length} total subscriber{subscribers.length !== 1 ? "s" : ""}
           </p>
         </div>

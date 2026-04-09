@@ -47,7 +47,7 @@ export default function NewsletterSignup() {
         placeholder="your@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="flex-1 rounded-sm bg-white/10 border border-white/20 px-4 py-2.5 text-sm font-sans text-cream placeholder:text-cream/40 focus:outline-none focus:ring-1 focus:ring-gold/40 focus:border-gold/40"
+        className="flex-1 rounded-sm bg-white/10 border border-white/20 px-4 py-2.5 text-sm font-sans text-cream placeholder:text-kraft/50 focus:outline-none focus:ring-1 focus:ring-gold/40 focus:border-gold/40"
         aria-label="Email address"
       />
       <button

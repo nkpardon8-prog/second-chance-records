@@ -88,7 +88,7 @@ export default function AdminReviewsClient({ reviews }: AdminReviewsClientProps)
         renderItem={(rev) => (
           <div>
             <p className="font-medium text-sm text-cream">&ldquo;{rev.quote.slice(0, 80)}{rev.quote.length > 80 ? "..." : ""}&rdquo;</p>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-kraft/70">
               {rev.author} - {rev.platform}
               {rev.rating != null && ` - ${rev.rating}/5`}
             </p>

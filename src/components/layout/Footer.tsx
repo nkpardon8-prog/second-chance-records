@@ -9,7 +9,7 @@ export default function Footer() {
         {/* Newsletter */}
         <div className="mb-12 max-w-xl">
           <h3 className="font-heading text-2xl mb-2">Stay in the Loop</h3>
-          <p className="text-sm text-cream/70 mb-4 font-sans">
+          <p className="text-sm text-cream mb-4 font-sans">
             New arrivals, events, and community news delivered to your inbox.
           </p>
           <NewsletterSignup />
@@ -19,8 +19,8 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           {/* Contact */}
           <div>
-            <h4 className="font-mono uppercase text-xs tracking-wider text-muted mb-4">Contact</h4>
-            <address className="not-italic font-mono text-sm leading-relaxed text-cream/70">
+            <h4 className="font-mono uppercase text-xs tracking-wider text-kraft/70 mb-4">Contact</h4>
+            <address className="not-italic font-mono text-sm leading-relaxed text-cream">
               <p>5744 E Burnside St, Suite 104</p>
               <p>Portland, OR 97215</p>
               <p className="mt-2">
@@ -32,7 +32,7 @@ export default function Footer() {
                 </a>
               </p>
             </address>
-            <div className="mt-3 font-mono text-sm text-cream/70">
+            <div className="mt-3 font-mono text-sm text-cream">
               <p>Thu - Sun: 12pm - 8pm</p>
               <p>Mon - Wed: Closed</p>
             </div>
@@ -40,28 +40,28 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-mono uppercase text-xs tracking-wider text-muted mb-4">Quick Links</h4>
+            <h4 className="font-mono uppercase text-xs tracking-wider text-kraft/70 mb-4">Quick Links</h4>
             <ul className="flex flex-col gap-2 text-sm">
-              <li><Link href="/shop" className="text-cream/70 hover:text-brick transition-colors">Shop</Link></li>
-              <li><Link href="/events" className="text-cream/70 hover:text-brick transition-colors">Events</Link></li>
-              <li><Link href="/about" className="text-cream/70 hover:text-brick transition-colors">About</Link></li>
-              <li><Link href="/mission" className="text-cream/70 hover:text-brick transition-colors">Mission</Link></li>
-              <li><Link href="/visit" className="text-cream/70 hover:text-brick transition-colors">Visit</Link></li>
-              <li><Link href="/contact" className="text-cream/70 hover:text-brick transition-colors">Contact</Link></li>
+              <li><Link href="/shop" className="text-cream hover:text-brick transition-colors">Shop</Link></li>
+              <li><Link href="/events" className="text-cream hover:text-brick transition-colors">Events</Link></li>
+              <li><Link href="/about" className="text-cream hover:text-brick transition-colors">About</Link></li>
+              <li><Link href="/mission" className="text-cream hover:text-brick transition-colors">Mission</Link></li>
+              <li><Link href="/visit" className="text-cream hover:text-brick transition-colors">Visit</Link></li>
+              <li><Link href="/contact" className="text-cream hover:text-brick transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           {/* Social */}
           <div>
-            <h4 className="font-mono uppercase text-xs tracking-wider text-muted mb-4">Social</h4>
+            <h4 className="font-mono uppercase text-xs tracking-wider text-kraft/70 mb-4">Social</h4>
             <ul className="flex flex-col gap-2 text-sm">
               <li>
-                <ExternalLink href="https://instagram.com/second_chance_recordspdx" className="text-cream/70 hover:text-brick transition-colors">
+                <ExternalLink href="https://instagram.com/second_chance_recordspdx" className="text-cream hover:text-brick transition-colors">
                   Instagram
                 </ExternalLink>
               </li>
               <li>
-                <ExternalLink href="https://www.discogs.com/seller/SecondChance_Records/profile" className="text-cream/70 hover:text-brick transition-colors">
+                <ExternalLink href="https://www.discogs.com/seller/SecondChance_Records/profile" className="text-cream hover:text-brick transition-colors">
                   Discogs
                 </ExternalLink>
               </li>
@@ -72,7 +72,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-6 border-t border-white/10 text-center">
           <p className="font-accent text-gold text-sm mb-2">Second chances for humans &amp; hi-fi</p>
-          <p className="text-muted text-xs">&copy; 2025 Second Chance Records. All rights reserved.</p>
+          <p className="text-kraft/70 text-xs">&copy; 2025 Second Chance Records. All rights reserved.</p>
         </div>
       </div>
     </footer>

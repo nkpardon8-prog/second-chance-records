@@ -70,14 +70,14 @@ export default function ItemForm({
               onChange={(e) =>
                 setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
               }
-              className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
+              className="bg-white/5 border-white/10 text-cream placeholder:text-kraft/70"
             />
           );
         }
         if (field.type === "select") {
           return (
             <div key={field.name} className="flex flex-col gap-1.5">
-              <label className="font-mono uppercase text-xs tracking-wider text-muted">
+              <label className="font-mono uppercase text-xs tracking-wider text-kraft/70">
                 {field.label}
               </label>
               <select
@@ -126,7 +126,7 @@ export default function ItemForm({
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
             }
-            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
+            className="bg-white/5 border-white/10 text-cream placeholder:text-kraft/70"
           />
         );
       })}

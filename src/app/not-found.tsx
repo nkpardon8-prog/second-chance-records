@@ -8,7 +8,7 @@ export default function NotFound() {
         <p className="font-heading text-2xl uppercase tracking-tight mt-4">
           This Record Is Not in Our Bins
         </p>
-        <p className="mt-2 text-cream/50 font-sans">
+        <p className="mt-2 text-cream/80 font-sans">
           Maybe it found a new home already.
         </p>
         <Link

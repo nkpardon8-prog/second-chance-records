@@ -16,7 +16,7 @@ export default async function AdminPageContentPage({ params }: PageProps) {
       </h2>
 
       {sections.length === 0 ? (
-        <p className="text-sm text-muted">No content sections found for this page.</p>
+        <p className="text-sm text-kraft/70">No content sections found for this page.</p>
       ) : (
         <ContentEditor sections={sections} />
       )}

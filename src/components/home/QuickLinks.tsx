@@ -31,7 +31,7 @@ export default function QuickLinks() {
             <h3 className="font-heading text-xl uppercase tracking-tight">
               {link.title}
             </h3>
-            <p className="mt-2 text-sm text-cream/70 flex-1">
+            <p className="mt-2 text-sm text-cream flex-1">
               {link.description}
             </p>
             <div className="mt-4">

@@ -36,7 +36,7 @@ export default async function InstagramFeed() {
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-base/60 mb-4 font-sans">
+          <p className="text-base/80 mb-4 font-sans">
             Follow us on Instagram for the latest updates!
           </p>
           <ExternalLink

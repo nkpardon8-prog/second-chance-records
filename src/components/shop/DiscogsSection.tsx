@@ -44,7 +44,7 @@ export default function DiscogsSection({ title, records }: DiscogsSectionProps) 
               {record.title}
             </h4>
             {record.artist && (
-              <p className="text-sm text-muted mt-1 font-mono">{record.artist}</p>
+              <p className="text-sm text-kraft/70 mt-1 font-mono">{record.artist}</p>
             )}
             <div className="mt-auto pt-4">
               <ExternalLink

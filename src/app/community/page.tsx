@@ -56,7 +56,7 @@ export default async function CommunityPage() {
                 >
                   {link.name}
                 </ExternalLink>
-                <p className="mt-2 text-sm text-cream/70 font-sans">
+                <p className="mt-2 text-sm text-cream font-sans">
                   {link.description}
                 </p>
               </div>
@@ -81,7 +81,7 @@ export default async function CommunityPage() {
                 {cherryBombs.name}
               </h3>
               {cherryBombs.description && (
-                <p className="mt-3 text-cream/70 font-sans max-w-xl mx-auto">
+                <p className="mt-3 text-cream font-sans max-w-xl mx-auto">
                   {cherryBombs.description}
                 </p>
               )}
@@ -124,7 +124,7 @@ export default async function CommunityPage() {
                     {partner.name}
                   </ExternalLink>
                   {partner.description && (
-                    <p className="mt-2 text-sm text-cream/70 flex-1 font-sans">
+                    <p className="mt-2 text-sm text-cream flex-1 font-sans">
                       {partner.description}
                     </p>
                   )}

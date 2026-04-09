@@ -48,7 +48,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
       <div className="space-y-8">
         {grouped.map(({ group, items }) => (
           <div key={group}>
-            <h3 className="font-mono text-sm text-muted mb-3 uppercase tracking-wider">{group}</h3>
+            <h3 className="font-mono text-sm text-kraft/70 mb-3 uppercase tracking-wider">{group}</h3>
             <div className="space-y-3">
               {items.map((setting) => (
                 <div
@@ -67,7 +67,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                             [setting.key]: e.target.value,
                           }))
                         }
-                        className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-muted"
+                        className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-kraft/70"
                       />
                     </div>
                     <Button

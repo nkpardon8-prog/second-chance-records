@@ -96,7 +96,7 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
             className={`px-3 py-1.5 rounded-sm font-mono text-sm transition-colors ${
               activeTab === cat
                 ? "bg-brick text-cream"
-                : "bg-white/5 text-cream/70 hover:bg-white/10 hover:text-cream"
+                : "bg-white/5 text-cream hover:bg-white/10 hover:text-cream"
             }`}
           >
             {cat}
@@ -109,7 +109,7 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
         renderItem={(rec) => (
           <div>
             <p className="font-medium text-sm text-cream">{rec.title}</p>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-kraft/70">
               {rec.artist && `${rec.artist} - `}{rec.category}
             </p>
           </div>

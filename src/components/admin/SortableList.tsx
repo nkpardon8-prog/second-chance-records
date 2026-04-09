@@ -103,7 +103,7 @@ export default function SortableList<T extends SortableItem>({
         </div>
       ))}
       {items.length === 0 && (
-        <p className="text-sm text-muted text-center py-8">No items yet.</p>
+        <p className="text-sm text-kraft/70 text-center py-8">No items yet.</p>
       )}
     </div>
   );

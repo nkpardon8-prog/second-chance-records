@@ -84,7 +84,7 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
           >
             <div className="min-w-0 flex-1">
               <p className="font-medium text-sm text-cream truncate">{item.title}</p>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-kraft/70">
                 {item.publishedAt
                   ? new Date(item.publishedAt).toLocaleDateString()
                   : "No date"}
@@ -119,7 +119,7 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
           </div>
         ))}
         {news.length === 0 && (
-          <p className="text-sm text-muted text-center py-8">No news posts yet.</p>
+          <p className="text-sm text-kraft/70 text-center py-8">No news posts yet.</p>
         )}
       </div>
     </div>

@@ -12,7 +12,7 @@ const variantClasses: Record<Variant, string> = {
   primary: "bg-brick text-cream hover:bg-brick/90 font-mono uppercase text-sm tracking-wider",
   secondary: "bg-gold text-base hover:bg-gold/90 font-mono uppercase text-sm tracking-wider",
   outline: "border-2 border-brick text-brick hover:bg-brick hover:text-cream font-mono uppercase text-sm tracking-wider",
-  ghost: "text-cream/70 hover:text-brick font-mono uppercase text-sm tracking-wider",
+  ghost: "text-cream hover:text-brick font-mono uppercase text-sm tracking-wider",
   dark: "bg-base text-cream hover:bg-card font-mono uppercase text-sm tracking-wider",
 };
 

@@ -42,7 +42,7 @@ export default function ReviewCard({ quote, author, platform, rating }: ReviewCa
         </p>
       </blockquote>
       <div className="mt-4 flex items-center justify-between">
-        <span className="font-mono text-sm text-muted">{author}</span>
+        <span className="font-mono text-sm text-kraft/70">{author}</span>
         <span className="font-mono text-xs uppercase px-2 py-0.5 rounded-sm bg-white/10">
           {platformLabels[platform] || platform}
         </span>

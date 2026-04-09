@@ -68,7 +68,7 @@ export default function EventCard({
           </p>
         )}
         {description && (
-          <p className="mt-3 text-cream/70 text-sm leading-relaxed font-sans">
+          <p className="mt-3 text-cream text-sm leading-relaxed font-sans">
             {description}
           </p>
         )}

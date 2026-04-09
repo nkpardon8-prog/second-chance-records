@@ -22,7 +22,7 @@ export default function PastEventsToggle({ events }: { events: Event[] }) {
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 font-mono text-sm text-muted hover:text-base transition-colors mb-6 uppercase tracking-wider"
+        className="flex items-center gap-2 font-mono text-sm text-base/60 hover:text-base transition-colors mb-6 uppercase tracking-wider"
       >
         <svg
           width="16"

@@ -48,11 +48,11 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
               />
             </div>
             <div className="p-2">
-              <p className="text-xs text-cream/70 line-clamp-2 mb-2">
+              <p className="text-xs text-cream line-clamp-2 mb-2">
                 {post.caption?.slice(0, 100) ?? "No caption"}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted font-mono">
+                <span className="text-xs text-kraft/70 font-mono">
                   {post.postedAt ? new Date(post.postedAt).toLocaleDateString() : ""}
                 </span>
                 <Button
@@ -68,7 +68,7 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
           </div>
         ))}
         {posts.length === 0 && (
-          <p className="text-sm text-muted col-span-full text-center py-8">
+          <p className="text-sm text-kraft/70 col-span-full text-center py-8">
             No Instagram posts synced yet.
           </p>
         )}

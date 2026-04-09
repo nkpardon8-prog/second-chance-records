@@ -12,7 +12,7 @@ export default function Error({
         <h1 className="font-heading text-4xl md:text-5xl uppercase tracking-tight">
           Something Skipped a Groove
         </h1>
-        <p className="mt-4 text-lg text-cream/70 font-sans">
+        <p className="mt-4 text-lg text-cream font-sans">
           We hit an unexpected bump. Give it another spin.
         </p>
         <button

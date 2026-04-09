@@ -78,7 +78,7 @@ export default function DataTable<T extends { id: number }>({
     <div>
       {bulkActions && selected.size > 0 && (
         <div className="flex items-center gap-2 mb-3 p-2 bg-white/5 rounded-sm">
-          <span className="text-sm text-cream/70">{selected.size} selected</span>
+          <span className="text-sm text-cream">{selected.size} selected</span>
           {bulkActions.map((action) => (
             <Button
               key={action.label}
@@ -108,7 +108,7 @@ export default function DataTable<T extends { id: number }>({
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="p-2 text-left font-mono uppercase text-xs tracking-wider text-muted cursor-pointer hover:text-cream select-none"
+                  className="p-2 text-left font-mono uppercase text-xs tracking-wider text-kraft/70 cursor-pointer hover:text-cream select-none"
                   onClick={() => handleSort(col.key)}
                 >
                   {col.label}
@@ -118,7 +118,7 @@ export default function DataTable<T extends { id: number }>({
                 </th>
               ))}
               {actions && actions.length > 0 && (
-                <th className="p-2 text-right font-mono uppercase text-xs tracking-wider text-muted">Actions</th>
+                <th className="p-2 text-right font-mono uppercase text-xs tracking-wider text-kraft/70">Actions</th>
               )}
             </tr>
           </thead>
@@ -165,7 +165,7 @@ export default function DataTable<T extends { id: number }>({
               <tr>
                 <td
                   colSpan={columns.length + (actions ? 1 : 0) + (onSelect || bulkActions ? 1 : 0)}
-                  className="p-8 text-center text-muted"
+                  className="p-8 text-center text-kraft/70"
                 >
                   No data found.
                 </td>

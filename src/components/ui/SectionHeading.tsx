@@ -12,7 +12,7 @@ export default function SectionHeading({ children, subtitle, dark = false, class
         {children}
       </h2>
       {subtitle && (
-        <p className="font-mono text-sm text-muted uppercase tracking-wider mt-2">
+        <p className={`font-mono text-sm uppercase tracking-wider mt-2 ${dark ? "text-kraft/70" : "text-base/60"}`}>
           {subtitle}
         </p>
       )}

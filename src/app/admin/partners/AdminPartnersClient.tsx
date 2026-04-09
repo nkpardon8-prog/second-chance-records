@@ -77,7 +77,7 @@ export default function AdminPartnersClient({ partners }: AdminPartnersClientPro
         renderItem={(p) => (
           <div>
             <p className="font-medium text-sm text-cream">{p.name}</p>
-            <p className="text-xs text-muted truncate">{p.url}</p>
+            <p className="text-xs text-kraft/70 truncate">{p.url}</p>
           </div>
         )}
         onReorder={reorderPartners}

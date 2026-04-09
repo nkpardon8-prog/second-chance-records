@@ -59,24 +59,24 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
                   )}
                   <p className="font-medium text-sm text-cream">{sub.name}</p>
                 </div>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-kraft/70">
                   {sub.email}
                   {sub.subject && ` - ${sub.subject}`}
                   {" - "}
                   {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : ""}
                 </p>
                 {expanded !== sub.id && (
-                  <p className="text-sm text-cream/70 mt-1 truncate">{sub.message}</p>
+                  <p className="text-sm text-cream mt-1 truncate">{sub.message}</p>
                 )}
               </div>
-              <span className="text-muted text-xs shrink-0 ml-2 font-mono">
+              <span className="text-kraft/70 text-xs shrink-0 ml-2 font-mono">
                 {expanded === sub.id ? "collapse" : "expand"}
               </span>
             </div>
 
             {expanded === sub.id && (
               <div className="mt-3 pt-3 border-t border-white/5">
-                <p className="text-sm text-cream/70 whitespace-pre-wrap">{sub.message}</p>
+                <p className="text-sm text-cream whitespace-pre-wrap">{sub.message}</p>
                 <div className="flex gap-2 mt-3">
                   {!sub.isRead && (
                     <Button
@@ -103,7 +103,7 @@ export default function AdminContactClient({ submissions }: AdminContactClientPr
           </div>
         ))}
         {submissions.length === 0 && (
-          <p className="text-sm text-muted text-center py-8">No submissions yet.</p>
+          <p className="text-sm text-kraft/70 text-center py-8">No submissions yet.</p>
         )}
       </div>
     </div>

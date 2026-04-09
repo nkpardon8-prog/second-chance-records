@@ -52,7 +52,7 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat, i) => (
           <Card key={stat.label}>
-            <p className="font-mono uppercase text-xs tracking-wider text-muted">{stat.label}</p>
+            <p className="font-mono uppercase text-xs tracking-wider text-kraft/70">{stat.label}</p>
             <p className={`text-3xl font-bold mt-1 ${
               i % 3 === 0 ? "text-brick" : i % 3 === 1 ? "text-gold" : "text-forest"
             }`}>{stat.value}</p>
