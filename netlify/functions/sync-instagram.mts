@@ -91,4 +91,4 @@ export default async function handler() {
   return new Response(`Fetched ${items.length} posts, synced ${synced} new`);
 }
 
-export const config: Config = { schedule: "0 9 * * *" };
+export const config: Config = { schedule: "0 9 * * 1,4" };
