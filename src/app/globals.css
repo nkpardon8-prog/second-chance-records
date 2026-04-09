@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Override Tailwind preflight: a { color: inherit } kills all color utilities on links.
+   This rule in the utilities layer has higher priority than preflight's base layer. */
+@layer utilities {
+  a[class*="text-cream"] { color: var(--color-cream) !important; }
+  a[class*="text-kraft"] { color: var(--color-kraft) !important; }
+  a[class*="text-brick"] { color: var(--color-brick) !important; }
+  a[class*="text-gold"] { color: var(--color-gold) !important; }
+  a[class*="text-white"] { color: var(--color-white) !important; }
+  a[class*="text-muted"] { color: var(--color-muted) !important; }
+}
+
 @theme inline {
   /* Fonts */
   --font-heading: var(--font-bebas-neue);
