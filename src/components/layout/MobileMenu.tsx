@@ -54,7 +54,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
             key={link.href}
             href={link.href}
             onClick={onClose}
-            className="font-heading text-4xl text-cream hover:text-brick transition-colors"
+            className="font-heading text-4xl hover:text-brick transition-colors"
+            style={{ color: "#F5E6D0" }}
           >
             {link.label}
           </Link>

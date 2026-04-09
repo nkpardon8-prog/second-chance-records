@@ -48,11 +48,12 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
   }
 
   const linkClasses = (href: string) =>
-    `block px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
-      isActive(href)
-        ? "text-brick bg-white/5 font-medium"
-        : "text-cream hover:text-kraft hover:bg-white/5"
+    `block px-3 py-2 rounded-sm font-mono text-sm transition-colors hover:bg-white/5 ${
+      isActive(href) ? "bg-white/5 font-medium" : ""
     }`;
+
+  const linkStyle = (href: string): React.CSSProperties =>
+    isActive(href) ? { color: "#C2452D" } : { color: "#F5E6D0" };
 
   const nav = (
     <nav className="flex flex-col gap-1 p-4">
@@ -62,11 +63,10 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
             <div key={item.label}>
               <button
                 onClick={() => setPagesOpen(!pagesOpen)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
-                  pathname.startsWith("/admin/pages")
-                    ? "text-brick bg-white/5 font-medium"
-                    : "text-cream hover:text-kraft hover:bg-white/5"
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-sm font-mono text-sm transition-colors hover:bg-white/5 ${
+                  pathname.startsWith("/admin/pages") ? "bg-white/5 font-medium" : ""
                 }`}
+                style={{ color: pathname.startsWith("/admin/pages") ? "#C2452D" : "#F5E6D0" }}
               >
                 {item.label}
                 <span className={`transition-transform ${pagesOpen ? "rotate-90" : ""}`}>
@@ -80,6 +80,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
                       key={child.href}
                       href={child.href}
                       className={linkClasses(child.href)}
+                      style={linkStyle(child.href)}
                       onClick={() => setMobileOpen(false)}
                     >
                       {child.label}
@@ -96,6 +97,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
             key={item.href}
             href={item.href}
             className={linkClasses(item.href)}
+            style={linkStyle(item.href)}
             onClick={() => setMobileOpen(false)}
           >
             <span className="flex items-center justify-between">
