@@ -13,7 +13,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col">
         {label && (
-          <label htmlFor={inputId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-white" : "text-base"}`}>
+          <label htmlFor={inputId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-cream" : "text-base"}`}>
             {label}
           </label>
         )}

@@ -78,7 +78,7 @@ export default function ItemForm({
         if (field.type === "select") {
           return (
             <div key={field.name} className="flex flex-col gap-1.5">
-              <label className="font-mono uppercase text-xs tracking-wider text-white">
+              <label className="font-mono uppercase text-xs tracking-wider text-cream">
                 {field.label}
               </label>
               <select

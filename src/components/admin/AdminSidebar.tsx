@@ -51,7 +51,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
     `block px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
       isActive(href)
         ? "text-brick bg-white/5 font-medium"
-        : "text-white hover:text-cream hover:bg-white/5"
+        : "text-cream hover:text-kraft hover:bg-white/5"
     }`;
 
   const nav = (
@@ -65,7 +65,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
                   pathname.startsWith("/admin/pages")
                     ? "text-brick bg-white/5 font-medium"
-                    : "text-white hover:text-cream hover:bg-white/5"
+                    : "text-cream hover:text-kraft hover:bg-white/5"
                 }`}
               >
                 {item.label}
