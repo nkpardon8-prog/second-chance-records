@@ -3,16 +3,17 @@ import { type InputHTMLAttributes, forwardRef } from "react";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  dark?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className = "", ...props }, ref) => {
+  ({ label, error, dark, id, className = "", ...props }, ref) => {
     const inputId = id || props.name;
 
     return (
       <div className="flex flex-col">
         {label && (
-          <label htmlFor={inputId} className="font-mono uppercase text-xs tracking-wider mb-1.5 block">
+          <label htmlFor={inputId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-kraft" : "text-base"}`}>
             {label}
           </label>
         )}

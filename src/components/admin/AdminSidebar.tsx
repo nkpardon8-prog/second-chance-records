@@ -51,7 +51,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
     `block px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
       isActive(href)
         ? "text-brick bg-white/5 font-medium"
-        : "text-cream/70 hover:text-cream hover:bg-white/5"
+        : "text-kraft hover:text-cream hover:bg-white/5"
     }`;
 
   const nav = (
@@ -65,7 +65,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-sm font-mono text-sm transition-colors ${
                   pathname.startsWith("/admin/pages")
                     ? "text-brick bg-white/5 font-medium"
-                    : "text-cream/70 hover:text-cream hover:bg-white/5"
+                    : "text-kraft hover:text-cream hover:bg-white/5"
                 }`}
               >
                 {item.label}
@@ -132,7 +132,7 @@ export default function AdminSidebar({ unreadCount = 0 }: AdminSidebarProps) {
       )}
 
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-white/5 overflow-y-auto transition-transform lg:translate-x-0 ${
+        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-[#2A2A2A] border-r border-white/10 overflow-y-auto transition-transform lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -3,16 +3,17 @@ import { type TextareaHTMLAttributes, forwardRef } from "react";
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
+  dark?: boolean;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, id, className = "", ...props }, ref) => {
+  ({ label, error, dark, id, className = "", ...props }, ref) => {
     const textareaId = id || props.name;
 
     return (
       <div className="flex flex-col">
         {label && (
-          <label htmlFor={textareaId} className="font-mono uppercase text-xs tracking-wider mb-1.5 block">
+          <label htmlFor={textareaId} className={`font-mono uppercase text-xs tracking-wider mb-1.5 block ${dark ? "text-kraft" : "text-base"}`}>
             {label}
           </label>
         )}

@@ -17,13 +17,8 @@ export const metadata: Metadata = {
 const socialLinks = [
   {
     name: "Instagram",
-    url: "https://www.instagram.com/secondchancerecords",
+    url: "https://instagram.com/second_chance_recordspdx",
     description: "Follow us for new arrivals, events, and behind-the-scenes looks.",
-  },
-  {
-    name: "Facebook",
-    url: "https://www.facebook.com/secondchancerecords",
-    description: "Join our community for updates and event announcements.",
   },
   {
     name: "Discogs",
@@ -51,7 +46,7 @@ export default async function CommunityPage() {
           <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
             Find Us Online
           </h3>
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
             {socialLinks.map((link) => (
               <div key={link.name} className="bg-card text-cream p-8 rounded-sm border border-white/5 hover:border-brick/30 transition-colors text-center">
                 <ExternalLink

@@ -56,17 +56,12 @@ export default function Footer() {
             <h4 className="font-mono uppercase text-xs tracking-wider text-muted mb-4">Social</h4>
             <ul className="flex flex-col gap-2 text-sm">
               <li>
-                <ExternalLink href="https://www.instagram.com/secondchancerecords" className="text-cream/70 hover:text-brick transition-colors">
+                <ExternalLink href="https://instagram.com/second_chance_recordspdx" className="text-cream/70 hover:text-brick transition-colors">
                   Instagram
                 </ExternalLink>
               </li>
               <li>
-                <ExternalLink href="https://www.facebook.com/secondchancerecords" className="text-cream/70 hover:text-brick transition-colors">
-                  Facebook
-                </ExternalLink>
-              </li>
-              <li>
-                <ExternalLink href="https://www.discogs.com/seller/secondchancerecords" className="text-cream/70 hover:text-brick transition-colors">
+                <ExternalLink href="https://www.discogs.com/seller/SecondChance_Records/profile" className="text-cream/70 hover:text-brick transition-colors">
                   Discogs
                 </ExternalLink>
               </li>

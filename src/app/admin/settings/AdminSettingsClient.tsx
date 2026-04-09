@@ -59,6 +59,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                     <div className="flex-1">
                       <Input
                         label={setting.label}
+                        dark
                         value={values[setting.key]}
                         onChange={(e) =>
                           setValues((prev) => ({
@@ -66,7 +67,7 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                             [setting.key]: e.target.value,
                           }))
                         }
-                        className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
+                        className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-muted"
                       />
                     </div>
                     <Button

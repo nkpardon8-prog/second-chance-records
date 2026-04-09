@@ -26,19 +26,21 @@ export default function AdminLoginPage() {
         <form action={handleSubmit} className="space-y-4">
           <Input
             label="Email"
+            dark
             name="email"
             type="email"
             required
             autoComplete="email"
-            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
+            className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-muted"
           />
           <Input
             label="Password"
+            dark
             name="password"
             type="password"
             required
             autoComplete="current-password"
-            className="bg-white/5 border-white/10 text-cream placeholder:text-muted"
+            className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-muted"
           />
           {error && (
             <p className="text-sm text-brick">{error}</p>

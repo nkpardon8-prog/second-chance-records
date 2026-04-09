@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import MobileMenu from "./MobileMenu";
 
 const navLinks = [
@@ -26,22 +27,13 @@ export default function Header() {
       {/* Top bar: logo + mobile hamburger */}
       <div className="mx-auto max-w-7xl flex items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3 group" aria-label="Second Chance Records home">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <rect x="1" y="1" width="22" height="22" rx="1" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
-            <line x1="7" y1="1" x2="7" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
-            <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
-            <line x1="17" y1="1" x2="17" y2="23" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
-            <line x1="7" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5" className="text-brick" />
-            <path d="M17 8 L22 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-brick" />
-          </svg>
+          <Image
+            src="/images/logo.jpg"
+            alt="Second Chance Records logo"
+            width={36}
+            height={36}
+            className="rounded-full shrink-0"
+          />
           <span className="font-heading text-cream text-lg tracking-widest">
             Second Chance Records
           </span>
