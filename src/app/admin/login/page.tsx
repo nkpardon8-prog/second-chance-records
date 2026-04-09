@@ -31,7 +31,6 @@ export default function AdminLoginPage() {
             type="email"
             required
             autoComplete="email"
-            className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-kraft/70"
           />
           <Input
             label="Password"
@@ -40,7 +39,6 @@ export default function AdminLoginPage() {
             type="password"
             required
             autoComplete="current-password"
-            className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-kraft/70"
           />
           {error && (
             <p className="text-sm text-brick">{error}</p>

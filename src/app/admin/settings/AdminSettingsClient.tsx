@@ -67,7 +67,6 @@ export default function AdminSettingsClient({ settings }: AdminSettingsClientPro
                             [setting.key]: e.target.value,
                           }))
                         }
-                        className="!bg-white/5 !border-white/10 !text-cream !placeholder:text-kraft/70"
                       />
                     </div>
                     <Button

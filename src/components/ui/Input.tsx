@@ -20,9 +20,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`w-full rounded-sm px-4 py-2.5 font-sans text-sm transition-colors bg-white/80 border border-base/20 text-base placeholder:text-muted focus:border-brick focus:ring-1 focus:ring-brick/20 focus:outline-none ${
-            error ? "border-brick focus:border-brick focus:ring-brick/20" : ""
-          } ${className}`}
+          className={`w-full rounded-sm px-4 py-2.5 font-sans text-sm transition-colors border focus:border-brick focus:ring-1 focus:ring-brick/20 focus:outline-none ${
+            dark
+              ? "bg-white/5 border-white/10 text-cream placeholder:text-cream/40"
+              : "bg-white/80 border-base/20 text-base placeholder:text-muted"
+          } ${error ? "border-brick" : ""} ${className}`}
           aria-invalid={error ? "true" : undefined}
           aria-describedby={error ? `${inputId}-error` : undefined}
           {...props}

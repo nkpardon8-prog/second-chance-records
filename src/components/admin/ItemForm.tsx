@@ -71,7 +71,6 @@ export default function ItemForm({
               onChange={(e) =>
                 setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
               }
-              className="bg-white/5 border-white/10 text-cream placeholder:text-kraft/70"
             />
           );
         }
@@ -128,7 +127,6 @@ export default function ItemForm({
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [field.name]: e.target.value }))
             }
-            className="bg-white/5 border-white/10 text-cream placeholder:text-kraft/70"
           />
         );
       })}

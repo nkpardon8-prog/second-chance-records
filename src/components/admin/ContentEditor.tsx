@@ -37,17 +37,18 @@ export default function ContentEditor({ sections }: ContentEditorProps) {
       {sections.map((section) => (
         <div key={section.id} className="bg-card rounded-sm border border-white/5 p-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="font-mono uppercase text-xs tracking-wider text-kraft/70">
+            <label className="font-mono uppercase text-xs tracking-wider text-cream">
               {formatKey(section.sectionKey)}
             </label>
             <span className="text-xs text-kraft/70">{section.contentType}</span>
           </div>
           <Textarea
+            dark
             value={values[section.id]}
             onChange={(e) =>
               setValues((prev) => ({ ...prev, [section.id]: e.target.value }))
             }
-            className="mb-3 bg-white/5 border-white/10 text-cream placeholder:text-kraft/70"
+            className="mb-3"
           />
           <div className="flex items-center gap-3">
             <Button
