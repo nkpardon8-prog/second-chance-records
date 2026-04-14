@@ -12,10 +12,10 @@ button[class*="text-brick"] { color: #C2452D !important; }
 
 @theme inline {
   /* Fonts */
-  --font-heading: var(--font-bebas-neue);
+  --font-heading: var(--font-my-underwood);
   --font-mono: var(--font-space-mono);
   --font-sans: var(--font-work-sans);
-  --font-accent: var(--font-permanent-marker);
+  --font-accent: var(--font-special-elite);
 
   /* Warm Grit Palette — hex literals only */
   --color-base: #1A1A1A;
@@ -48,7 +48,7 @@ button[class*="text-brick"] { color: #C2452D !important; }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), system-ui, sans-serif;
     text-transform: uppercase;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.05em;
   }
 
   ::selection {

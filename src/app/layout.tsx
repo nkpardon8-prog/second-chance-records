@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Space_Mono, Work_Sans, Permanent_Marker } from "next/font/google";
+import localFont from "next/font/local";
+import { Space_Mono, Work_Sans, Special_Elite } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
@@ -7,10 +8,9 @@ import { getSession } from "@/lib/auth";
 import { AdminProvider } from "@/components/context/AdminContext";
 import "./globals.css";
 
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  variable: "--font-bebas-neue",
-  subsets: ["latin"],
+const myUnderwood = localFont({
+  src: "../../public/fonts/my-underwood.ttf",
+  variable: "--font-my-underwood",
   display: "swap",
 });
 
@@ -27,9 +27,9 @@ const workSans = Work_Sans({
   display: "swap",
 });
 
-const permanentMarker = Permanent_Marker({
+const specialElite = Special_Elite({
   weight: "400",
-  variable: "--font-permanent-marker",
+  variable: "--font-special-elite",
   subsets: ["latin"],
   display: "swap",
 });
@@ -87,7 +87,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${spaceMono.variable} ${workSans.variable} ${permanentMarker.variable} h-full antialiased`}
+      className={`${myUnderwood.variable} ${spaceMono.variable} ${workSans.variable} ${specialElite.variable} h-full antialiased`}
     >
       <head>
         <script

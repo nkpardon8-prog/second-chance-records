@@ -12,7 +12,7 @@ export default function Hero() {
       />
       <div className="absolute inset-0 bg-base/70" />
       <div className="max-w-5xl mx-auto px-6 py-20 text-center relative z-10">
-        <h1 className="font-heading text-7xl md:text-8xl lg:text-9xl tracking-tight leading-none uppercase">
+        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-tight uppercase">
           Second Chance Records
         </h1>
         <InlineEditor pageSlug="home" sectionKey="hero-tagline" content="Second chances for humans &amp; hi-fi">
