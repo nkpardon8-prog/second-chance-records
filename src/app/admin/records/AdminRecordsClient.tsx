@@ -12,7 +12,11 @@ import ItemForm, { type FieldDef } from "@/components/admin/ItemForm";
 import Button from "@/components/ui/Button";
 import type { FeaturedRecord } from "@/types";
 
-const categories = ["New Arrivals", "Staff Picks", "Local Artists"];
+const categories = [
+  { label: "New Arrivals",  value: "new_arrivals"  },
+  { label: "Staff Picks",   value: "staff_picks"   },
+  { label: "Local Artists", value: "local_artists" },
+] as const;
 
 const recordFields: FieldDef[] = [
   { name: "title", label: "Title", type: "text", required: true },
@@ -22,7 +26,7 @@ const recordFields: FieldDef[] = [
     label: "Category",
     type: "select",
     required: true,
-    options: categories.map((c) => ({ label: c, value: c })),
+    options: categories.map((c) => ({ label: c.label, value: c.value })),
   },
   { name: "discogsUrl", label: "Discogs URL", type: "url", required: true },
   { name: "imageUrl", label: "Image URL", type: "url" },
@@ -34,7 +38,7 @@ interface AdminRecordsClientProps {
 }
 
 export default function AdminRecordsClient({ records }: AdminRecordsClientProps) {
-  const [activeTab, setActiveTab] = useState(categories[0]);
+  const [activeTab, setActiveTab] = useState<"new_arrivals" | "staff_picks" | "local_artists">(categories[0].value);
   const [editing, setEditing] = useState<FeaturedRecord | null>(null);
   const [showAdd, setShowAdd] = useState(false);
 
@@ -91,15 +95,15 @@ export default function AdminRecordsClient({ records }: AdminRecordsClientProps)
       <div className="flex gap-2 mb-4">
         {categories.map((cat) => (
           <button
-            key={cat}
-            onClick={() => setActiveTab(cat)}
+            key={cat.value}
+            onClick={() => setActiveTab(cat.value)}
             className={`px-3 py-1.5 rounded-sm font-mono text-sm transition-colors ${
-              activeTab === cat
+              activeTab === cat.value
                 ? "bg-brick text-cream"
                 : "bg-white/5 text-cream hover:bg-white/10 hover:text-cream"
             }`}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>

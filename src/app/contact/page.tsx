@@ -40,8 +40,8 @@ export default function ContactPage() {
                   </a>
                 </p>
                 <p>
-                  <a href="mailto:hello@secondchancerecords.com" className="text-brick hover:text-gold transition-colors">
-                    hello@secondchancerecords.com
+                  <a href="mailto:secondchancerecords@gmail.com" className="text-brick hover:text-gold transition-colors">
+                    secondchancerecords@gmail.com
                   </a>
                 </p>
               </address>

@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useIsAdmin } from "@/components/context/AdminContext";
 import {
   updatePageContent,
   upsertPageContent,
 } from "@/lib/actions/content";
+
+type SaveStatus = "idle" | "saving" | "saved";
 
 interface InlineEditorProps {
   contentId?: number;
@@ -27,38 +30,79 @@ export default function InlineEditor({
   children,
 }: InlineEditorProps) {
   const isAdmin = useIsAdmin();
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(content);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [saving, startTransition] = useTransition();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const statusResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (statusResetRef.current) clearTimeout(statusResetRef.current);
+    };
+  }, []);
+
+  // Sync content prop into value state when not editing.
+  // After router.refresh() delivers a new content prop from the server,
+  // useState does NOT re-initialize — this effect keeps value in sync.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!isEditing) setValue(content);
+  }, [content, isEditing]);
 
   if (!isAdmin) return <>{children}</>;
 
-  function handleSave() {
+  async function performSave(val: string) {
     setError(null);
-    startTransition(async () => {
-      try {
-        if (contentId) {
-          await updatePageContent(contentId, value);
-        } else if (pageSlug && sectionKey) {
-          await upsertPageContent(pageSlug, sectionKey, value);
-        }
-        setIsEditing(false);
-      } catch {
-        setError("Save failed. Try again.");
+    setSaveStatus("saving");
+    try {
+      if (contentId) {
+        await updatePageContent(contentId, val);
+      } else if (pageSlug && sectionKey) {
+        await upsertPageContent(pageSlug, sectionKey, val);
       }
-    });
+      setSaveStatus("saved");
+      router.refresh();
+      if (statusResetRef.current) clearTimeout(statusResetRef.current);
+      statusResetRef.current = setTimeout(() => setSaveStatus("idle"), 3000);
+    } catch {
+      setError("Save failed. Try again.");
+      setSaveStatus("idle");
+    }
+  }
+
+  function scheduleAutoSave(newValue: string) {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => performSave(newValue), 1500);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
       setValue(content);
       setIsEditing(false);
     }
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      handleSave();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      performSave(value);
     }
+  }
+
+  async function handleDone() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    await performSave(value);
+    setIsEditing(false);
+  }
+
+  function handleCancel() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setValue(content);
+    setIsEditing(false);
   }
 
   if (isEditing) {
@@ -66,28 +110,36 @@ export default function InlineEditor({
       <div className="relative">
         <textarea
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            scheduleAutoSave(e.target.value);
+          }}
           onKeyDown={handleKeyDown}
           className="w-full min-h-[100px] p-3 bg-base text-cream border-2 border-brick rounded-sm font-sans text-sm"
           autoFocus
         />
         <div className="flex items-center gap-2 mt-2">
           <button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-brick text-cream px-4 py-1 rounded-sm font-mono text-xs uppercase"
+            onClick={handleDone}
+            disabled={saveStatus === "saving"}
+            className="bg-brick text-cream px-4 py-1 rounded-sm font-mono text-xs uppercase disabled:opacity-50"
           >
-            {saving ? "Saving..." : "Save"}
+            Done
           </button>
           <button
-            onClick={() => {
-              setValue(content);
-              setIsEditing(false);
-            }}
+            onClick={handleCancel}
             className="border border-cream/30 text-cream px-4 py-1 rounded-sm font-mono text-xs uppercase"
           >
             Cancel
           </button>
+
+          {saveStatus === "saving" && (
+            <span className="font-mono text-xs text-muted ml-2">Saving...</span>
+          )}
+          {saveStatus === "saved" && (
+            <span className="font-mono text-xs text-forest ml-2">Saved ✓</span>
+          )}
+
           <span className="font-mono text-xs text-cream/50 ml-auto">
             Ctrl+Enter to save · Esc to cancel
           </span>

@@ -2,27 +2,34 @@ import Link from "next/link";
 import ExternalLink from "@/components/ui/ExternalLink";
 import InlineEditor from "@/components/admin/InlineEditor";
 
-export default function Hero() {
+interface HeroProps {
+  heading: string;
+  tagline: string;
+  description: string;
+}
+
+export default function Hero({ heading, tagline, description }: HeroProps) {
   return (
     <section className="relative min-h-screen bg-base text-cream grain-overlay flex items-center torn-edge overflow-hidden">
-      {/* Mt. Tabor background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/mt-tabor.jpg')" }}
       />
       <div className="absolute inset-0 bg-base/70" />
       <div className="max-w-5xl mx-auto px-6 py-20 text-center relative z-10">
-        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-tight uppercase">
-          Second Chance Records
-        </h1>
-        <InlineEditor pageSlug="home" sectionKey="hero-tagline" content="Second chances for humans &amp; hi-fi">
+        <InlineEditor pageSlug="home" sectionKey="hero-heading" content={heading}>
+          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-tight uppercase">
+            {heading}
+          </h1>
+        </InlineEditor>
+        <InlineEditor pageSlug="home" sectionKey="hero-tagline" content={tagline}>
           <p className="font-accent text-xl md:text-2xl text-gold mt-4">
-            Second chances for humans &amp; hi-fi
+            {tagline}
           </p>
         </InlineEditor>
-        <InlineEditor pageSlug="home" sectionKey="hero-description" content="A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.">
+        <InlineEditor pageSlug="home" sectionKey="hero-description" content={description}>
           <p className="font-sans text-cream/90 text-lg max-w-2xl mx-auto mt-6">
-            A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.
+            {description}
           </p>
         </InlineEditor>
         <div className="flex flex-wrap gap-4 justify-center mt-10">

@@ -27,8 +27,8 @@ export default function Footer() {
                 <a href="tel:+15039972729" className="hover:text-brick transition-colors">(503) 997-2729</a>
               </p>
               <p>
-                <a href="mailto:hello@secondchancerecords.com" className="hover:text-brick transition-colors">
-                  hello@secondchancerecords.com
+                <a href="mailto:secondchancerecords@gmail.com" className="hover:text-brick transition-colors">
+                  secondchancerecords@gmail.com
                 </a>
               </p>
             </address>

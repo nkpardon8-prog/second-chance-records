@@ -8,18 +8,24 @@ import InlineEditor from "@/components/admin/InlineEditor";
 import { db } from "@/lib/db";
 import { news } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { getPageContent } from "@/lib/actions/content";
 
 export default async function Home() {
-  const latestNews = await db
-    .select()
-    .from(news)
-    .where(eq(news.isPublished, true))
-    .orderBy(desc(news.publishedAt))
-    .limit(2);
+  const [homeContent, latestNews] = await Promise.all([
+    getPageContent("home"),
+    db.select().from(news).where(eq(news.isPublished, true)).orderBy(desc(news.publishedAt)).limit(2),
+  ]);
+
+  const s = (key: string, fallback: string) =>
+    homeContent.find((c) => c.sectionKey === key)?.content ?? fallback;
 
   return (
     <>
-      <Hero />
+      <Hero
+        heading={s("hero-heading", "Second Chance Records")}
+        tagline={s("hero-tagline", "Second chances for humans & hi-fi")}
+        description={s("hero-description", "A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.")}
+      />
       <FeaturedRecords />
 
       {latestNews.length > 0 && (
@@ -55,12 +61,12 @@ export default async function Home() {
 
       <section className="bg-base text-cream py-12 px-6 grain-overlay">
         <div className="max-w-5xl mx-auto text-center">
-          <InlineEditor pageSlug="home" sectionKey="newsletter-heading" as="div" content="Stay in the Loop">
-            <h2 className="font-heading text-3xl uppercase tracking-tight">Stay in the Loop</h2>
+          <InlineEditor pageSlug="home" sectionKey="newsletter-heading" as="div" content={s("newsletter-heading", "Stay in the Loop")}>
+            <h2 className="font-heading text-3xl uppercase tracking-tight">{s("newsletter-heading", "Stay in the Loop")}</h2>
           </InlineEditor>
-          <InlineEditor pageSlug="home" sectionKey="newsletter-description" content="New arrivals, events, and community news delivered to your inbox.">
+          <InlineEditor pageSlug="home" sectionKey="newsletter-description" content={s("newsletter-description", "New arrivals, events, and community news delivered to your inbox.")}>
             <p className="mt-3 text-lg text-cream max-w-xl mx-auto font-sans">
-              New arrivals, events, and community news delivered to your inbox.
+              {s("newsletter-description", "New arrivals, events, and community news delivered to your inbox.")}
             </p>
           </InlineEditor>
           <div className="mt-8 flex justify-center">
