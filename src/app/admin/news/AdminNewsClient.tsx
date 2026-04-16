@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createNews, updateNews, deleteNews } from "@/lib/actions/news";
+import { createNews, updateNews, deleteNews, toggleNewsPublished } from "@/lib/actions/news";
 import ItemForm, { type FieldDef } from "@/components/admin/ItemForm";
 import Button from "@/components/ui/Button";
 import type { News } from "@/types";
@@ -23,12 +23,7 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
 
   function togglePublish(item: News) {
     startTransition(async () => {
-      const fd = new FormData();
-      fd.set("title", item.title);
-      fd.set("content", item.content);
-      fd.set("imageUrl", item.imageUrl ?? "");
-      fd.set("isPublished", String(!item.isPublished));
-      await updateNews(item.id, fd);
+      await toggleNewsPublished(item.id, !item.isPublished);
     });
   }
 
@@ -110,7 +105,11 @@ export default function AdminNewsClient({ news }: AdminNewsClientProps) {
                 variant="ghost"
                 className="text-brick hover:text-brick/80"
                 onClick={() => {
-                  if (confirm("Delete this post?")) deleteNews(item.id);
+                  if (confirm("Delete this post?")) {
+                    startTransition(async () => {
+                      await deleteNews(item.id);
+                    });
+                  }
                 }}
               >
                 Delete

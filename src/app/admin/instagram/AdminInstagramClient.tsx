@@ -19,6 +19,7 @@ export default function AdminInstagramClient({ posts }: AdminInstagramClientProp
   function handleToggle(id: number) {
     startTransition(async () => {
       await togglePostVisibility(id);
+      router.refresh();
     });
   }
 

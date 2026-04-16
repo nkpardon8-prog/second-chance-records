@@ -58,7 +58,33 @@ export async function searchEvents(
         },
         { role: "user", content: userQuery },
       ],
-      response_format: { type: "json_object" },
+      response_format: {
+        type: "json_schema" as const,
+        json_schema: {
+          name: "events_response",
+          schema: {
+            type: "object",
+            properties: {
+              events: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    date: { type: "string" },
+                    description: { type: "string" },
+                    time: { type: "string" },
+                    artist_name: { type: "string" },
+                    source_url: { type: "string" },
+                  },
+                  required: ["title", "date", "description"],
+                },
+              },
+            },
+            required: ["events"],
+          },
+        },
+      },
       search_recency_filter: "week",
     } as any);
 
@@ -95,7 +121,30 @@ export async function searchResources(
         },
         { role: "user", content: userQuery },
       ],
-      response_format: { type: "json_object" },
+      response_format: {
+        type: "json_schema" as const,
+        json_schema: {
+          name: "resources_response",
+          schema: {
+            type: "object",
+            properties: {
+              resources: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    url: { type: "string" },
+                    description: { type: "string" },
+                  },
+                  required: ["name", "url", "description"],
+                },
+              },
+            },
+            required: ["resources"],
+          },
+        },
+      },
       search_recency_filter: "month",
     } as any);
 

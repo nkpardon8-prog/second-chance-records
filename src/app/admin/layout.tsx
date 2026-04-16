@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { contactSubmissions } from "@/lib/db/schema";
 import { eq, count } from "drizzle-orm";
+import { redirect } from "next/navigation";
 import AdminLayoutClient from "./AdminLayoutClient";
 
 export default async function AdminLayout({
@@ -10,13 +11,18 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+  if (!session.isLoggedIn) redirect("/admin/login");
 
-  const [unreadResult] = await db
-    .select({ count: count() })
-    .from(contactSubmissions)
-    .where(eq(contactSubmissions.isRead, false));
-
-  const unreadCount = unreadResult?.count ?? 0;
+  let unreadCount = 0;
+  try {
+    const [unreadResult] = await db
+      .select({ count: count() })
+      .from(contactSubmissions)
+      .where(eq(contactSubmissions.isRead, false));
+    unreadCount = unreadResult?.count ?? 0;
+  } catch {
+    // DB error should not block the admin layout
+  }
 
   return (
     <AdminLayoutClient

@@ -32,6 +32,7 @@ export async function createNews(formData: FormData) {
     title: parsed.title,
     content: parsed.content,
     imageUrl: parsed.imageUrl || null,
+    isPublished: false,
   });
 
   revalidatePath("/");
@@ -55,6 +56,19 @@ export async function updateNews(id: number, formData: FormData) {
       content: parsed.content,
       imageUrl: parsed.imageUrl || null,
     })
+    .where(eq(news.id, id));
+
+  revalidatePath("/");
+  revalidatePath("/admin/news");
+}
+
+export async function toggleNewsPublished(id: number, isPublished: boolean) {
+  const session = await getSession();
+  if (!session.isLoggedIn) throw new Error("Unauthorized");
+
+  await db
+    .update(news)
+    .set({ isPublished })
     .where(eq(news.id, id));
 
   revalidatePath("/");

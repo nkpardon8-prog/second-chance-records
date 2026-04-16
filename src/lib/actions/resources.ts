@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { communityResources } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { resourceSchema } from "@/lib/validations/resource";
@@ -68,14 +68,12 @@ export async function reorderResources(orderedIds: number[]) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
 
-  const cases = orderedIds
-    .map((id, i) => `WHEN id = ${Number(id)} THEN ${i}`)
-    .join(" ");
-  const idList = orderedIds.map(Number).join(",");
-
-  await db.execute(
-    sql.raw(`UPDATE community_resources SET sort_order = CASE ${cases} END WHERE id IN (${idList})`)
-  );
+  for (let i = 0; i < orderedIds.length; i++) {
+    await db
+      .update(communityResources)
+      .set({ sortOrder: i })
+      .where(eq(communityResources.id, orderedIds[i]));
+  }
 
   revalidatePath("/mission");
   revalidatePath("/admin/resources");

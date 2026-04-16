@@ -287,7 +287,11 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
         onReorder={reorderEvents}
         onEdit={(ev) => { setEditing(ev); setShowAdd(false); }}
         onDelete={(id) => {
-          if (confirm("Delete this event?")) deleteEvent(id);
+          if (confirm("Delete this event?")) {
+            startTransition(async () => {
+              await deleteEvent(id);
+            });
+          }
         }}
       />
     </div>
