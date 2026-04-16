@@ -2,7 +2,6 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { contactSubmissions } from "@/lib/db/schema";
 import { eq, count } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import AdminLayoutClient from "./AdminLayoutClient";
 
 export default async function AdminLayout({
@@ -11,7 +10,6 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
-  if (!session.isLoggedIn) redirect("/admin/login");
 
   let unreadCount = 0;
   try {
