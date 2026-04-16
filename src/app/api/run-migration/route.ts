@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const dbUrl = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL!;
+    const dbUrl = process.env.DATABASE_URL!;
     const sql = neon(dbUrl);
 
     const before = await sql`SELECT category, COUNT(*) as count FROM featured_records GROUP BY category`;
