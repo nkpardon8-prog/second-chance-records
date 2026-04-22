@@ -30,9 +30,20 @@ const resourcesResponseSchema = z.object({
 export type DiscoveredEvent = z.infer<typeof discoveredEventSchema>;
 export type DiscoveredResource = z.infer<typeof discoveredResourceSchema>;
 
+class MissingApiKeyError extends Error {
+  constructor() {
+    super(
+      "PERPLEXITY_API_KEY is not set. Add it to the Netlify environment variables and redeploy.",
+    );
+    this.name = "MissingApiKeyError";
+  }
+}
+
 function getPerplexityClient() {
+  const apiKey = process.env.PERPLEXITY_API_KEY;
+  if (!apiKey) throw new MissingApiKeyError();
   return new OpenAI({
-    apiKey: process.env.PERPLEXITY_API_KEY!,
+    apiKey,
     baseURL: "https://api.perplexity.ai",
   });
 }
@@ -41,9 +52,15 @@ export async function searchEvents(
   query?: string
 ): Promise<{ events: DiscoveredEvent[]; error?: string }> {
   const session = await getSession();
-  if (!session.isLoggedIn) return { events: [], error: "Unauthorized" };
+  if (!session.isLoggedIn)
+    return { events: [], error: "Unauthorized — sign in as admin to use discovery." };
 
-  const perplexity = getPerplexityClient();
+  let perplexity: OpenAI;
+  try {
+    perplexity = getPerplexityClient();
+  } catch (e) {
+    return { events: [], error: e instanceof Error ? e.message : "Configuration error" };
+  }
   const userQuery =
     query?.trim() ||
     "Find upcoming events at Second Chance Records Portland Oregon in the next 30 days";
@@ -104,9 +121,21 @@ export async function searchResources(
   query?: string
 ): Promise<{ resources: DiscoveredResource[]; error?: string }> {
   const session = await getSession();
-  if (!session.isLoggedIn) return { resources: [], error: "Unauthorized" };
+  if (!session.isLoggedIn)
+    return {
+      resources: [],
+      error: "Unauthorized — sign in as admin to use discovery.",
+    };
 
-  const perplexity = getPerplexityClient();
+  let perplexity: OpenAI;
+  try {
+    perplexity = getPerplexityClient();
+  } catch (e) {
+    return {
+      resources: [],
+      error: e instanceof Error ? e.message : "Configuration error",
+    };
+  }
   const userQuery =
     query?.trim() ||
     "Find community resources for vinyl record collectors and music lovers in Portland Oregon — record stores, music venues, community organizations, local music publications, and related resources";

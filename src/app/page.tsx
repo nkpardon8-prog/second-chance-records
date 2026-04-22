@@ -24,7 +24,7 @@ export default async function Home() {
       <Hero
         heading={s("hero-heading", "Second Chance Records")}
         tagline={s("hero-tagline", "Second chances for humans & hi-fi")}
-        description={s("hero-description", "A mission-driven vinyl record store in Portland, Oregon. We restore records and support our community.")}
+        description={s("hero-description", "A mission-driven vinyl record store in Portland, Oregon.\nWe restore records and support our community.")}
       />
       <FeaturedRecords />
 
