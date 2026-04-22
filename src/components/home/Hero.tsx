@@ -18,7 +18,7 @@ export default function Hero({ heading, tagline, description }: HeroProps) {
       <div className="absolute inset-0 bg-base/70" />
       <div className="max-w-5xl mx-auto px-6 py-20 text-center relative z-10">
         <InlineEditor pageSlug="home" sectionKey="hero-heading" content={heading}>
-          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-tight uppercase">
+          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-tight uppercase md:whitespace-nowrap">
             {heading}
           </h1>
         </InlineEditor>

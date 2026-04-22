@@ -133,7 +133,13 @@ export default function AdminResourcesClient({ resources }: AdminResourcesClient
         </div>
 
         {searchError && (
-          <p className="text-xs text-brick mt-2">{searchError}</p>
+          <div
+            role="alert"
+            className="mt-3 border-2 border-brick bg-brick/10 text-brick font-mono text-xs px-3 py-2 rounded-sm"
+          >
+            <span className="font-bold uppercase mr-1">Discover failed:</span>
+            {searchError}
+          </div>
         )}
 
         {suggestions.length > 0 && (

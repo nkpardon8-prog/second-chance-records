@@ -69,15 +69,18 @@ export default function InlineEditor({
       router.refresh();
       if (statusResetRef.current) clearTimeout(statusResetRef.current);
       statusResetRef.current = setTimeout(() => setSaveStatus("idle"), 3000);
-    } catch {
-      setError("Save failed. Try again.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setError(`Save failed: ${message}`);
       setSaveStatus("idle");
     }
   }
 
   function scheduleAutoSave(newValue: string) {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => performSave(newValue), 1500);
+    debounceRef.current = setTimeout(() => {
+      void performSave(newValue);
+    }, 1500);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -89,7 +92,7 @@ export default function InlineEditor({
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      performSave(value);
+      void performSave(value);
     }
   }
 
@@ -145,7 +148,12 @@ export default function InlineEditor({
           </span>
         </div>
         {error && (
-          <p className="text-brick font-mono text-xs mt-1">{error}</p>
+          <div
+            role="alert"
+            className="mt-2 border-2 border-brick bg-brick/10 text-brick font-mono text-xs px-3 py-2 rounded-sm"
+          >
+            {error}
+          </div>
         )}
       </div>
     );
