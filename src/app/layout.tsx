@@ -54,7 +54,7 @@ const jsonLd = {
     "Mission-driven vinyl record store in Portland, Oregon. Second chances for humans & hi-fi.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "5744 E Burnside St, Suite 104",
+    streetAddress: "5744 E Burnside St",
     addressLocality: "Portland",
     addressRegion: "OR",
     postalCode: "97215",

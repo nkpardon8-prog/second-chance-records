@@ -16,7 +16,7 @@ const links = [
   },
   {
     title: "Visit the Store",
-    description: "5744 E Burnside St, Suite 104, Portland, OR. Thu-Sun 12-8pm.",
+    description: "5744 E Burnside St 97215. Thu-Sun 12-8pm.",
     href: "/visit",
     external: false,
   },

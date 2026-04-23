@@ -55,9 +55,9 @@ async function seed() {
   await db.insert(siteSettings).values([
     { key: "store_name", value: "Second Chance Records", label: "Store Name", group: "general" },
     { key: "tagline", value: "Second chances for humans & hi-fi", label: "Tagline", group: "general" },
-    { key: "address", value: "5744 E Burnside St, Suite 104, Portland, OR 97215", label: "Address", group: "contact" },
+    { key: "address", value: "5744 E Burnside St 97215", label: "Address", group: "contact" },
     { key: "phone", value: "(503) 997-2729", label: "Phone", group: "contact" },
-    { key: "email", value: "secondchancerecords@gmail.com", label: "Email", group: "contact" },
+    { key: "email", value: "secondchancerecordsllc@gmail.com", label: "Email", group: "contact" },
     { key: "hours", value: "Thursday\u2013Sunday, Noon\u20138 PM", label: "Hours", group: "hours" },
     { key: "hours_detail", value: "Closed Monday\u2013Wednesday", label: "Hours Detail", group: "hours" },
     { key: "instagram", value: "https://instagram.com/second_chance_recordspdx", label: "Instagram", group: "social" },
