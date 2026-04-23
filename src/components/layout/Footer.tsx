@@ -21,14 +21,14 @@ export default function Footer() {
           <div>
             <h4 className="font-mono uppercase text-xs tracking-wider text-kraft/70 mb-4">Contact</h4>
             <address className="not-italic font-mono text-sm leading-relaxed text-cream">
-              <p>5744 E Burnside St, Suite 104</p>
-              <p>Portland, OR 97215</p>
+              <p>5744 E Burnside St</p>
+              <p>97215</p>
               <p className="mt-2">
                 <a href="tel:+15039972729" className="hover:text-brick transition-colors">(503) 997-2729</a>
               </p>
               <p>
-                <a href="mailto:secondchancerecords@gmail.com" className="hover:text-brick transition-colors">
-                  secondchancerecords@gmail.com
+                <a href="mailto:secondchancerecordsllc@gmail.com" className="hover:text-brick transition-colors">
+                  secondchancerecordsllc@gmail.com
                 </a>
               </p>
             </address>

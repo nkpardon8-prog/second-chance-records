@@ -32,16 +32,16 @@ export default function ContactPage() {
                 Store Info
               </h3>
               <address className="not-italic font-mono text-sm text-cream leading-relaxed space-y-2">
-                <p>5744 E Burnside St, Suite 104</p>
-                <p>Portland, OR 97215</p>
+                <p>5744 E Burnside St</p>
+                <p>97215</p>
                 <p>
                   <a href="tel:+15039972729" className="text-brick hover:text-gold transition-colors">
                     (503) 997-2729
                   </a>
                 </p>
                 <p>
-                  <a href="mailto:secondchancerecords@gmail.com" className="text-brick hover:text-gold transition-colors">
-                    secondchancerecords@gmail.com
+                  <a href="mailto:secondchancerecordsllc@gmail.com" className="text-brick hover:text-gold transition-colors">
+                    secondchancerecordsllc@gmail.com
                   </a>
                 </p>
               </address>
