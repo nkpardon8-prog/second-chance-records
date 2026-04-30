@@ -30,6 +30,7 @@ const navItems = [
   { label: "Featured Records", href: "/admin/records" },
   { label: "Reviews", href: "/admin/reviews" },
   { label: "Partners", href: "/admin/partners" },
+  { label: "Press Mentions", href: "/admin/press-mentions" },
   { label: "Community Resources", href: "/admin/resources" },
   { label: "Instagram", href: "/admin/instagram" },
   { label: "Subscribers", href: "/admin/subscribers" },

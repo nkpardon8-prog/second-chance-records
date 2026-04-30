@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPageContent } from "@/lib/actions/content";
+import { getPressMentions } from "@/lib/actions/press-mentions";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
 
@@ -14,23 +15,11 @@ export const metadata: Metadata = {
   },
 };
 
-const pressMentions = [
-  {
-    name: "Willamette Week",
-    url: "https://www.wweek.com",
-  },
-  {
-    name: "KMHD Jazz Radio",
-    url: "https://www.kmhd.org",
-  },
-  {
-    name: "Travel Portland",
-    url: "https://www.travelportland.com",
-  },
-];
-
 export default async function AboutPage() {
-  const content = await getPageContent("about");
+  const [content, pressMentions] = await Promise.all([
+    getPageContent("about"),
+    getPressMentions(),
+  ]);
 
   return (
     <div className="bg-kraft min-h-screen">
@@ -74,24 +63,29 @@ export default async function AboutPage() {
           </>
         )}
 
-        <section>
-          <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-6">
-            Press Mentions
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {pressMentions.map((mention) => (
-              <div key={mention.name} className="bg-card text-cream p-6 rounded-sm border border-white/5 text-center">
-                <ExternalLink
-                  href={mention.url}
-                  showIcon
-                  className="font-heading text-lg text-brick hover:text-gold transition-colors"
+        {pressMentions.length > 0 && (
+          <section>
+            <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-6">
+              Press Mentions
+            </h3>
+            <div data-testid="press-mentions-list" className="flex flex-wrap justify-center gap-4">
+              {pressMentions.map((mention) => (
+                <div
+                  key={mention.id}
+                  className="bg-card text-cream p-6 rounded-sm border border-white/5 text-center w-full sm:w-56"
                 >
-                  {mention.name}
-                </ExternalLink>
-              </div>
-            ))}
-          </div>
-        </section>
+                  <ExternalLink
+                    href={mention.url}
+                    showIcon
+                    className="font-heading text-lg text-brick hover:text-gold transition-colors"
+                  >
+                    {mention.name}
+                  </ExternalLink>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
