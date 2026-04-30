@@ -79,6 +79,13 @@ export const partners = pgTable("partners", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
+export const pressMentions = pgTable("press_mentions", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  url: text("url").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 export const communityResources = pgTable("community_resources", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 200 }).notNull(),

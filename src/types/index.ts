@@ -8,6 +8,7 @@ export type News = typeof schema.news.$inferSelect;
 export type FeaturedRecord = typeof schema.featuredRecords.$inferSelect;
 export type Review = typeof schema.reviews.$inferSelect;
 export type Partner = typeof schema.partners.$inferSelect;
+export type PressMention = typeof schema.pressMentions.$inferSelect;
 export type CommunityResource = typeof schema.communityResources.$inferSelect;
 export type Subscriber = typeof schema.subscribers.$inferSelect;
 export type ContactSubmission = typeof schema.contactSubmissions.$inferSelect;
