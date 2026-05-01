@@ -4,6 +4,10 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import EventCard from "@/components/events/EventCard";
 import PastEventsToggle from "./PastEventsToggle";
 import InlineEditor from "@/components/admin/InlineEditor";
+import { db } from "@/lib/db";
+import { eventImages } from "@/lib/db/schema";
+import { asc, inArray } from "drizzle-orm";
+import type { EventImage } from "@/types";
 
 export const metadata: Metadata = {
   title: "Events | Second Chance Records",
@@ -20,8 +24,28 @@ export default async function EventsPage() {
   const allEvents = await getEvents(true);
   const today = new Date().toISOString().slice(0, 10);
 
+  const eventIds = allEvents.map((e) => e.id);
+  const allImages: EventImage[] = eventIds.length
+    ? await db
+        .select()
+        .from(eventImages)
+        .where(inArray(eventImages.eventId, eventIds))
+        .orderBy(asc(eventImages.eventId), asc(eventImages.sortOrder))
+    : [];
+  const imagesByEventId = new Map<number, EventImage[]>();
+  for (const img of allImages) {
+    const list = imagesByEventId.get(img.eventId) ?? [];
+    list.push(img);
+    imagesByEventId.set(img.eventId, list);
+  }
+
   const upcoming = allEvents.filter((e) => e.date >= today);
   const past = allEvents.filter((e) => e.date < today).reverse();
+
+  const pastWithImages = past.map((e) => ({
+    ...e,
+    images: imagesByEventId.get(e.id) ?? [],
+  }));
 
   return (
     <div className="bg-kraft min-h-screen">
@@ -41,7 +65,7 @@ export default async function EventsPage() {
                 description={event.description}
                 artistName={event.artistName}
                 artistUrl={event.artistUrl}
-                imageUrl={event.imageUrl}
+                images={imagesByEventId.get(event.id) ?? []}
               />
             ))}
           </div>
@@ -53,7 +77,7 @@ export default async function EventsPage() {
           </InlineEditor>
         )}
 
-        {past.length > 0 && <PastEventsToggle events={past} />}
+        {pastWithImages.length > 0 && <PastEventsToggle events={pastWithImages} />}
       </div>
     </div>
   );

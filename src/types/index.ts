@@ -4,6 +4,7 @@ export type User = typeof schema.users.$inferSelect;
 export type SiteSetting = typeof schema.siteSettings.$inferSelect;
 export type PageContent = typeof schema.pageContent.$inferSelect;
 export type Event = typeof schema.events.$inferSelect;
+export type EventImage = typeof schema.eventImages.$inferSelect;
 export type News = typeof schema.news.$inferSelect;
 export type FeaturedRecord = typeof schema.featuredRecords.$inferSelect;
 export type Review = typeof schema.reviews.$inferSelect;

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import EventCard from "@/components/events/EventCard";
+import type { EventImage } from "@/types";
 
 interface Event {
   id: number;
@@ -11,7 +12,7 @@ interface Event {
   description: string | null;
   artistName: string | null;
   artistUrl: string | null;
-  imageUrl: string | null;
+  images: EventImage[];
 }
 
 export default function PastEventsToggle({ events }: { events: Event[] }) {
@@ -51,7 +52,7 @@ export default function PastEventsToggle({ events }: { events: Event[] }) {
               description={event.description}
               artistName={event.artistName}
               artistUrl={event.artistUrl}
-              imageUrl={event.imageUrl}
+              images={event.images}
             />
           ))}
         </div>
