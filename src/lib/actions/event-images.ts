@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { eventImages } from "@/lib/db/schema";
-import { eq, and, asc, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { deleteImageBlob, keyFromImageUrl } from "@/lib/image-store";
@@ -20,14 +20,6 @@ function assertOurEventImageUrl(url: string): void {
   if (!key || !key.startsWith(EVENT_IMAGE_KEY_PREFIX)) {
     throw new Error("Invalid image URL");
   }
-}
-
-export async function getEventImages(eventId: number) {
-  return db
-    .select()
-    .from(eventImages)
-    .where(eq(eventImages.eventId, eventId))
-    .orderBy(asc(eventImages.sortOrder));
 }
 
 export async function addEventImage(eventId: number, url: string) {

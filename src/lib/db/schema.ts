@@ -31,7 +31,6 @@ export const events = pgTable("events", {
   time: varchar("time", { length: 20 }),
   artistName: varchar("artist_name", { length: 300 }),
   artistUrl: text("artist_url"),
-  imageUrl: text("image_url"),
   sourceUrl: text("source_url"),
   source: varchar("source", { length: 20 }).notNull().default("manual"),
   isPublished: boolean("is_published").notNull().default(true),

@@ -2,40 +2,24 @@ import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { uploadFromBuffer } from "@/lib/image-store";
+import { processImage } from "@/lib/image-processing";
 
 export const runtime = "nodejs";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
-// Browser-supplied file.type is spoofable, so we sniff the leading bytes for
-// real signatures. Polyglot files renamed with a fake extension also fail here.
-const SIGNATURES: Array<{ ext: string; contentType: string; bytes: number[] }> = [
-  { ext: "jpg", contentType: "image/jpeg", bytes: [0xff, 0xd8, 0xff] },
-  { ext: "png", contentType: "image/png", bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
-  { ext: "gif", contentType: "image/gif", bytes: [0x47, 0x49, 0x46, 0x38] },
-  { ext: "webp", contentType: "image/webp", bytes: [0x52, 0x49, 0x46, 0x46] },
-];
+// Allowlist of folder prefixes the admin can upload into. Each downstream
+// feature owns one prefix so blob deletion gates can scope safely.
+const ALLOWED_FOLDERS = ["events", "news", "partners"] as const;
+type AllowedFolder = (typeof ALLOWED_FOLDERS)[number];
+const DEFAULT_FOLDER: AllowedFolder = "events";
 
-function detectImage(bytes: Uint8Array): { ext: string; contentType: string } | null {
-  for (const sig of SIGNATURES) {
-    if (bytes.length < sig.bytes.length) continue;
-    let match = true;
-    for (let i = 0; i < sig.bytes.length; i++) {
-      if (bytes[i] !== sig.bytes[i]) {
-        match = false;
-        break;
-      }
-    }
-    if (!match) continue;
-    // RIFF containers cover several formats. Confirm WEBP via the WEBP marker.
-    if (sig.ext === "webp") {
-      if (bytes.length < 12 || String.fromCharCode(...bytes.slice(8, 12)) !== "WEBP") {
-        continue;
-      }
-    }
-    return { ext: sig.ext, contentType: sig.contentType };
+function pickFolder(formData: FormData): AllowedFolder {
+  const raw = formData.get("folder");
+  if (typeof raw === "string" && (ALLOWED_FOLDERS as readonly string[]).includes(raw)) {
+    return raw as AllowedFolder;
   }
-  return null;
+  return DEFAULT_FOLDER;
 }
 
 // CSRF defense in depth: ensure the request's Origin (or Referer fallback)
@@ -88,7 +72,7 @@ export async function POST(request: NextRequest) {
   // headroom. Without it, legitimate files just under MAX_BYTES are rejected
   // here even though the actual file would pass the post-parse check below.
   // The post-parse `file.size > MAX_BYTES` check still enforces the true cap.
-  const PREPARSE_LIMIT = MAX_BYTES + 16 * 1024; // ~16KB header budget
+  const PREPARSE_LIMIT = MAX_BYTES + 16 * 1024;
   const declaredLength = Number(request.headers.get("content-length") ?? 0);
   if (declaredLength > PREPARSE_LIMIT) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 413 });
@@ -96,6 +80,7 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData();
   const file = formData.get("file");
+  const folder = pickFolder(formData);
 
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -104,30 +89,40 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 413 });
   }
 
-  const buffer = await file.arrayBuffer();
-  const head = new Uint8Array(buffer.slice(0, 12));
-  const detected = detectImage(head);
-  if (!detected) {
-    // HEIC (iPhone default) and other camera formats fall through here. Surface
-    // an explicit hint for the most common case Tasha will hit.
-    const filename = (file.name || "").toLowerCase();
-    if (filename.endsWith(".heic") || filename.endsWith(".heif")) {
+  const inputBuffer = await file.arrayBuffer();
+
+  // Process: validate structure, cap decoded pixels, resize, re-encode to webp,
+  // strip EXIF. sharp throws on malformed / non-image input, on oversized
+  // pixel counts, and decodes HEIC natively — so this single call replaces
+  // the prior magic-byte sniff plus handles iPhone photos transparently.
+  let processed;
+  try {
+    processed = await processImage(inputBuffer);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    // Friendly hint for the most common failure modes.
+    if (/unsupported image format|Input file contains unsupported image format/i.test(message)) {
       return NextResponse.json(
-        { error: "iPhone HEIC photos aren't supported. Please export the photo as JPG before uploading." },
+        { error: "Unsupported image format. Try JPG, PNG, WEBP, GIF, or HEIC." },
         { status: 415 },
       );
     }
+    if (/limitInputPixels|Input image exceeds pixel limit/i.test(message)) {
+      return NextResponse.json(
+        { error: "Image dimensions are too large. Please resize before uploading." },
+        { status: 413 },
+      );
+    }
     return NextResponse.json(
-      { error: "Unsupported or corrupt image (allowed: JPG, PNG, WEBP, GIF)" },
+      { error: "Could not process image. The file may be corrupt." },
       { status: 415 },
     );
   }
 
-  // Hardcoded folder — no client-controlled path component. New folders
-  // require a new typed route or server-side allowlist.
-  const folder = "events";
-  const key = `${folder}/${randomUUID()}.${detected.ext}`;
-  const url = await uploadFromBuffer(buffer, detected.contentType, key);
+  // Hardcoded folder allowlist — no client-controlled path component beyond
+  // the validated short string above. New folders require a code change.
+  const key = `${folder}/${randomUUID()}.${processed.ext}`;
+  const url = await uploadFromBuffer(processed.buffer, processed.contentType, key);
 
   return NextResponse.json({ url, key });
 }

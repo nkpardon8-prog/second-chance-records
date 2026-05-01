@@ -14,6 +14,8 @@ export interface FieldDef {
   type: "text" | "textarea" | "select" | "url" | "date" | "email" | "checkbox" | "image" | "images";
   required?: boolean;
   options?: { label: string; value: string }[];
+  /** For type "image": which blob folder to upload into (events/news/partners). */
+  folder?: "events" | "news" | "partners";
 }
 
 interface ItemFormProps {
@@ -115,6 +117,7 @@ export default function ItemForm({
               key={field.name}
               label={field.label}
               value={values[field.name] as string}
+              folder={field.folder}
               onChange={(url) =>
                 setValues((prev) => ({ ...prev, [field.name]: url }))
               }

@@ -53,12 +53,6 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     if (!file) return;
     setError(null);
 
-    const filename = (file.name || "").toLowerCase();
-    if (filename.endsWith(".heic") || filename.endsWith(".heif")) {
-      setError("iPhone HEIC photos aren't supported. Please export the photo as JPG before uploading.");
-      e.target.value = "";
-      return;
-    }
     if (file.size > MAX_BYTES) {
       setError(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 5MB.`);
       e.target.value = "";
@@ -75,6 +69,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     try {
       const fd = new FormData();
       fd.set("file", file);
+      fd.set("folder", "events");
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Upload failed");
@@ -180,7 +175,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
           onChange={handleFile}
           disabled={uploading || items.length >= MAX_IMAGES}
           className="hidden"
