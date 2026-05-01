@@ -23,30 +23,33 @@ export default function SortableList<T extends SortableItem>({
   onEdit,
   onDelete,
 }: SortableListProps<T>) {
-  const [items, setItems] = useState(initialItems);
-  const [dirty, setDirty] = useState(false);
+  // `draft` holds the user's in-progress reordering. When null, we render the
+  // server-pushed `initialItems` directly — so add/edit/delete from server
+  // actions are reflected immediately without needing a manual page refresh.
+  const [draft, setDraft] = useState<T[] | null>(null);
   const [pending, startTransition] = useTransition();
+  const items = draft ?? initialItems;
+  const dirty = draft !== null;
 
   function moveUp(index: number) {
     if (index === 0) return;
     const next = [...items];
     [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    setItems(next);
-    setDirty(true);
+    setDraft(next);
   }
 
   function moveDown(index: number) {
     if (index === items.length - 1) return;
     const next = [...items];
     [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    setItems(next);
-    setDirty(true);
+    setDraft(next);
   }
 
   function saveOrder() {
+    if (!draft) return;
     startTransition(async () => {
-      await onReorder(items.map((i) => i.id));
-      setDirty(false);
+      await onReorder(draft.map((i) => i.id));
+      setDraft(null);
     });
   }
 
