@@ -6,6 +6,7 @@ import {
   updateEvent,
   deleteEvent,
   reorderEvents,
+  toggleEventPublished,
 } from "@/lib/actions/events";
 import { searchEvents } from "@/lib/actions/discover";
 import type { DiscoveredEvent } from "@/lib/actions/discover";
@@ -46,18 +47,10 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
 
   function handlePublish(id: number) {
     startTransition(async () => {
-      const fd = new FormData();
-      const ev = events.find((e) => e.id === id);
-      if (!ev) return;
-      fd.set("title", ev.title);
-      fd.set("date", ev.date);
-      fd.set("time", ev.time ?? "");
-      fd.set("description", ev.description ?? "");
-      fd.set("artistName", ev.artistName ?? "");
-      fd.set("artistUrl", ev.artistUrl ?? "");
-      fd.set("imageUrl", ev.imageUrl ?? "");
-      fd.set("isPublished", "true");
-      await updateEvent(id, fd);
+      // Focused typed action — flips is_published only. Mirrors toggleNewsPublished
+      // in news.ts. Avoids the prior bug where rebuilding FormData with stale
+      // in-memory state could overwrite a flyer attached in another tab.
+      await toggleEventPublished(id, true);
     });
   }
 

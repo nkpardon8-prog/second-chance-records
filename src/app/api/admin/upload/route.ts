@@ -38,10 +38,30 @@ function detectImage(bytes: Uint8Array): { ext: string; contentType: string } | 
   return null;
 }
 
-function originAllowed(request: NextRequest, siteUrl: string): boolean {
-  // Strict path: Origin header is present and matches the site.
+// Build the allowlist of acceptable origins from the configured site URL.
+// new URL(...).origin normalizes away trailing slashes and any path, so a
+// misconfigured NEXT_PUBLIC_SITE_URL with `/` doesn't 403 every upload. Both
+// apex and www variants are accepted so admins reaching the site via either
+// hostname work.
+function allowedOrigins(rawSiteUrl: string): string[] {
+  try {
+    const url = new URL(rawSiteUrl);
+    const apex = url.origin;
+    const host = url.hostname;
+    const wwwHost = host.startsWith("www.") ? host : `www.${host}`;
+    const apexHost = host.startsWith("www.") ? host.slice(4) : host;
+    const wwwOrigin = `${url.protocol}//${wwwHost}`;
+    const apexOrigin = `${url.protocol}//${apexHost}`;
+    return Array.from(new Set([apex, wwwOrigin, apexOrigin]));
+  } catch {
+    return [rawSiteUrl];
+  }
+}
+
+function originAllowed(request: NextRequest, allowed: string[]): boolean {
+  // Strict path: Origin header is present and matches an allowed origin.
   const origin = request.headers.get("origin");
-  if (origin) return origin === siteUrl;
+  if (origin) return allowed.includes(origin);
 
   // Fallback: Origin can legitimately be absent (some same-site fetch flows,
   // older browsers). Require a Referer that points at the same host so a
@@ -50,15 +70,16 @@ function originAllowed(request: NextRequest, siteUrl: string): boolean {
   const referer = request.headers.get("referer");
   if (!referer) return false;
   try {
-    return new URL(referer).origin === siteUrl;
+    return allowed.includes(new URL(referer).origin);
   } catch {
     return false;
   }
 }
 
 export async function POST(request: NextRequest) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
-  if (!originAllowed(request, siteUrl)) {
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
+  const allowed = allowedOrigins(rawSiteUrl);
+  if (!originAllowed(request, allowed)) {
     return NextResponse.json({ error: "Forbidden origin" }, { status: 403 });
   }
 

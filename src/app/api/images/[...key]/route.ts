@@ -18,13 +18,16 @@ export async function GET(
   // to image/jpeg for those. New admin uploads write contentType in metadata.
   const meta = await store.getMetadata(joined).catch(() => null);
   const metadata = meta?.metadata as { contentType?: string } | undefined;
-  const stored = metadata?.contentType ?? "image/jpeg";
+  const stored = (metadata?.contentType ?? "image/jpeg").toLowerCase().split(";")[0].trim();
 
-  // Hard-allowlist on the GET side: even if a future code path stamps a non-image
-  // contentType into blob metadata, we refuse to serve it as anything but an
-  // image. Combined with X-Content-Type-Options: nosniff this prevents a stored
-  // blob from ever being interpreted as HTML/JS by the browser.
-  const contentType = stored.startsWith("image/") ? stored : "image/jpeg";
+  // Hard-allowlist on the GET side. SVG is an image MIME type but renders as a
+  // top-level HTML/JS document when navigated to directly, so it's deliberately
+  // excluded — even though the upload route's signature sniff already rejects
+  // it. Combined with X-Content-Type-Options: nosniff this means a stored blob
+  // can never be interpreted as HTML/JS by the browser regardless of how it
+  // got into the store.
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const contentType = ALLOWED_TYPES.includes(stored) ? stored : "image/jpeg";
 
   return new NextResponse(blob, {
     headers: {

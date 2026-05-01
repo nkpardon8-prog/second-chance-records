@@ -60,17 +60,6 @@ export async function updateEvent(id: number, formData: FormData) {
     imageUrl: formData.get("imageUrl") || undefined,
   });
 
-  // isPublished is admin metadata, not user input — handled outside Zod.
-  // Only included in the SET clause when explicitly provided, so editing an
-  // event without flipping its publish state preserves the existing value.
-  const isPublishedRaw = formData.get("isPublished");
-  const isPublishedUpdate =
-    isPublishedRaw === "true"
-      ? { isPublished: true }
-      : isPublishedRaw === "false"
-        ? { isPublished: false }
-        : {};
-
   await db
     .update(events)
     .set({
@@ -81,9 +70,21 @@ export async function updateEvent(id: number, formData: FormData) {
       artistName: parsed.artistName ?? null,
       artistUrl: parsed.artistUrl || null,
       imageUrl: parsed.imageUrl || null,
-      ...isPublishedUpdate,
     })
     .where(eq(events.id, id));
+
+  revalidatePath("/events");
+  revalidatePath("/admin/events");
+}
+
+// Mirrors toggleNewsPublished in news.ts. Used by the admin Publish button on
+// auto-discovered events; keeps the publish-state flip as a focused typed
+// action instead of round-tripping the entire event through updateEvent.
+export async function toggleEventPublished(id: number, isPublished: boolean) {
+  const session = await getSession();
+  if (!session.isLoggedIn) throw new Error("Unauthorized");
+
+  await db.update(events).set({ isPublished }).where(eq(events.id, id));
 
   revalidatePath("/events");
   revalidatePath("/admin/events");
