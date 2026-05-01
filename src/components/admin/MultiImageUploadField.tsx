@@ -10,7 +10,10 @@ import {
   reorderEventImages,
   deleteOrphanBlob,
 } from "@/lib/actions/event-images";
+import { keyFromImageUrl } from "@/lib/image-store";
 import type { EventImage } from "@/types";
+
+const EVENT_IMAGE_KEY_PREFIX = "events/";
 
 const MAX_IMAGES = 10;
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -34,7 +37,16 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
   // (revalidatePath alone invalidates the cache for next navigation but does
   // NOT auto-trigger a re-render of the currently-mounted client tree when
   // the action was awaited from a client handler rather than a <form action>.)
-  const items = images;
+  //
+  // Defense in depth: filter out any row whose URL doesn't decode to one of
+  // our own /api/images/events/* keys. EventCard applies the same filter on
+  // the public render path; mirroring it here means a stored bad row (legacy
+  // data, schema accident) can never produce a clickable cross-origin link in
+  // the admin gallery either.
+  const items = images.filter((img) => {
+    const key = keyFromImageUrl(img.url);
+    return key !== null && key.startsWith(EVENT_IMAGE_KEY_PREFIX);
+  });
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -87,7 +99,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     setError(null);
     startTransition(async () => {
       try {
-        await removeEventImage(imageId);
+        await removeEventImage(imageId, eventId);
         router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Remove failed");

@@ -48,13 +48,20 @@ export default function ImageLightbox({
   }
 
   // Keep React state in sync if the user closes via ESC (native dialog
-  // behavior) so the parent can re-trigger if needed.
+  // behavior) so the parent can re-trigger if needed. Cleanup also force-closes
+  // the dialog if it's still open at unmount — without this, a parent
+  // re-render that drops this component (e.g., remove flow → router.refresh()
+  // re-renders the gallery) leaves the modal/inert state stale at the document
+  // level.
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
     const onClose = () => setOpen(false);
     dialog.addEventListener("close", onClose);
-    return () => dialog.removeEventListener("close", onClose);
+    return () => {
+      dialog.removeEventListener("close", onClose);
+      if (dialog.open) dialog.close();
+    };
   }, []);
 
   return (

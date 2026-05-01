@@ -77,9 +77,10 @@ export async function addEventImage(eventId: number, url: string) {
 // the subsequent addEventImage threw. Without this the blob lives in storage
 // forever with no row pointing to it.
 //
-// Only accepts URLs whose key lives under the events/ prefix — without this
-// any authenticated admin could pass an Instagram/news/etc blob URL and wipe
-// it. Same-origin assertion blocks malformed URLs too.
+// Hardening: refuse to delete a URL that any current event_images row
+// references. A forged client call could otherwise pass the URL of a live
+// flyer and wipe it under the guise of orphan cleanup. The events/ prefix
+// gate is kept so a forged Instagram/news URL still no-ops at the URL level.
 export async function deleteOrphanBlob(url: string) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
@@ -87,24 +88,46 @@ export async function deleteOrphanBlob(url: string) {
   if (!key || !key.startsWith(EVENT_IMAGE_KEY_PREFIX)) {
     throw new Error("Invalid image URL");
   }
+  const [match] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(eventImages)
+    .where(eq(eventImages.url, url));
+  if ((match?.count ?? 0) > 0) {
+    // Not actually orphaned — refuse rather than wipe a live row's blob.
+    return;
+  }
   await deleteImageBlob(url);
 }
 
-export async function removeEventImage(imageId: number) {
+export async function removeEventImage(imageId: number, eventId: number) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
 
+  // Composite WHERE prevents cross-event tampering: an admin (or anyone
+  // holding the cookie) can't enumerate ids across events to delete other
+  // events' flyers. The select + delete both scope by (id, event_id).
   const [row] = await db
     .select({ url: eventImages.url })
     .from(eventImages)
-    .where(eq(eventImages.id, imageId))
+    .where(and(eq(eventImages.id, imageId), eq(eventImages.eventId, eventId)))
     .limit(1);
   if (!row) return;
 
-  // Delete blob first (best-effort), then row. If blob delete fails the row is
-  // still removed — orphan blob is recoverable, broken row is not.
-  await deleteImageBlob(row.url);
-  await db.delete(eventImages).where(eq(eventImages.id, imageId));
+  // Row delete first, then a conditional blob delete only if no remaining
+  // event_images row references the same URL. Reverses the previous order
+  // (blob first, then row) so a duplicate row pointing at the same blob
+  // doesn't break the surviving thumbnail.
+  await db
+    .delete(eventImages)
+    .where(and(eq(eventImages.id, imageId), eq(eventImages.eventId, eventId)));
+
+  const [remaining] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(eventImages)
+    .where(eq(eventImages.url, row.url));
+  if ((remaining?.count ?? 0) === 0) {
+    await deleteImageBlob(row.url);
+  }
 
   revalidatePath("/events");
   revalidatePath("/admin/events");

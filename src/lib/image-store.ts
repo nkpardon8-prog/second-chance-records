@@ -58,29 +58,42 @@ export async function uploadFromBuffer(
 }
 
 /**
+ * Resolves OUR canonical origin from NEXT_PUBLIC_SITE_URL, falling back to the
+ * production hostname. Used to bind both URL emission and URL validation to
+ * the same origin so the two can never drift.
+ */
+function ourOrigin(): string {
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
+  try {
+    return new URL(rawSiteUrl).origin;
+  } catch {
+    return "https://secondchancerecords.com";
+  }
+}
+
+/**
  * Returns the URL for a stored image, served via our API route.
  * Normalizes the configured site URL (via new URL().origin) so a trailing slash
  * in env doesn't produce a `//api/images/...` path.
  */
 export function getImageUrl(key: string): string {
-  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
-  let origin: string;
-  try {
-    origin = new URL(rawSiteUrl).origin;
-  } catch {
-    origin = "https://secondchancerecords.com";
-  }
   const safeKey = key.split("/").map(encodeURIComponent).join("/");
-  return `${origin}/api/images/${safeKey}`;
+  return `${ourOrigin()}/api/images/${safeKey}`;
 }
 
 /**
  * Extracts the blob key from a /api/images/<key> URL produced by getImageUrl().
  * Returns null if the URL isn't one of ours (defensive — never delete random blobs).
+ *
+ * Origin is asserted: a foreign URL like https://evil.com/api/images/events/x.jpg
+ * has the matching pathname but a different origin, and would otherwise pass the
+ * prefix check. Without the origin assert, an authenticated admin could store an
+ * arbitrary URL under our events/ prefix and bypass downstream gates.
  */
 export function keyFromImageUrl(url: string): string | null {
   try {
     const u = new URL(url);
+    if (u.origin !== ourOrigin()) return null;
     const prefix = "/api/images/";
     if (!u.pathname.startsWith(prefix)) return null;
     const encoded = u.pathname.slice(prefix.length);
