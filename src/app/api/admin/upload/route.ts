@@ -38,48 +38,32 @@ function detectImage(bytes: Uint8Array): { ext: string; contentType: string } | 
   return null;
 }
 
-// Build the allowlist of acceptable origins from the configured site URL.
-// new URL(...).origin normalizes away trailing slashes and any path, so a
-// misconfigured NEXT_PUBLIC_SITE_URL with `/` doesn't 403 every upload. Both
-// apex and www variants are accepted so admins reaching the site via either
-// hostname work.
-function allowedOrigins(rawSiteUrl: string): string[] {
-  try {
-    const url = new URL(rawSiteUrl);
-    const apex = url.origin;
-    const host = url.hostname;
-    const wwwHost = host.startsWith("www.") ? host : `www.${host}`;
-    const apexHost = host.startsWith("www.") ? host.slice(4) : host;
-    const wwwOrigin = `${url.protocol}//${wwwHost}`;
-    const apexOrigin = `${url.protocol}//${apexHost}`;
-    return Array.from(new Set([apex, wwwOrigin, apexOrigin]));
-  } catch {
-    return [rawSiteUrl];
-  }
-}
+// CSRF defense in depth: require the request's Origin (or Referer fallback) to
+// match the request's own host. This is the *actual* security property we
+// want — that the request originated from the same site that's serving it —
+// and it's robust to NEXT_PUBLIC_SITE_URL misconfiguration, www-vs-apex
+// hostname differences, deploy preview URLs, etc. Same-site cookies are
+// sameSite=lax so for POST requests this is purely belt-and-suspenders.
+function originAllowed(request: NextRequest): boolean {
+  const requestOrigin = request.nextUrl.origin;
 
-function originAllowed(request: NextRequest, allowed: string[]): boolean {
-  // Strict path: Origin header is present and matches an allowed origin.
+  // Strict path: Origin header present and matches the host serving us.
   const origin = request.headers.get("origin");
-  if (origin) return allowed.includes(origin);
+  if (origin) return origin === requestOrigin;
 
-  // Fallback: Origin can legitimately be absent (some same-site fetch flows,
-  // older browsers). Require a Referer that points at the same host so a
-  // cross-site form post that suppresses Origin via referrerpolicy is still
-  // rejected. Same-site cookies are sameSite=lax so this is defense in depth.
+  // Fallback: Origin can legitimately be absent. Require Referer to come from
+  // the same origin.
   const referer = request.headers.get("referer");
   if (!referer) return false;
   try {
-    return allowed.includes(new URL(referer).origin);
+    return new URL(referer).origin === requestOrigin;
   } catch {
     return false;
   }
 }
 
 export async function POST(request: NextRequest) {
-  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
-  const allowed = allowedOrigins(rawSiteUrl);
-  if (!originAllowed(request, allowed)) {
+  if (!originAllowed(request)) {
     return NextResponse.json({ error: "Forbidden origin" }, { status: 403 });
   }
 
