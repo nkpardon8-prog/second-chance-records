@@ -11,7 +11,11 @@ export interface SessionData {
 export const sessionOptions = {
   password: process.env.SESSION_SECRET!,
   cookieName: "scr-admin-session",
-  cookieOptions: { secure: process.env.NODE_ENV === "production" },
+  cookieOptions: {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    httpOnly: true,
+  },
 };
 
 export async function getSession() {

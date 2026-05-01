@@ -3,6 +3,7 @@ import { getPageContent } from "@/lib/actions/content";
 import { getResources } from "@/lib/actions/resources";
 import ExternalLink from "@/components/ui/ExternalLink";
 import InlineEditor from "@/components/admin/InlineEditor";
+import ProseContent from "@/components/ui/ProseContent";
 
 export const metadata: Metadata = {
   title: "Mission | Second Chance Records",
@@ -47,13 +48,15 @@ export default async function MissionPage() {
           <p className="font-mono text-sm text-kraft/70 uppercase tracking-wider mt-2">
             Second chances for humans &amp; hi-fi
           </p>
-          {content.length > 0 ? (
+          {content.some((b) => b.content.trim() !== "") ? (
             <div className="prose prose-lg prose-invert mx-auto mt-8 font-sans">
-              {content.map((block) => (
-                <InlineEditor key={block.id} contentId={block.id} content={block.content}>
-                  <div dangerouslySetInnerHTML={{ __html: block.content }} />
-                </InlineEditor>
-              ))}
+              {content
+                .filter((block) => block.content.trim() !== "")
+                .map((block) => (
+                  <InlineEditor key={block.id} contentId={block.id} content={block.content}>
+                    <ProseContent text={block.content} />
+                  </InlineEditor>
+                ))}
             </div>
           ) : (
             <InlineEditor pageSlug="mission" sectionKey="mission-statement" content="Second Chance Records is more than a record store. We believe everyone and everything deserves a second chance. From restoring discarded vinyl to supporting our community, we put that belief into practice every day.">

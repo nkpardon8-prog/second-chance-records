@@ -21,7 +21,7 @@ const eventFields: FieldDef[] = [
   { name: "description", label: "Description", type: "textarea" },
   { name: "artistName", label: "Artist Name", type: "text" },
   { name: "artistUrl", label: "Artist URL", type: "url" },
-  { name: "imageUrl", label: "Image URL", type: "url" },
+  { name: "imageUrl", label: "Flyer Image", type: "image" },
 ];
 
 interface AdminEventsClientProps {
@@ -55,6 +55,7 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
       fd.set("description", ev.description ?? "");
       fd.set("artistName", ev.artistName ?? "");
       fd.set("artistUrl", ev.artistUrl ?? "");
+      fd.set("imageUrl", ev.imageUrl ?? "");
       await updateEvent(id, fd);
     });
   }
@@ -87,6 +88,7 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
       fd.set("description", event.description);
       fd.set("artistName", event.artist_name ?? "");
       fd.set("artistUrl", "");
+      fd.set("imageUrl", "");
       await createEvent(fd);
       setSuggestions((prev) => prev.filter((s) => s !== event));
     });

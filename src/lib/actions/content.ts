@@ -35,6 +35,24 @@ export async function updatePageContent(id: number, content: string) {
   revalidatePath("/");
 }
 
+export async function deletePageContent(id: number) {
+  const session = await getSession();
+  if (!session.isLoggedIn) throw new Error("Unauthorized");
+
+  const [row] = await db
+    .select({ pageSlug: pageContent.pageSlug })
+    .from(pageContent)
+    .where(eq(pageContent.id, id))
+    .limit(1);
+
+  await db.delete(pageContent).where(eq(pageContent.id, id));
+
+  if (row) {
+    revalidatePath(`/${row.pageSlug === "home" ? "" : row.pageSlug}`);
+  }
+  revalidatePath("/");
+}
+
 export async function upsertPageContent(
   pageSlug: string,
   sectionKey: string,

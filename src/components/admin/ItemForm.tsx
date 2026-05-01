@@ -4,11 +4,12 @@ import { useState, useTransition, type FormEvent } from "react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
+import ImageUploadField from "@/components/admin/ImageUploadField";
 
 export interface FieldDef {
   name: string;
   label: string;
-  type: "text" | "textarea" | "select" | "url" | "date" | "email" | "checkbox";
+  type: "text" | "textarea" | "select" | "url" | "date" | "email" | "checkbox" | "image";
   required?: boolean;
   options?: { label: string; value: string }[];
 }
@@ -97,6 +98,18 @@ export default function ItemForm({
                 ))}
               </select>
             </div>
+          );
+        }
+        if (field.type === "image") {
+          return (
+            <ImageUploadField
+              key={field.name}
+              label={field.label}
+              value={values[field.name] as string}
+              onChange={(url) =>
+                setValues((prev) => ({ ...prev, [field.name]: url }))
+              }
+            />
           );
         }
         if (field.type === "checkbox") {

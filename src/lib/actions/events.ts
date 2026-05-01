@@ -29,6 +29,7 @@ export async function createEvent(formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
+    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db.insert(events).values({
@@ -38,6 +39,7 @@ export async function createEvent(formData: FormData) {
     time: parsed.time ?? null,
     artistName: parsed.artistName ?? null,
     artistUrl: parsed.artistUrl || null,
+    imageUrl: parsed.imageUrl || null,
   });
 
   revalidatePath("/events");
@@ -55,6 +57,7 @@ export async function updateEvent(id: number, formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
+    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db
@@ -66,6 +69,7 @@ export async function updateEvent(id: number, formData: FormData) {
       time: parsed.time ?? null,
       artistName: parsed.artistName ?? null,
       artistUrl: parsed.artistUrl || null,
+      imageUrl: parsed.imageUrl || null,
     })
     .where(eq(events.id, id));
 

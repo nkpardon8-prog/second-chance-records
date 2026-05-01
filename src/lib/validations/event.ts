@@ -7,4 +7,5 @@ export const eventSchema = z.object({
   time: z.string().max(20).optional(),
   artistName: z.string().max(200).optional(),
   artistUrl: z.string().url().optional().or(z.literal("")),
+  imageUrl: z.string().url().optional().or(z.literal("")),
 });
