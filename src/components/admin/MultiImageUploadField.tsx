@@ -77,8 +77,13 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
   }
 
   function handleRemove(imageId: number) {
+    setError(null);
     startTransition(async () => {
-      await removeEventImage(imageId);
+      try {
+        await removeEventImage(imageId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Remove failed");
+      }
     });
   }
 
@@ -86,8 +91,13 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     if (to < 0 || to >= items.length) return;
     const next = [...items];
     [next[from], next[to]] = [next[to], next[from]];
+    setError(null);
     startTransition(async () => {
-      await reorderEventImages(eventId, next.map((i) => i.id));
+      try {
+        await reorderEventImages(eventId, next.map((i) => i.id));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Reorder failed");
+      }
     });
   }
 

@@ -2,12 +2,25 @@
 
 import { db } from "@/lib/db";
 import { eventImages } from "@/lib/db/schema";
-import { eq, asc, sql } from "drizzle-orm";
+import { eq, and, asc, sql } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { deleteImageBlob } from "@/lib/image-store";
+import { deleteImageBlob, keyFromImageUrl } from "@/lib/image-store";
 
 const MAX_IMAGES_PER_EVENT = 10;
+const EVENT_IMAGE_KEY_PREFIX = "events/";
+
+// Defense in depth: only accept URLs that came out of our own upload route
+// under the events/ prefix. Without this an authenticated admin (or anyone
+// holding the iron-session cookie) could store an arbitrary URL like
+// `https://evil.com/track.png` or `javascript:...` and the public EventCard
+// would render it directly, exposing visitors to XSS / SSRF / link injection.
+function assertOurEventImageUrl(url: string): void {
+  const key = keyFromImageUrl(url);
+  if (!key || !key.startsWith(EVENT_IMAGE_KEY_PREFIX)) {
+    throw new Error("Invalid image URL");
+  }
+}
 
 export async function getEventImages(eventId: number) {
   return db
@@ -20,6 +33,7 @@ export async function getEventImages(eventId: number) {
 export async function addEventImage(eventId: number, url: string) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
+  assertOurEventImageUrl(url);
 
   const [stats] = await db
     .select({
@@ -62,9 +76,17 @@ export async function addEventImage(eventId: number, url: string) {
 // Best-effort orphan cleanup for the case where a blob upload succeeded but
 // the subsequent addEventImage threw. Without this the blob lives in storage
 // forever with no row pointing to it.
+//
+// Only accepts URLs whose key lives under the events/ prefix — without this
+// any authenticated admin could pass an Instagram/news/etc blob URL and wipe
+// it. Same-origin assertion blocks malformed URLs too.
 export async function deleteOrphanBlob(url: string) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
+  const key = keyFromImageUrl(url);
+  if (!key || !key.startsWith(EVENT_IMAGE_KEY_PREFIX)) {
+    throw new Error("Invalid image URL");
+  }
   await deleteImageBlob(url);
 }
 
@@ -92,11 +114,15 @@ export async function reorderEventImages(eventId: number, orderedIds: number[]) 
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
 
+  // Constrain each UPDATE to images that belong to the given event. Without
+  // the eventId guard, a caller could pass IDs of images belonging to a
+  // different event and rewrite their sort_order — cross-row tampering even
+  // among trusted admins. The composite WHERE makes mismatched IDs no-op.
   for (let i = 0; i < orderedIds.length; i++) {
     await db
       .update(eventImages)
       .set({ sortOrder: i })
-      .where(eq(eventImages.id, orderedIds[i]));
+      .where(and(eq(eventImages.id, orderedIds[i]), eq(eventImages.eventId, eventId)));
   }
 
   revalidatePath("/events");

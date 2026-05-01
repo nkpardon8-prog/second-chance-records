@@ -1,4 +1,5 @@
 import ExternalLink from "@/components/ui/ExternalLink";
+import { keyFromImageUrl } from "@/lib/image-store";
 import type { EventImage } from "@/types";
 
 interface EventCardProps {
@@ -65,30 +66,42 @@ export default function EventCard({
         )}
       </div>
 
-      {images.length > 0 && (
-        <div
-          className="mt-4 grid gap-2"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
-        >
-          {images.map((img) => (
-            <a
-              key={img.id}
-              href={img.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-base border border-white/5 rounded-sm overflow-hidden hover:border-brick/40 transition-colors"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={img.url}
-                alt={title}
-                className="w-full h-48 object-cover"
-                loading="lazy"
-              />
-            </a>
-          ))}
-        </div>
-      )}
+      {images.length > 0 && (() => {
+        // Defense in depth: filter out any image whose URL doesn't decode to one
+        // of our own /api/images/events/* keys. The server action also rejects
+        // foreign URLs at write time, but rendering through this guard means a
+        // stored bad row (legacy data, schema migration accident, etc) can never
+        // produce a clickable javascript:/cross-origin link in this card.
+        const safeImages = images.filter((img) => {
+          const key = keyFromImageUrl(img.url);
+          return key !== null && key.startsWith("events/");
+        });
+        if (safeImages.length === 0) return null;
+        return (
+          <div
+            className="mt-4 grid gap-2"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+          >
+            {safeImages.map((img) => (
+              <a
+                key={img.id}
+                href={img.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-base border border-white/5 rounded-sm overflow-hidden hover:border-brick/40 transition-colors"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={img.url}
+                  alt={title}
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                />
+              </a>
+            ))}
+          </div>
+        );
+      })()}
     </div>
   );
 }
