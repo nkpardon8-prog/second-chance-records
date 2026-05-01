@@ -56,6 +56,7 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
       fd.set("artistName", ev.artistName ?? "");
       fd.set("artistUrl", ev.artistUrl ?? "");
       fd.set("imageUrl", ev.imageUrl ?? "");
+      fd.set("isPublished", "true");
       await updateEvent(id, fd);
     });
   }

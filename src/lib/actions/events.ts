@@ -60,6 +60,17 @@ export async function updateEvent(id: number, formData: FormData) {
     imageUrl: formData.get("imageUrl") || undefined,
   });
 
+  // isPublished is admin metadata, not user input — handled outside Zod.
+  // Only included in the SET clause when explicitly provided, so editing an
+  // event without flipping its publish state preserves the existing value.
+  const isPublishedRaw = formData.get("isPublished");
+  const isPublishedUpdate =
+    isPublishedRaw === "true"
+      ? { isPublished: true }
+      : isPublishedRaw === "false"
+        ? { isPublished: false }
+        : {};
+
   await db
     .update(events)
     .set({
@@ -70,6 +81,7 @@ export async function updateEvent(id: number, formData: FormData) {
       artistName: parsed.artistName ?? null,
       artistUrl: parsed.artistUrl || null,
       imageUrl: parsed.imageUrl || null,
+      ...isPublishedUpdate,
     })
     .where(eq(events.id, id));
 

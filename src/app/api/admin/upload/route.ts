@@ -38,16 +38,41 @@ function detectImage(bytes: Uint8Array): { ext: string; contentType: string } | 
   return null;
 }
 
-export async function POST(request: NextRequest) {
+function originAllowed(request: NextRequest, siteUrl: string): boolean {
+  // Strict path: Origin header is present and matches the site.
   const origin = request.headers.get("origin");
+  if (origin) return origin === siteUrl;
+
+  // Fallback: Origin can legitimately be absent (some same-site fetch flows,
+  // older browsers). Require a Referer that points at the same host so a
+  // cross-site form post that suppresses Origin via referrerpolicy is still
+  // rejected. Same-site cookies are sameSite=lax so this is defense in depth.
+  const referer = request.headers.get("referer");
+  if (!referer) return false;
+  try {
+    return new URL(referer).origin === siteUrl;
+  } catch {
+    return false;
+  }
+}
+
+export async function POST(request: NextRequest) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://secondchancerecords.com";
-  if (origin && origin !== siteUrl) {
+  if (!originAllowed(request, siteUrl)) {
     return NextResponse.json({ error: "Forbidden origin" }, { status: 403 });
   }
 
   const session = await getSession();
   if (!session.isLoggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Reject oversized uploads BEFORE buffering the body via formData(). Without
+  // this an attacker (or a misbehaving client) could push multi-GB multipart
+  // bodies into memory before the file.size check fires.
+  const declaredLength = Number(request.headers.get("content-length") ?? 0);
+  if (declaredLength > MAX_BYTES) {
+    return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 413 });
   }
 
   const formData = await request.formData();
@@ -64,7 +89,19 @@ export async function POST(request: NextRequest) {
   const head = new Uint8Array(buffer.slice(0, 12));
   const detected = detectImage(head);
   if (!detected) {
-    return NextResponse.json({ error: "Unsupported or corrupt image" }, { status: 415 });
+    // HEIC (iPhone default) and other camera formats fall through here. Surface
+    // an explicit hint for the most common case Tasha will hit.
+    const filename = (file.name || "").toLowerCase();
+    if (filename.endsWith(".heic") || filename.endsWith(".heif")) {
+      return NextResponse.json(
+        { error: "iPhone HEIC photos aren't supported. Please export the photo as JPG before uploading." },
+        { status: 415 },
+      );
+    }
+    return NextResponse.json(
+      { error: "Unsupported or corrupt image (allowed: JPG, PNG, WEBP, GIF)" },
+      { status: 415 },
+    );
   }
 
   // Hardcoded folder — no client-controlled path component. New folders

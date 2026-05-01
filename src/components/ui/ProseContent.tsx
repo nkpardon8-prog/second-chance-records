@@ -4,7 +4,9 @@ interface Props {
 }
 
 export default function ProseContent({ text, className }: Props) {
-  const trimmed = text.trim();
+  // Normalize CRLF (Windows/paste-from-Word) and lone CR before splitting so a
+  // stray \r doesn't cling to the previous paragraph as invisible whitespace.
+  const trimmed = text.replace(/\r\n?/g, "\n").trim();
   if (!trimmed) return null;
 
   // Any run of newlines = paragraph break. Tasha types single \n on Mission and

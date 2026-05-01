@@ -9,6 +9,8 @@ interface Props {
   onChange: (url: string) => void;
 }
 
+const MAX_BYTES = 5 * 1024 * 1024;
+
 export default function ImageUploadField({ label, value, onChange }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +19,21 @@ export default function ImageUploadField({ label, value, onChange }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     setError(null);
+
+    // Reject obviously bad files BEFORE the full upload — saves a 50MB iPhone
+    // photo from streaming all the way to the server only to bounce.
+    const filename = (file.name || "").toLowerCase();
+    if (filename.endsWith(".heic") || filename.endsWith(".heif")) {
+      setError("iPhone HEIC photos aren't supported. Please export the photo as JPG before uploading.");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      setError(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 5MB.`);
+      e.target.value = "";
+      return;
+    }
+
     setUploading(true);
     try {
       const fd = new FormData();

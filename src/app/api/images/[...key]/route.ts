@@ -18,12 +18,19 @@ export async function GET(
   // to image/jpeg for those. New admin uploads write contentType in metadata.
   const meta = await store.getMetadata(joined).catch(() => null);
   const metadata = meta?.metadata as { contentType?: string } | undefined;
-  const contentType = metadata?.contentType ?? "image/jpeg";
+  const stored = metadata?.contentType ?? "image/jpeg";
+
+  // Hard-allowlist on the GET side: even if a future code path stamps a non-image
+  // contentType into blob metadata, we refuse to serve it as anything but an
+  // image. Combined with X-Content-Type-Options: nosniff this prevents a stored
+  // blob from ever being interpreted as HTML/JS by the browser.
+  const contentType = stored.startsWith("image/") ? stored : "image/jpeg";
 
   return new NextResponse(blob, {
     headers: {
       "Content-Type": contentType,
       "Cache-Control": "public, max-age=31536000, immutable",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }
