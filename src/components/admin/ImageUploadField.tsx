@@ -1,17 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "@/components/ui/Button";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 
 interface Props {
   label: string;
   value: string;
   onChange: (url: string) => void;
+  /** Which blob folder this upload lands under. Validated server-side. */
+  folder?: "events" | "news" | "partners";
 }
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
-export default function ImageUploadField({ label, value, onChange }: Props) {
+export default function ImageUploadField({ label, value, onChange, folder }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,14 +24,6 @@ export default function ImageUploadField({ label, value, onChange }: Props) {
     if (!file) return;
     setError(null);
 
-    // Reject obviously bad files BEFORE the full upload — saves a 50MB iPhone
-    // photo from streaming all the way to the server only to bounce.
-    const filename = (file.name || "").toLowerCase();
-    if (filename.endsWith(".heic") || filename.endsWith(".heif")) {
-      setError("iPhone HEIC photos aren't supported. Please export the photo as JPG before uploading.");
-      e.target.value = "";
-      return;
-    }
     if (file.size > MAX_BYTES) {
       setError(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 5MB.`);
       e.target.value = "";
@@ -38,6 +34,7 @@ export default function ImageUploadField({ label, value, onChange }: Props) {
     try {
       const fd = new FormData();
       fd.set("file", file);
+      if (folder) fd.set("folder", folder);
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Upload failed");
@@ -57,12 +54,13 @@ export default function ImageUploadField({ label, value, onChange }: Props) {
       </label>
       {value && (
         <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={value}
-            alt=""
-            className="h-20 w-20 object-cover rounded-sm border border-white/10"
-          />
+          <div className="h-20 w-20 rounded-sm border border-white/10 overflow-hidden bg-base flex items-center justify-center">
+            <ImageLightbox
+              src={value}
+              alt={label}
+              thumbnailClassName="w-full h-full"
+            />
+          </div>
           <Button
             type="button"
             size="sm"
@@ -74,13 +72,23 @@ export default function ImageUploadField({ label, value, onChange }: Props) {
         </div>
       )}
       <input
+        ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
         onChange={handleFile}
         disabled={uploading}
-        className="text-xs text-cream"
+        className="hidden"
       />
-      {uploading && <span className="text-xs text-kraft/70">Uploading…</span>}
+      <div>
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+        >
+          {uploading ? "Uploading…" : value ? "Replace Image" : "Upload Image"}
+        </Button>
+      </div>
       {error && <span className="text-xs text-brick">{error}</span>}
     </div>
   );

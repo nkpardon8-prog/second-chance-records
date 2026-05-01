@@ -84,6 +84,7 @@ export default function ImageLightbox({
       <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}
+        aria-label={alt ? `${alt} — full size view` : "Image full size view"}
         className="bg-transparent p-0 m-auto max-w-[90vw] max-h-[90vh] backdrop:bg-base/90 backdrop:backdrop-blur-sm"
       >
         {open && (

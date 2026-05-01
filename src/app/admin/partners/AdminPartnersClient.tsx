@@ -15,7 +15,7 @@ import type { Partner } from "@/types";
 const partnerFields: FieldDef[] = [
   { name: "name", label: "Name", type: "text", required: true },
   { name: "url", label: "URL", type: "url", required: true },
-  { name: "logoUrl", label: "Logo URL", type: "url" },
+  { name: "logoUrl", label: "Logo", type: "image", folder: "partners" },
   { name: "description", label: "Description", type: "textarea" },
 ];
 

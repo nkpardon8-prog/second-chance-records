@@ -9,7 +9,7 @@ import type { News } from "@/types";
 const newsFields: FieldDef[] = [
   { name: "title", label: "Title", type: "text", required: true },
   { name: "content", label: "Content", type: "textarea", required: true },
-  { name: "imageUrl", label: "Image URL", type: "url" },
+  { name: "imageUrl", label: "Image", type: "image", folder: "news" },
 ];
 
 interface AdminNewsClientProps {

@@ -83,14 +83,18 @@ export default function EventCard({
             className="mt-4 grid gap-2"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
           >
-            {safeImages.map((img) => (
+            {safeImages.map((img, i) => (
               <div
                 key={img.id}
                 className="bg-base border border-white/5 rounded-sm overflow-hidden h-64 flex items-center justify-center hover:border-brick/40 transition-colors"
               >
                 <ImageLightbox
                   src={img.url}
-                  alt={title}
+                  alt={
+                    safeImages.length > 1
+                      ? `${title} — flyer ${i + 1} of ${safeImages.length}`
+                      : title
+                  }
                   thumbnailClassName="w-full h-full"
                 />
               </div>
