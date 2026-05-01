@@ -1,4 +1,5 @@
 import ExternalLink from "@/components/ui/ExternalLink";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 import { keyFromImageUrl } from "@/lib/image-store";
 import type { EventImage } from "@/types";
 
@@ -83,21 +84,16 @@ export default function EventCard({
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
           >
             {safeImages.map((img) => (
-              <a
+              <div
                 key={img.id}
-                href={img.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-base border border-white/5 rounded-sm overflow-hidden hover:border-brick/40 transition-colors"
+                className="bg-base border border-white/5 rounded-sm overflow-hidden h-64 flex items-center justify-center hover:border-brick/40 transition-colors"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <ImageLightbox
                   src={img.url}
                   alt={title}
-                  className="w-full h-48 object-cover"
-                  loading="lazy"
+                  thumbnailClassName="w-full h-full"
                 />
-              </a>
+              </div>
             ))}
           </div>
         );

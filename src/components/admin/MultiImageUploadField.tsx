@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 import {
   addEventImage,
   removeEventImage,
@@ -21,13 +23,17 @@ interface Props {
 
 export default function MultiImageUploadField({ eventId, images, label }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   // No local "draft" state — items mirror the prop. Server actions revalidate
-  // the route; the parent server component re-renders and feeds new images
-  // back through props.
+  // the route; router.refresh() then pulls the new RSC payload so the parent
+  // server component re-renders and feeds new images back through props.
+  // (revalidatePath alone invalidates the cache for next navigation but does
+  // NOT auto-trigger a re-render of the currently-mounted client tree when
+  // the action was awaited from a client handler rather than a <form action>.)
   const items = images;
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,6 +68,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
       if (!res.ok) throw new Error(json.error ?? "Upload failed");
       uploadedUrl = json.url;
       await addEventImage(eventId, json.url);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
       // If blob upload SUCCEEDED but addEventImage FAILED (cap race, session
@@ -81,6 +88,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     startTransition(async () => {
       try {
         await removeEventImage(imageId);
+        router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Remove failed");
       }
@@ -95,6 +103,7 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
     startTransition(async () => {
       try {
         await reorderEventImages(eventId, next.map((i) => i.id));
+        router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Reorder failed");
       }
@@ -117,20 +126,24 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
           {items.map((img, index) => (
             <div
               key={img.id}
-              className="relative group bg-base border border-white/10 rounded-sm overflow-hidden"
+              className="relative bg-base border border-white/10 rounded-sm overflow-hidden h-32 flex items-center justify-center"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt="" className="w-full h-24 object-cover" />
+              <ImageLightbox
+                src={img.url}
+                alt=""
+                thumbnailClassName="w-full h-full"
+                imgClassName=""
+              />
               <button
                 type="button"
                 onClick={() => handleRemove(img.id)}
                 disabled={pending}
                 aria-label="Remove image"
-                className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-base/80 text-cream hover:bg-brick text-xs disabled:opacity-50"
+                className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-base/80 text-cream hover:bg-brick text-xs disabled:opacity-50 z-10"
               >
                 &#10005;
               </button>
-              <div className="absolute bottom-1 left-1 flex flex-col gap-0.5">
+              <div className="absolute bottom-1 left-1 flex flex-col gap-0.5 z-10">
                 <button
                   type="button"
                   onClick={() => reorder(index, index - 1)}
