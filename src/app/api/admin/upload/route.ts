@@ -38,25 +38,32 @@ function detectImage(bytes: Uint8Array): { ext: string; contentType: string } | 
   return null;
 }
 
-// CSRF defense in depth: require the request's Origin (or Referer fallback) to
-// match the request's own host. This is the *actual* security property we
-// want — that the request originated from the same site that's serving it —
-// and it's robust to NEXT_PUBLIC_SITE_URL misconfiguration, www-vs-apex
-// hostname differences, deploy preview URLs, etc. Same-site cookies are
-// sameSite=lax so for POST requests this is purely belt-and-suspenders.
+// CSRF defense in depth: ensure the request's Origin (or Referer fallback)
+// hostname matches the host the user actually browsed to. We compare against
+// the Host / X-Forwarded-Host header (set by the browser / preserved by the
+// edge proxy) rather than request.nextUrl.origin, because on Netlify the
+// internal request URL isn't the same as the public-facing host. Comparing
+// hostnames sidesteps protocol/port noise and works on apex, www, and any
+// Netlify preview URL automatically. Same-site cookies are sameSite=lax so
+// for POST requests this is purely belt-and-suspenders.
 function originAllowed(request: NextRequest): boolean {
-  const requestOrigin = request.nextUrl.origin;
+  const ownHost = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!ownHost) return false;
 
-  // Strict path: Origin header present and matches the host serving us.
   const origin = request.headers.get("origin");
-  if (origin) return origin === requestOrigin;
+  if (origin) {
+    try {
+      return new URL(origin).host === ownHost;
+    } catch {
+      return false;
+    }
+  }
 
-  // Fallback: Origin can legitimately be absent. Require Referer to come from
-  // the same origin.
+  // Fallback: Origin can legitimately be absent. Require Referer host match.
   const referer = request.headers.get("referer");
   if (!referer) return false;
   try {
-    return new URL(referer).origin === requestOrigin;
+    return new URL(referer).host === ownHost;
   } catch {
     return false;
   }
