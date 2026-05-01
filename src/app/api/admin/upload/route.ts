@@ -82,8 +82,15 @@ export async function POST(request: NextRequest) {
   // Reject oversized uploads BEFORE buffering the body via formData(). Without
   // this an attacker (or a misbehaving client) could push multi-GB multipart
   // bodies into memory before the file.size check fires.
+  //
+  // Content-Length includes multipart framing (boundary lines, per-part headers,
+  // CRLFs) on top of the file bytes, so the precheck must allow some envelope
+  // headroom. Without it, legitimate files just under MAX_BYTES are rejected
+  // here even though the actual file would pass the post-parse check below.
+  // The post-parse `file.size > MAX_BYTES` check still enforces the true cap.
+  const PREPARSE_LIMIT = MAX_BYTES + 16 * 1024; // ~16KB header budget
   const declaredLength = Number(request.headers.get("content-length") ?? 0);
-  if (declaredLength > MAX_BYTES) {
+  if (declaredLength > PREPARSE_LIMIT) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 413 });
   }
 
