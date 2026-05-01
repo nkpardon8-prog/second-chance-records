@@ -4,6 +4,7 @@ import { getPressMentions } from "@/lib/actions/press-mentions";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
 import InlineEditor from "@/components/admin/InlineEditor";
+import ProseContent from "@/components/ui/ProseContent";
 
 export const metadata: Metadata = {
   title: "About | Second Chance Records",
@@ -29,13 +30,15 @@ export default async function AboutPage() {
           About Us
         </SectionHeading>
 
-        {content.length > 0 ? (
+        {content.some((b) => b.content.trim() !== "") ? (
           <div className="prose prose-lg mx-auto mb-12 font-sans leading-relaxed">
-            {content.map((block) => (
-              <InlineEditor key={block.id} contentId={block.id} content={block.content}>
-                <div dangerouslySetInnerHTML={{ __html: block.content }} />
-              </InlineEditor>
-            ))}
+            {content
+              .filter((block) => block.content.trim() !== "")
+              .map((block) => (
+                <InlineEditor key={block.id} contentId={block.id} content={block.content}>
+                  <ProseContent text={block.content} />
+                </InlineEditor>
+              ))}
           </div>
         ) : (
           <>

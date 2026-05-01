@@ -29,6 +29,7 @@ export async function createEvent(formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
+    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db.insert(events).values({
@@ -38,6 +39,7 @@ export async function createEvent(formData: FormData) {
     time: parsed.time ?? null,
     artistName: parsed.artistName ?? null,
     artistUrl: parsed.artistUrl || null,
+    imageUrl: parsed.imageUrl || null,
   });
 
   revalidatePath("/events");
@@ -55,6 +57,7 @@ export async function updateEvent(id: number, formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
+    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db
@@ -66,8 +69,22 @@ export async function updateEvent(id: number, formData: FormData) {
       time: parsed.time ?? null,
       artistName: parsed.artistName ?? null,
       artistUrl: parsed.artistUrl || null,
+      imageUrl: parsed.imageUrl || null,
     })
     .where(eq(events.id, id));
+
+  revalidatePath("/events");
+  revalidatePath("/admin/events");
+}
+
+// Mirrors toggleNewsPublished in news.ts. Used by the admin Publish button on
+// auto-discovered events; keeps the publish-state flip as a focused typed
+// action instead of round-tripping the entire event through updateEvent.
+export async function toggleEventPublished(id: number, isPublished: boolean) {
+  const session = await getSession();
+  if (!session.isLoggedIn) throw new Error("Unauthorized");
+
+  await db.update(events).set({ isPublished }).where(eq(events.id, id));
 
   revalidatePath("/events");
   revalidatePath("/admin/events");

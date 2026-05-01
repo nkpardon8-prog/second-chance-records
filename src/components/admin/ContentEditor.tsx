@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { updatePageContent } from "@/lib/actions/content";
+import { updatePageContent, deletePageContent } from "@/lib/actions/content";
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
 import type { PageContent } from "@/types";
@@ -32,6 +32,13 @@ export default function ContentEditor({ sections }: ContentEditorProps) {
     });
   }
 
+  function handleDelete(id: number) {
+    if (!confirm("Delete this section permanently?")) return;
+    startTransition(async () => {
+      await deletePageContent(id);
+    });
+  }
+
   return (
     <div className="space-y-6">
       {sections.map((section) => (
@@ -57,6 +64,15 @@ export default function ContentEditor({ sections }: ContentEditorProps) {
               disabled={pending}
             >
               {pending ? "Saving..." : "Save"}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-brick hover:text-brick/80"
+              onClick={() => handleDelete(section.id)}
+              disabled={pending}
+            >
+              Delete
             </Button>
             {saved[section.id] && (
               <span className="text-sm text-forest">Saved</span>
