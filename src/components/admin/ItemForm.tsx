@@ -5,11 +5,13 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import MultiImageUploadField from "@/components/admin/MultiImageUploadField";
+import type { EventImage } from "@/types";
 
 export interface FieldDef {
   name: string;
   label: string;
-  type: "text" | "textarea" | "select" | "url" | "date" | "email" | "checkbox" | "image";
+  type: "text" | "textarea" | "select" | "url" | "date" | "email" | "checkbox" | "image" | "images";
   required?: boolean;
   options?: { label: string; value: string }[];
 }
@@ -20,6 +22,12 @@ interface ItemFormProps {
   initialValues?: Record<string, string | boolean>;
   submitLabel?: string;
   onCancel?: () => void;
+  // Generic shape so future News/Partners/etc multi-image migrations can reuse
+  // the pattern. parentId = the parent row's id, items = existing related rows.
+  relationContext?: {
+    parentId: number;
+    items: EventImage[];
+  };
 }
 
 export default function ItemForm({
@@ -28,6 +36,7 @@ export default function ItemForm({
   initialValues = {},
   submitLabel = "Save",
   onCancel,
+  relationContext,
 }: ItemFormProps) {
   const [values, setValues] = useState<Record<string, string | boolean>>(
     Object.fromEntries(
@@ -109,6 +118,28 @@ export default function ItemForm({
               onChange={(url) =>
                 setValues((prev) => ({ ...prev, [field.name]: url }))
               }
+            />
+          );
+        }
+        if (field.type === "images") {
+          if (!relationContext) {
+            return (
+              <div key={field.name} className="flex flex-col gap-1.5">
+                <label className="font-mono uppercase text-xs tracking-wider text-cream">
+                  {field.label}
+                </label>
+                <span className="text-xs text-kraft/70">
+                  Save the event first, then attach flyers via Edit.
+                </span>
+              </div>
+            );
+          }
+          return (
+            <MultiImageUploadField
+              key={field.name}
+              eventId={relationContext.parentId}
+              images={relationContext.items}
+              label={field.label}
             />
           );
         }

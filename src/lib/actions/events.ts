@@ -1,11 +1,12 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { events } from "@/lib/db/schema";
-import { eq, desc, asc } from "drizzle-orm";
+import { events, eventImages } from "@/lib/db/schema";
+import { eq, asc } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { eventSchema } from "@/lib/validations/event";
+import { deleteImageBlob } from "@/lib/image-store";
 
 export async function getEvents(publishedOnly?: boolean) {
   if (publishedOnly) {
@@ -29,7 +30,6 @@ export async function createEvent(formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
-    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db.insert(events).values({
@@ -39,7 +39,6 @@ export async function createEvent(formData: FormData) {
     time: parsed.time ?? null,
     artistName: parsed.artistName ?? null,
     artistUrl: parsed.artistUrl || null,
-    imageUrl: parsed.imageUrl || null,
   });
 
   revalidatePath("/events");
@@ -57,7 +56,6 @@ export async function updateEvent(id: number, formData: FormData) {
     time: formData.get("time") || undefined,
     artistName: formData.get("artistName") || undefined,
     artistUrl: formData.get("artistUrl") || undefined,
-    imageUrl: formData.get("imageUrl") || undefined,
   });
 
   await db
@@ -69,7 +67,6 @@ export async function updateEvent(id: number, formData: FormData) {
       time: parsed.time ?? null,
       artistName: parsed.artistName ?? null,
       artistUrl: parsed.artistUrl || null,
-      imageUrl: parsed.imageUrl || null,
     })
     .where(eq(events.id, id));
 
@@ -93,6 +90,18 @@ export async function toggleEventPublished(id: number, isPublished: boolean) {
 export async function deleteEvent(id: number) {
   const session = await getSession();
   if (!session.isLoggedIn) throw new Error("Unauthorized");
+
+  // Order matters: delete blobs FIRST, then the row. If we crash mid-cleanup,
+  // the event row is still there for the next delete attempt to retry. The
+  // alternative (row delete first, then blob cleanup) means a mid-flight crash
+  // strands blobs forever because ON DELETE CASCADE has already removed the
+  // only DB references.
+  const images = await db
+    .select({ url: eventImages.url })
+    .from(eventImages)
+    .where(eq(eventImages.eventId, id));
+
+  await Promise.all(images.map((img) => deleteImageBlob(img.url)));
 
   await db.delete(events).where(eq(events.id, id));
 

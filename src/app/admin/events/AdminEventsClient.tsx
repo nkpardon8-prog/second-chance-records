@@ -13,7 +13,7 @@ import type { DiscoveredEvent } from "@/lib/actions/discover";
 import SortableList from "@/components/admin/SortableList";
 import ItemForm, { type FieldDef } from "@/components/admin/ItemForm";
 import Button from "@/components/ui/Button";
-import type { Event } from "@/types";
+import type { Event, EventImage } from "@/types";
 
 const eventFields: FieldDef[] = [
   { name: "title", label: "Title", type: "text", required: true },
@@ -22,14 +22,15 @@ const eventFields: FieldDef[] = [
   { name: "description", label: "Description", type: "textarea" },
   { name: "artistName", label: "Artist Name", type: "text" },
   { name: "artistUrl", label: "Artist URL", type: "url" },
-  { name: "imageUrl", label: "Flyer Image", type: "image" },
+  { name: "imageUrls", label: "Flyer Images", type: "images" },
 ];
 
 interface AdminEventsClientProps {
   events: Event[];
+  imagesByEventId: Record<number, EventImage[]>;
 }
 
-export default function AdminEventsClient({ events }: AdminEventsClientProps) {
+export default function AdminEventsClient({ events, imagesByEventId }: AdminEventsClientProps) {
   const [editing, setEditing] = useState<Event | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -82,7 +83,6 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
       fd.set("description", event.description);
       fd.set("artistName", event.artist_name ?? "");
       fd.set("artistUrl", "");
-      fd.set("imageUrl", "");
       await createEvent(fd);
       setSuggestions((prev) => prev.filter((s) => s !== event));
     });
@@ -128,7 +128,10 @@ export default function AdminEventsClient({ events }: AdminEventsClientProps) {
               description: editing.description ?? "",
               artistName: editing.artistName ?? "",
               artistUrl: editing.artistUrl ?? "",
-              imageUrl: editing.imageUrl ?? "",
+            }}
+            relationContext={{
+              parentId: editing.id,
+              items: imagesByEventId[editing.id] ?? [],
             }}
             onSubmit={async (fd) => {
               await updateEvent(editing.id, fd);

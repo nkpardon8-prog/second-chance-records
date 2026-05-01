@@ -1,4 +1,5 @@
 import ExternalLink from "@/components/ui/ExternalLink";
+import type { EventImage } from "@/types";
 
 interface EventCardProps {
   title: string;
@@ -7,7 +8,7 @@ interface EventCardProps {
   description: string | null;
   artistName: string | null;
   artistUrl: string | null;
-  imageUrl: string | null;
+  images: EventImage[];
 }
 
 function formatDate(dateStr: string) {
@@ -27,20 +28,10 @@ export default function EventCard({
   description,
   artistName,
   artistUrl,
-  imageUrl,
+  images,
 }: EventCardProps) {
   return (
-    <div className="bg-card text-cream p-6 rounded-sm border border-white/5 flex flex-col sm:flex-row gap-6">
-      {imageUrl && (
-        <div className="sm:w-48 shrink-0">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-48 sm:h-full object-cover rounded-sm"
-            loading="lazy"
-          />
-        </div>
-      )}
+    <div className="bg-card text-cream p-6 rounded-sm border border-white/5">
       <div className="flex-1">
         <div className="flex flex-wrap items-center gap-2 font-mono text-gold text-sm uppercase mb-2">
           <time dateTime={date}>{formatDate(date)}</time>
@@ -73,6 +64,31 @@ export default function EventCard({
           </p>
         )}
       </div>
+
+      {images.length > 0 && (
+        <div
+          className="mt-4 grid gap-2"
+          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+        >
+          {images.map((img) => (
+            <a
+              key={img.id}
+              href={img.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-base border border-white/5 rounded-sm overflow-hidden hover:border-brick/40 transition-colors"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={img.url}
+                alt={title}
+                className="w-full h-48 object-cover"
+                loading="lazy"
+              />
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

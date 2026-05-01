@@ -73,3 +73,30 @@ export function getImageUrl(key: string): string {
   const safeKey = key.split("/").map(encodeURIComponent).join("/");
   return `${origin}/api/images/${safeKey}`;
 }
+
+/**
+ * Extracts the blob key from a /api/images/<key> URL produced by getImageUrl().
+ * Returns null if the URL isn't one of ours (defensive — never delete random blobs).
+ */
+export function keyFromImageUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    const prefix = "/api/images/";
+    if (!u.pathname.startsWith(prefix)) return null;
+    const encoded = u.pathname.slice(prefix.length);
+    return encoded.split("/").map(decodeURIComponent).join("/");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Deletes a stored blob by its public URL. No-op if the URL isn't ours or the
+ * blob doesn't exist — never throws on missing keys, since cleanup is best-effort.
+ */
+export async function deleteImageBlob(url: string): Promise<void> {
+  const key = keyFromImageUrl(url);
+  if (!key) return;
+  const store = getStore({ name: "images", consistency: "strong" });
+  await store.delete(key).catch(() => undefined);
+}

@@ -39,6 +39,16 @@ export const events = pgTable("events", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const eventImages = pgTable("event_images", {
+  id: serial("id").primaryKey(),
+  eventId: integer("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const news = pgTable("news", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 300 }).notNull(),
