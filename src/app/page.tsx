@@ -1,5 +1,4 @@
 import Hero from "@/components/home/Hero";
-import FeaturedRecords from "@/components/home/FeaturedRecords";
 import InstagramFeed from "@/components/home/InstagramFeed";
 import QuickLinks from "@/components/home/QuickLinks";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
@@ -26,8 +25,6 @@ export default async function Home() {
         tagline={s("hero-tagline", "Second chances for humans & hi-fi")}
         description={s("hero-description", "A mission-driven vinyl record store in Portland, Oregon.\nWe restore records and support our community.")}
       />
-      <FeaturedRecords />
-
       {latestNews.length > 0 && (
         <section className="bg-base text-cream py-16 grain-overlay torn-edge torn-edge-reverse">
           <div className="max-w-5xl mx-auto px-6">

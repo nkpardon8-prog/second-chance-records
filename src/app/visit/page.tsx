@@ -7,11 +7,11 @@ import InlineEditor from "@/components/admin/InlineEditor";
 export const metadata: Metadata = {
   title: "Visit | Second Chance Records",
   description:
-    "Visit Second Chance Records at 5744 E Burnside St, Portland, OR 97215. Open Thu-Sun 12-8pm.",
+    "Visit Second Chance Records at 5744 E Burnside St, Suite 104, Portland, OR 97215. Open Thu-Sun 12-8pm.",
   openGraph: {
     title: "Visit | Second Chance Records",
     description:
-      "Find us at 5744 E Burnside St, Portland, OR. Open Thu-Sun 12-8pm.",
+      "Find us at 5744 E Burnside St, Suite 104, Portland, OR. Open Thu-Sun 12-8pm.",
   },
 };
 
@@ -20,7 +20,7 @@ export default async function VisitPage() {
 
   const settingsMap = Object.fromEntries(settings.map((s) => [s.key, s.value]));
 
-  const address = settingsMap["store_address"] || "5744 E Burnside St 97215";
+  const address = settingsMap["store_address"] || "5744 E Burnside St, Suite 104, 97215";
   const phone = settingsMap["store_phone"] || "(503) 997-2729";
   const hours = settingsMap["store_hours"] || "Thu - Sun: 12pm - 8pm";
 
