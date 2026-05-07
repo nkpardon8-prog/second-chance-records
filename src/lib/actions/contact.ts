@@ -7,6 +7,32 @@ import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { contactSchema } from "@/lib/validations/contact";
 
+const SPAM_INDICATORS = [
+  /\bseo\b/i,
+  /search engine/i,
+  /\bgoogle\b/i,
+  /\bbing\b/i,
+  /website traffic/i,
+  /targeted traffic/i,
+  /increase (your )?traffic/i,
+  /\branking?s?\b/i,
+  /your website/i,
+  /web ?design services/i,
+  /digital marketing/i,
+  /backlinks?/i,
+];
+
+function isLikelySpam(...fields: (string | null | undefined)[]): boolean {
+  const text = fields.filter(Boolean).join(" ");
+  if (!text) return false;
+  let hits = 0;
+  for (const re of SPAM_INDICATORS) {
+    if (re.test(text)) hits++;
+    if (hits >= 2) return true;
+  }
+  return false;
+}
+
 export async function submitContact(formData: FormData) {
   const honeypot = formData.get("website") as string;
   if (honeypot) return { error: "Invalid submission" };
@@ -25,6 +51,10 @@ export async function submitContact(formData: FormData) {
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
+  }
+
+  if (isLikelySpam(parsed.data.subject, parsed.data.message)) {
+    return { success: true };
   }
 
   await db.insert(contactSubmissions).values({
