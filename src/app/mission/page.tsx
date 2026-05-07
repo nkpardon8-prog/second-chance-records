@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getPageContent } from "@/lib/actions/content";
 import { getResources } from "@/lib/actions/resources";
+import { getPillars } from "@/lib/actions/pillars";
 import ExternalLink from "@/components/ui/ExternalLink";
 import InlineEditor from "@/components/admin/InlineEditor";
 import ProseContent from "@/components/ui/ProseContent";
@@ -16,28 +17,11 @@ export const metadata: Metadata = {
   },
 };
 
-const advocacyPillars = [
-  {
-    title: "Record Restoration",
-    description:
-      "We give discarded vinyl a second life through careful cleaning, grading, and restoration.",
-  },
-  {
-    title: "Community Support",
-    description:
-      "We create welcoming spaces and support local organizations working on housing, recovery, and reentry.",
-  },
-  {
-    title: "Second Chances",
-    description:
-      "We believe in the power of second chances for everyone. Our hiring practices and partnerships reflect this value.",
-  },
-];
-
 export default async function MissionPage() {
-  const [content, resources] = await Promise.all([
+  const [content, resources, pillars] = await Promise.all([
     getPageContent("mission"),
     getResources(),
+    getPillars(),
   ]);
 
   return (
@@ -72,21 +56,32 @@ export default async function MissionPage() {
 
       <div className="bg-kraft py-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <section className="mb-16">
-            <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
-              Our Pillars
-            </h3>
-            <div className="grid gap-6 sm:grid-cols-3">
-              {advocacyPillars.map((pillar) => (
-                <div key={pillar.title} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors">
-                  <h4 className="font-heading text-lg uppercase text-brick mb-2">
-                    {pillar.title}
-                  </h4>
-                  <p className="text-sm text-cream font-sans">{pillar.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          {pillars.length > 0 && (
+            <section className="mb-16">
+              <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+                Our Pillars
+              </h3>
+              <div className="grid gap-6 sm:grid-cols-3">
+                {pillars.map((pillar) => (
+                  <div key={pillar.id} className="bg-card text-cream p-6 rounded-sm border border-white/5 hover:border-brick/30 transition-colors">
+                    <h4 className="font-heading text-lg uppercase text-brick mb-2">
+                      {pillar.title}
+                    </h4>
+                    <p className="text-sm text-cream font-sans">{pillar.description}</p>
+                    {pillar.linkUrl && (
+                      <ExternalLink
+                        href={pillar.linkUrl}
+                        showIcon
+                        className="block mt-3 font-mono text-xs uppercase tracking-wider text-brick hover:text-gold transition-colors"
+                      >
+                        {pillar.linkLabel || "Learn more"}
+                      </ExternalLink>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {resources.length > 0 && (
             <section>
