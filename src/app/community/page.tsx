@@ -25,6 +25,11 @@ const socialLinks = [
     url: "https://www.discogs.com/seller/SecondChance_Records/profile",
     description: "Browse and buy from our full inventory of restored vinyl.",
   },
+  {
+    name: "YouTube",
+    url: "https://www.youtube.com/@SecondChanceRecords",
+    description: "Watch shop tours, record features, and live in-store sessions.",
+  },
 ];
 
 export default async function CommunityPage() {
@@ -46,7 +51,7 @@ export default async function CommunityPage() {
           <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
             Find Us Online
           </h3>
-          <div className="grid gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
+          <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto">
             {socialLinks.map((link) => (
               <div key={link.name} className="bg-card text-cream p-8 rounded-sm border border-white/5 hover:border-brick/30 transition-colors text-center">
                 <ExternalLink
