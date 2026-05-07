@@ -14,7 +14,7 @@ export default async function InstagramFeed() {
 
   return (
     <section className="bg-kraft py-16 px-6">
-      <SectionHeading subtitle="Latest from our feed">
+      <SectionHeading subtitle="Latest from our Instagram">
         Follow the Groove
       </SectionHeading>
       {posts.length > 0 ? (

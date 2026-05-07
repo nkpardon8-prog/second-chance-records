@@ -23,7 +23,7 @@ export default function NewsletterSignup() {
         throw new Error(data.error || "Something went wrong");
       }
       setStatus("success");
-      setMessage("You're in! Check your inbox.");
+      setMessage("Thanks! We'll be in touch with the next newsletter.");
       setEmail("");
     } catch (err) {
       setStatus("error");
