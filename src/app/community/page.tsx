@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getPartners } from "@/lib/actions/partners";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
@@ -30,6 +31,18 @@ const socialLinks = [
     url: "https://www.youtube.com/@SecondChanceRecords",
     description: "Watch shop tours, record features, and live in-store sessions.",
   },
+];
+
+const cherryBombsRoster = [
+  "Lady Gaga", "Joni Mitchell",
+  "Poly Styrene", "Janis Joplin",
+  "Ani DiFranco", "Bjork",
+  "Madonna", "Dolly Parton",
+  "Siouxsie Sioux", "Grace Jones",
+  "Bonnie Raitt", "Carrie Brownstein",
+  "Cyndi Lauper", "Nina Simone",
+  "Taylor Swift", "Beyonce",
+  "Esperanza Spalding", "Joan Jett",
 ];
 
 export default async function CommunityPage() {
@@ -69,39 +82,66 @@ export default async function CommunityPage() {
           </div>
         </section>
 
-        {cherryBombs && (
-          <section className="mb-16 bg-base text-cream p-8 md:p-12 rounded-sm grain-overlay relative">
-            <div className="relative z-10 text-center">
-              {cherryBombs.logoUrl && (
-                <div className="h-20 mb-6 flex items-center justify-center">
-                  <img
-                    src={cherryBombs.logoUrl}
-                    alt={cherryBombs.name}
-                    className="max-h-full max-w-full object-contain"
-                    loading="lazy"
-                  />
+        <section
+          id="cherry-bombs-fc"
+          className="mb-16 bg-base text-cream p-8 md:p-12 rounded-sm grain-overlay relative scroll-mt-24"
+        >
+          <div className="relative z-10 text-center">
+            {cherryBombs && (
+              <>
+                {cherryBombs.logoUrl && (
+                  <div className="h-20 mb-6 flex items-center justify-center">
+                    <img
+                      src={cherryBombs.logoUrl}
+                      alt={cherryBombs.name}
+                      className="max-h-full max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <h3 className="font-heading text-2xl uppercase tracking-tight text-brick">
+                  {cherryBombs.name}
+                </h3>
+                {cherryBombs.description && (
+                  <p className="mt-3 text-cream font-sans max-w-xl mx-auto">
+                    {cherryBombs.description}
+                  </p>
+                )}
+                <div className="mt-4">
+                  <ExternalLink
+                    href={cherryBombs.url}
+                    showIcon
+                    className="text-brick hover:text-gold font-mono"
+                  >
+                    Learn more
+                  </ExternalLink>
                 </div>
-              )}
-              <h3 className="font-heading text-2xl uppercase tracking-tight text-brick">
-                {cherryBombs.name}
-              </h3>
-              {cherryBombs.description && (
-                <p className="mt-3 text-cream font-sans max-w-xl mx-auto">
-                  {cherryBombs.description}
-                </p>
-              )}
-              <div className="mt-4">
-                <ExternalLink
-                  href={cherryBombs.url}
-                  showIcon
-                  className="text-brick hover:text-gold font-mono"
-                >
-                  Learn more
-                </ExternalLink>
-              </div>
+              </>
+            )}
+
+            <div className="mt-12 pt-10">
+              <h4 className="font-heading text-xl uppercase tracking-tight text-brick">
+                Meet the Players
+              </h4>
+              <p className="mt-3 text-cream font-sans max-w-xl mx-auto">
+                The Cherry Bombs FC sponsor table features iconic female
+                musicians as the players. Can you name them all?
+              </p>
+              <Image
+                src="/cherry-bombs-table.jpg"
+                alt="Hand-painted Cherry Bombs FC sponsor table with iconic female musicians as players"
+                width={1400}
+                height={1050}
+                className="mx-auto my-8 rounded-sm h-auto w-full max-w-2xl"
+              />
+              <ul className="grid grid-cols-2 gap-x-12 gap-y-2 max-w-md mx-auto text-cream font-sans text-left">
+                {cherryBombsRoster.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {otherPartners.length > 0 && (
           <section>
