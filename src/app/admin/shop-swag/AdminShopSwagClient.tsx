@@ -7,6 +7,7 @@ import {
   deleteSwagItem,
   reorderSwagItems,
   addSwagImage,
+  deleteOrphanSwagBlob,
 } from "@/lib/actions/shop-swag";
 import SwagMultiImageUploadField from "@/components/admin/SwagMultiImageUploadField";
 import Button from "@/components/ui/Button";
@@ -244,6 +245,7 @@ function AddItemPanel({ onDone }: { onDone: () => void }) {
       // user gets as many photos through as possible on a flaky network.
       const failures: string[] = [];
       for (const file of pendingFiles) {
+        let uploadedUrl: string | null = null;
         try {
           const upload = new FormData();
           upload.set("file", file);
@@ -251,9 +253,17 @@ function AddItemPanel({ onDone }: { onDone: () => void }) {
           const res = await fetch("/api/admin/upload", { method: "POST", body: upload });
           const json = await res.json();
           if (!res.ok) throw new Error(json.error ?? "Upload failed");
+          uploadedUrl = json.url;
           await addSwagImage(newId, json.url);
         } catch (err) {
           failures.push(`${file.name}: ${err instanceof Error ? err.message : "failed"}`);
+          // Blob upload succeeded but addSwagImage failed — orphan cleanup so
+          // the storage doesn't accumulate dead .webp files. refuse-if-
+          // referenced gate inside deleteOrphanSwagBlob means this is safe
+          // even if a concurrent insert raced ahead.
+          if (uploadedUrl) {
+            deleteOrphanSwagBlob(uploadedUrl).catch(() => undefined);
+          }
         }
       }
 
