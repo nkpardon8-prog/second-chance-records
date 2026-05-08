@@ -10,7 +10,7 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 // Allowlist of folder prefixes the admin can upload into. Each downstream
 // feature owns one prefix so blob deletion gates can scope safely.
-const ALLOWED_FOLDERS = ["events", "news", "partners"] as const;
+const ALLOWED_FOLDERS = ["events", "news", "partners", "swag"] as const;
 type AllowedFolder = (typeof ALLOWED_FOLDERS)[number];
 const DEFAULT_FOLDER: AllowedFolder = "events";
 
