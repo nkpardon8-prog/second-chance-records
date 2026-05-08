@@ -48,6 +48,24 @@ export const eventImages = pgTable("event_images", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const shopSwagItems = pgTable("shop_swag_items", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const shopSwagImages = pgTable("shop_swag_images", {
+  id: serial("id").primaryKey(),
+  itemId: integer("item_id")
+    .notNull()
+    .references(() => shopSwagItems.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const news = pgTable("news", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 300 }).notNull(),

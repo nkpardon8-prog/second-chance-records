@@ -28,6 +28,7 @@ const navItems = [
   { label: "Events", href: "/admin/events" },
   { label: "News", href: "/admin/news" },
   { label: "Featured Records", href: "/admin/records" },
+  { label: "Shop Swag", href: "/admin/shop-swag" },
   { label: "Reviews", href: "/admin/reviews" },
   { label: "Partners", href: "/admin/partners" },
   { label: "Press Mentions", href: "/admin/press-mentions" },
