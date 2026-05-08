@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import {
   addEventImage,
@@ -26,6 +25,7 @@ interface Props {
 
 export default function MultiImageUploadField({ eventId, images, label }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -172,22 +172,28 @@ export default function MultiImageUploadField({ eventId, images, label }: Props)
       )}
 
       <div className="flex items-center gap-2 flex-wrap">
+        {/*
+          Native <label htmlFor> + sr-only input opens the file picker via
+          HTML, not via fileInputRef.current.click(). Some browsers refuse to
+          open a file dialog when the input is display:none and the click is
+          programmatic; this pattern sidesteps both gotchas.
+        */}
         <input
           ref={fileInputRef}
+          id={inputId}
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
           onChange={handleFile}
           disabled={uploading || items.length >= MAX_IMAGES}
-          className="hidden"
+          className="sr-only"
         />
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading || items.length >= MAX_IMAGES}
+        <label
+          htmlFor={inputId}
+          aria-disabled={uploading || items.length >= MAX_IMAGES}
+          className={`rounded-sm transition-colors duration-200 inline-flex items-center justify-center bg-brick text-cream hover:bg-brick/90 font-mono uppercase text-sm tracking-wider px-3 py-1.5 text-xs cursor-pointer ${uploading || items.length >= MAX_IMAGES ? "opacity-50 pointer-events-none" : ""}`}
         >
           {uploading ? "Uploading…" : "Upload Image"}
-        </Button>
+        </label>
         {items.length >= MAX_IMAGES && (
           <span className="text-xs text-kraft/70">
             Max reached. Remove one to add another.
