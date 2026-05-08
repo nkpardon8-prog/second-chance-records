@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
 import {
   createSwagItem,
   updateSwagItem,
@@ -193,6 +193,7 @@ function AddItemPanel({ onDone }: { onDone: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
 
   // Generate stable preview URLs that get revoked when files change/unmount,
   // so we don't leak object URLs.
@@ -312,25 +313,30 @@ function AddItemPanel({ onDone }: { onDone: () => void }) {
             </div>
           )}
 
+          {/*
+            Native <label htmlFor> + sr-only input opens the file picker via
+            HTML, not via fileInputRef.current.click() — sidesteps browser
+            gotchas where display:none + programmatic .click() refuses to
+            show the dialog.
+          */}
           <input
             ref={fileInputRef}
+            id={inputId}
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
             multiple
             onChange={handleFiles}
             disabled={submitting || pendingFiles.length >= MAX_IMAGES}
-            className="hidden"
+            className="sr-only"
           />
           <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={submitting || pendingFiles.length >= MAX_IMAGES}
+            <label
+              htmlFor={inputId}
+              aria-disabled={submitting || pendingFiles.length >= MAX_IMAGES}
+              className={`rounded-sm transition-colors duration-200 inline-flex items-center justify-center text-cream hover:text-brick font-mono uppercase text-sm tracking-wider px-3 py-1.5 text-xs cursor-pointer ${submitting || pendingFiles.length >= MAX_IMAGES ? "opacity-50 pointer-events-none" : ""}`}
             >
               Add Photos
-            </Button>
+            </label>
             {pendingFiles.length === 0 && (
               <span className="text-xs text-kraft/70">
                 Optional — you can also add photos after saving.
