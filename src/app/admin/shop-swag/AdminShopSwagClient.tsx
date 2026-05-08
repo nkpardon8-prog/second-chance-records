@@ -18,9 +18,14 @@ interface AdminShopSwagClientProps {
 }
 
 export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps) {
-  const [editing, setEditing] = useState<ShopSwagItemWithImages | null>(null);
+  // Track the editing target by id, not by object snapshot, so the Edit panel
+  // re-derives from the latest `items` prop after every revalidate. Without
+  // this, the embedded SwagMultiImageUploadField shows a stale image count
+  // after each upload until the user reloads.
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [pending, startTransition] = useTransition();
+  const editing = editingId === null ? null : items.find((i) => i.id === editingId) ?? null;
 
   function handleReorder(index: number, direction: -1 | 1) {
     const next = [...items];
@@ -40,7 +45,7 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
           size="sm"
           onClick={() => {
             setShowAdd(!showAdd);
-            setEditing(null);
+            setEditingId(null);
           }}
         >
           {showAdd ? "Cancel" : "Add Item"}
@@ -53,8 +58,13 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
           <form
             action={(fd) => {
               startTransition(async () => {
-                await createSwagItem(fd);
+                // createSwagItem returns the new id; hop straight into the
+                // Edit panel so the user can upload images without a separate
+                // click. revalidatePath inside the action refreshes `items`
+                // so the derived `editing` resolves on the next render.
+                const newId = await createSwagItem(fd);
                 setShowAdd(false);
+                setEditingId(newId);
               });
             }}
             className="flex flex-col gap-3"
@@ -85,7 +95,7 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
             action={(fd) => {
               startTransition(async () => {
                 await updateSwagItem(editing.id, fd);
-                setEditing(null);
+                setEditingId(null);
               });
             }}
             className="flex flex-col gap-3"
@@ -111,7 +121,7 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
                 type="button"
                 size="sm"
                 variant="ghost"
-                onClick={() => setEditing(null)}
+                onClick={() => setEditingId(null)}
               >
                 Cancel
               </Button>
@@ -163,7 +173,7 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
                 size="sm"
                 variant="ghost"
                 onClick={() => {
-                  setEditing(item);
+                  setEditingId(item.id);
                   setShowAdd(false);
                 }}
               >
@@ -176,7 +186,7 @@ export default function AdminShopSwagClient({ items }: AdminShopSwagClientProps)
                 onClick={() => {
                   startTransition(async () => {
                     await deleteSwagItem(item.id);
-                    if (editing?.id === item.id) setEditing(null);
+                    if (editingId === item.id) setEditingId(null);
                   });
                 }}
                 disabled={pending}
