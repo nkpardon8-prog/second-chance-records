@@ -44,7 +44,7 @@ export default async function Home() {
                       year: "numeric",
                     })}
                   </p>
-                  <p className="mt-3 text-cream text-sm line-clamp-3 font-sans">
+                  <p className="mt-3 text-cream text-sm font-sans whitespace-pre-line">
                     {post.content}
                   </p>
                 </div>

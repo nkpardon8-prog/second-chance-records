@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
+import Image from "next/image";
 import { getPageContent } from "@/lib/actions/content";
 import { getPressMentions } from "@/lib/actions/press-mentions";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -31,15 +33,38 @@ export default async function AboutPage() {
         </SectionHeading>
 
         {content.some((b) => b.content.trim() !== "") ? (
-          <div className="prose prose-lg mx-auto mb-12 font-sans leading-relaxed">
-            {content
-              .filter((block) => block.content.trim() !== "")
-              .map((block) => (
-                <InlineEditor key={block.id} contentId={block.id} content={block.content}>
-                  <ProseContent text={block.content} />
-                </InlineEditor>
-              ))}
-          </div>
+          (() => {
+            const blocks = content.filter((block) => block.content.trim() !== "");
+            // Tasha's photo sits as a break before the personal "second chance"
+            // paragraph, matching the printed reference: photo to the left with
+            // that paragraph wrapping to its right (falls back to the last
+            // paragraph if the personal block isn't found).
+            const personalIdx = blocks.findIndex((b) => b.sectionKey === "tasha_story");
+            const photoIdx = personalIdx === -1 ? blocks.length - 1 : personalIdx;
+            return (
+              <div className="prose prose-lg mx-auto mb-12 font-sans leading-relaxed">
+                {blocks.map((block, i) => (
+                  <Fragment key={block.id}>
+                    {i === photoIdx && (
+                      <figure className="not-prose mb-4 md:float-left md:mr-6 md:w-2/5">
+                        <Image
+                          src="/images/tasha.jpg"
+                          alt="Tasha Brain, owner of Second Chance Records, in the shop"
+                          width={1373}
+                          height={2048}
+                          className="h-auto w-full rounded-sm"
+                        />
+                      </figure>
+                    )}
+                    <InlineEditor contentId={block.id} content={block.content}>
+                      <ProseContent text={block.content} />
+                    </InlineEditor>
+                  </Fragment>
+                ))}
+                <div className="clear-both" />
+              </div>
+            );
+          })()
         ) : (
           <>
             <section className="mb-12">

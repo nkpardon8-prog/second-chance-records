@@ -57,7 +57,7 @@ export default async function ReviewsPage() {
             </InlineEditor>
             <div className="flex flex-wrap justify-center gap-4">
               <ExternalLink
-                href="https://www.google.com/maps/place/Second+Chance+Records"
+                href="https://search.google.com/local/writereview?placeid=ChIJFeUOHbGhlVQREWaSjf9TUzk"
                 className="inline-flex items-center justify-center rounded-sm bg-brick text-cream px-6 py-3 font-mono uppercase text-sm tracking-wider hover:bg-brick/90 transition-colors"
               >
                 Review on Google
