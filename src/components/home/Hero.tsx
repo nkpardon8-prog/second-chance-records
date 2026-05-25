@@ -33,18 +33,18 @@ export default function Hero({ heading, tagline, description }: HeroProps) {
           </p>
         </InlineEditor>
         <div className="flex flex-wrap gap-4 justify-center mt-10">
-          <Link
-            href="/events"
-            className="inline-flex items-center justify-center rounded-sm bg-brick text-cream px-7 py-3 font-mono uppercase text-sm tracking-wider transition-colors hover:bg-brick/90"
-          >
-            Upcoming Events
-          </Link>
           <ExternalLink
             href="https://www.discogs.com/seller/SecondChance_Records/profile"
             className="inline-flex items-center justify-center rounded-sm border-2 border-cream/30 px-7 py-3 font-mono uppercase text-sm tracking-wider text-cream transition-colors hover:bg-cream/10"
           >
             Shop on Discogs
           </ExternalLink>
+          <Link
+            href="/events"
+            className="inline-flex items-center justify-center rounded-sm bg-brick text-cream px-7 py-3 font-mono uppercase text-sm tracking-wider transition-colors hover:bg-brick/90"
+          >
+            Upcoming Events
+          </Link>
           <Link
             href="/visit"
             className="inline-flex items-center justify-center rounded-sm border-2 border-cream/30 px-7 py-3 font-mono uppercase text-sm tracking-wider text-cream transition-colors hover:bg-cream/10"
