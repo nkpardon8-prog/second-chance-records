@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { z } from "zod";
 import { parseEmails } from "../src/lib/parse-emails"; // RELATIVE: matches scripts/seed.ts, no @/ alias reliance
+
+const zodEmail = z.string().email();
 
 let failures = 0;
 function check(name: string, fn: () => void): void {
@@ -128,6 +131,12 @@ check("typo flagging: con-TLD + OSA transposition/substitution/deletion", () => 
     const r = parseEmails(e);
     assert.equal(r.flagged.length, 1, `${e} should be flagged`);
     assert.equal(r.valid.length, 0, `${e} should not be valid`);
+  }
+});
+
+check("every Tasha-sheet valid email passes the repo Zod validator (pre-filter ⊆ Zod)", () => {
+  for (const e of parseEmails(TASHA_SHEET).valid) {
+    assert.ok(zodEmail.safeParse(e).success, `${e} must pass z.string().email()`);
   }
 });
 

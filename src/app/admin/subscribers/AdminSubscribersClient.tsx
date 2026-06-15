@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   deleteSubscriber,
   toggleSubscriberActive,
+  analyzeSubscriberPaste,
+  importSubscribers,
 } from "@/lib/actions/subscribers";
+import type { ImportPreview } from "@/lib/actions/subscribers";
 import DataTable, { type Column, type RowAction } from "@/components/admin/DataTable";
 import Button from "@/components/ui/Button";
+import Textarea from "@/components/ui/Textarea";
 import type { Subscriber } from "@/types";
 
 const TASHA_EMAIL = "secondchancerecordsllc@gmail.com"; // matches Footer.tsx:30
@@ -18,7 +23,44 @@ interface AdminSubscribersClientProps {
 }
 
 export default function AdminSubscribersClient({ subscribers }: AdminSubscribersClientProps) {
-  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+
+  const [showImport, setShowImport] = useState(false);
+  const [paste, setPaste] = useState("");
+  const [preview, setPreview] = useState<ImportPreview | null>(null);
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const [importPending, startImport] = useTransition();
+
+  const importingRef = useRef(false);
+
+  const handleAnalyze = () =>
+    startImport(async () => {
+      setImportMsg(null);
+      try {
+        setPreview(await analyzeSubscriberPaste(paste));
+      } catch (err) {
+        // surface the action's own message (e.g. the "split into smaller batches" size hint)
+        setImportMsg(err instanceof Error ? err.message : "Could not analyze that paste.");
+      }
+    });
+  const handleImport = () => {
+    if (importingRef.current) return; // re-entry guard: a double-click must not clobber the result with "Imported 0"
+    importingRef.current = true;
+    startImport(async () => {
+      try {
+        const { inserted } = await importSubscribers(paste);
+        setImportMsg(`Imported ${inserted} new subscriber${inserted === 1 ? "" : "s"}.`);
+        setPaste("");
+        setPreview(null);
+        router.refresh();
+      } catch (err) {
+        setImportMsg(err instanceof Error ? err.message : "Import failed — nothing was added.");
+      } finally {
+        importingRef.current = false;
+      }
+    });
+  };
 
   const activeEmails = subscribers.filter((s) => s.isActive).map((s) => s.email);
   const noActive = activeEmails.length === 0;
@@ -134,8 +176,103 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
               Export CSV
             </Button>
           </a>
+          <Button
+            size="sm"
+            variant="outline"
+            type="button"
+            onClick={() => setShowImport((v) => !v)}
+            aria-expanded={showImport}
+          >
+            Add subscribers
+          </Button>
         </div>
       </div>
+
+      {showImport && (
+        <div className="bg-card rounded-sm border border-white/5 p-4 mb-4">
+          <Textarea
+            dark
+            label="Paste emails — from a spreadsheet, a column, or a comma list. Names and other columns are ignored."
+            rows={6}
+            value={paste}
+            placeholder={"anita.wente@gmail.com\nfrogrod@gmail.com, stv@mac.com\nAlexander Johnson\tmassagepower@yahoo.com"}
+            onChange={(e) => {
+              setPaste(e.target.value);
+              setPreview(null);
+              setImportMsg(null);
+            }}
+          />
+          <div className="flex items-center gap-2 mt-3">
+            <Button
+              size="sm"
+              variant="outline"
+              type="button"
+              onClick={handleAnalyze}
+              disabled={!paste.trim() || importPending}
+            >
+              {importPending && !preview ? "Analyzing…" : "Analyze"}
+            </Button>
+            {preview && preview.toImport.length > 0 && (
+              <Button
+                size="sm"
+                variant="primary"
+                type="button"
+                onClick={handleImport}
+                disabled={importPending}
+              >
+                Import {preview.toImport.length} subscriber{preview.toImport.length === 1 ? "" : "s"}
+              </Button>
+            )}
+          </div>
+
+          {preview && (
+            // counts reconcile: to-import (which INCLUDES flagged) + already + skipped = everything parsed.
+            // flagged is shown as a parenthetical of to-import, never as a separate addend, so the numbers add up.
+            <div className="mt-3 text-sm font-mono text-kraft/70">
+              {preview.toImport.length} to import
+              {preview.flagged.length > 0 &&
+                ` (incl. ${preview.flagged.length} flagged — double-check below)`}{" "}
+              · {preview.alreadySubscribed.length} already subscribed · {preview.invalid.length} skipped
+            </div>
+          )}
+
+          {preview && preview.flagged.length > 0 && (
+            <div className="mt-2 text-sm font-mono text-gold">
+              <p className="mb-0.5">
+                flagged — likely typos, but these WILL be imported (fix your paste and Analyze again to exclude):
+              </p>
+              <ul className="space-y-0.5">
+                {preview.flagged.map((f) => (
+                  <li key={f.email}>
+                    {f.email} — {f.reason}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {preview && preview.invalid.length > 0 && (
+            <div className="mt-2 text-sm font-mono text-kraft/60">
+              <p className="mb-0.5">skipped (not valid)</p>
+              <ul className="space-y-0.5">
+                {preview.invalid.map((e) => (
+                  <li key={e}>{e}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {preview && preview.toImport.length === 0 && (
+            <p className="mt-3 text-sm font-mono text-kraft/70">Nothing new to import.</p>
+          )}
+
+          {importMsg && (
+            <p className="mt-3 text-sm font-mono text-cream" aria-live="polite">
+              {importMsg}
+            </p>
+          )}
+        </div>
+      )}
 
       {composeDisabled && composeReason && (
         <p id="compose-hint" className="text-xs text-kraft/70 mb-4 font-mono">

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     await db
       .insert(subscribers)
-      .values({ email: parsed.data.email })
+      .values({ email: parsed.data.email.toLowerCase() })
       .onConflictDoNothing({ target: subscribers.email });
 
     return NextResponse.json({ success: true });
