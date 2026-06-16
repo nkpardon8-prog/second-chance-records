@@ -33,3 +33,31 @@ export function resolveSettingValue(
   const value = settings.find((s) => s.key === key)?.value.trim();
   return value ? value : fallback;
 }
+
+/**
+ * True only for an absolute http(s) URL. Guards the admin-editable setting: a malformed or
+ * scheme-less value (e.g. "youtu.be/x", which would render as a broken RELATIVE link, or a
+ * "javascript:" URL) must never reach the rendered href.
+ */
+export function isHttpUrl(value: string): boolean {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Resolves the editable Record Care video URL: the stored setting when it is present, non-empty,
+ * AND a valid http(s) URL — otherwise the hardcoded default. This completes the helper's
+ * "never render a broken/unsafe link" guarantee for a free-text admin field.
+ */
+export function resolveVideoUrl(settings: { key: string; value: string }[]): string {
+  const value = resolveSettingValue(
+    settings,
+    RESTORATION_VIDEO_URL_KEY,
+    DEFAULT_RESTORATION_VIDEO_URL,
+  );
+  return isHttpUrl(value) ? value : DEFAULT_RESTORATION_VIDEO_URL;
+}

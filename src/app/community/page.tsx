@@ -7,11 +7,9 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
 import InlineEditor from "@/components/admin/InlineEditor";
 import {
-  RESTORATION_VIDEO_URL_KEY,
-  DEFAULT_RESTORATION_VIDEO_URL,
   DEFAULT_RESTORATION_VIDEO_TITLE,
   DEFAULT_RESTORATION_VIDEO_BLURB,
-  resolveSettingValue,
+  resolveVideoUrl,
 } from "@/lib/restoration-video";
 
 export const metadata: Metadata = {
@@ -68,12 +66,9 @@ export default async function CommunityPage() {
   const otherPartners = allPartners.filter((p) => p.id !== cherryBombs?.id);
 
   // "Record Care" card: hardcoded defaults with editable overrides (URL via site_settings,
-  // title/blurb via page_content / InlineEditor). Each falls back to its default if unset.
-  const videoUrl = resolveSettingValue(
-    settings,
-    RESTORATION_VIDEO_URL_KEY,
-    DEFAULT_RESTORATION_VIDEO_URL,
-  );
+  // title/blurb via page_content / InlineEditor). Each falls back to its default if unset; the URL
+  // also falls back if the stored value isn't a valid http(s) link (never render a broken href).
+  const videoUrl = resolveVideoUrl(settings);
   const videoTitle =
     content.find((c) => c.sectionKey === "restoration-video-title")?.content?.trim() ||
     DEFAULT_RESTORATION_VIDEO_TITLE;
