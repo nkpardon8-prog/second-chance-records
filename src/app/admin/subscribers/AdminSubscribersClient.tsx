@@ -33,13 +33,18 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
   const [importPending, startImport] = useTransition();
 
   const importingRef = useRef(false);
+  const pasteRef = useRef(""); // mirrors the live textarea so a stale in-flight Analyze can be discarded
 
   const handleAnalyze = () =>
     startImport(async () => {
       setImportMsg(null);
+      const snapshot = paste;
       try {
-        setPreview(await analyzeSubscriberPaste(paste));
+        const result = await analyzeSubscriberPaste(snapshot);
+        if (pasteRef.current !== snapshot) return; // edited mid-analyze → discard; preview must match current text
+        setPreview(result);
       } catch (err) {
+        if (pasteRef.current !== snapshot) return; // a newer edit owns the panel now
         // surface the action's own message (e.g. the "split into smaller batches" size hint)
         setImportMsg(err instanceof Error ? err.message : "Could not analyze that paste.");
       }
@@ -52,6 +57,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
         const { inserted } = await importSubscribers(paste);
         setImportMsg(`Imported ${inserted} new subscriber${inserted === 1 ? "" : "s"}.`);
         setPaste("");
+        pasteRef.current = "";
         setPreview(null);
         router.refresh();
       } catch (err) {
@@ -197,6 +203,7 @@ export default function AdminSubscribersClient({ subscribers }: AdminSubscribers
             value={paste}
             placeholder={"anita.wente@gmail.com\nfrogrod@gmail.com, stv@mac.com\nAlexander Johnson\tmassagepower@yahoo.com"}
             onChange={(e) => {
+              pasteRef.current = e.target.value;
               setPaste(e.target.value);
               setPreview(null);
               setImportMsg(null);
