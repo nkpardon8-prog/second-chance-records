@@ -9,6 +9,7 @@
     "lint": "eslint",
     "seed": "npx tsx scripts/seed.ts",
     "test:parse": "npx tsx scripts/test-parse-emails.ts",
+    "test:restoration": "npx tsx scripts/test-restoration-video.ts",
     "db:push": "npx drizzle-kit push",
     "db:studio": "npx drizzle-kit studio"
   },

@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getPartners } from "@/lib/actions/partners";
+import { getSettings } from "@/lib/actions/settings";
+import { getPageContent } from "@/lib/actions/content";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ExternalLink from "@/components/ui/ExternalLink";
+import InlineEditor from "@/components/admin/InlineEditor";
+import {
+  RESTORATION_VIDEO_URL_KEY,
+  DEFAULT_RESTORATION_VIDEO_URL,
+  DEFAULT_RESTORATION_VIDEO_TITLE,
+  DEFAULT_RESTORATION_VIDEO_BLURB,
+  resolveSettingValue,
+} from "@/lib/restoration-video";
 
 export const metadata: Metadata = {
   title: "Community | Second Chance Records",
@@ -46,12 +56,30 @@ const cherryBombsRoster = [
 ];
 
 export default async function CommunityPage() {
-  const allPartners = await getPartners();
+  const [allPartners, settings, content] = await Promise.all([
+    getPartners(),
+    getSettings(),
+    getPageContent("community"),
+  ]);
 
   const cherryBombs = allPartners.find(
     (p) => p.name.toLowerCase().includes("cherry bomb")
   );
   const otherPartners = allPartners.filter((p) => p.id !== cherryBombs?.id);
+
+  // "Record Care" card: hardcoded defaults with editable overrides (URL via site_settings,
+  // title/blurb via page_content / InlineEditor). Each falls back to its default if unset.
+  const videoUrl = resolveSettingValue(
+    settings,
+    RESTORATION_VIDEO_URL_KEY,
+    DEFAULT_RESTORATION_VIDEO_URL,
+  );
+  const videoTitle =
+    content.find((c) => c.sectionKey === "restoration-video-title")?.content?.trim() ||
+    DEFAULT_RESTORATION_VIDEO_TITLE;
+  const videoBlurb =
+    content.find((c) => c.sectionKey === "restoration-video-blurb")?.content?.trim() ||
+    DEFAULT_RESTORATION_VIDEO_BLURB;
 
   return (
     <div className="bg-kraft min-h-screen">
@@ -79,6 +107,27 @@ export default async function CommunityPage() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mb-16">
+          <h3 className="font-heading text-2xl uppercase tracking-tight text-base text-center mb-8">
+            Record Care
+          </h3>
+          <div className="max-w-md mx-auto">
+            <div className="bg-card text-cream p-8 rounded-sm border border-white/5 hover:border-brick/30 transition-colors text-center">
+              <InlineEditor pageSlug="community" sectionKey="restoration-video-title" content={videoTitle}>
+                <h4 className="font-heading text-xl text-brick">{videoTitle}</h4>
+              </InlineEditor>
+              <InlineEditor pageSlug="community" sectionKey="restoration-video-blurb" content={videoBlurb}>
+                <p className="mt-2 text-sm text-cream font-sans">{videoBlurb}</p>
+              </InlineEditor>
+              <div className="mt-4">
+                <ExternalLink href={videoUrl} showIcon className="text-brick hover:text-gold font-mono">
+                  Watch on YouTube
+                </ExternalLink>
+              </div>
+            </div>
           </div>
         </section>
 

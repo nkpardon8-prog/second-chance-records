@@ -28,5 +28,6 @@ export async function updateSetting(key: string, value: string) {
 
   revalidatePath("/");
   revalidatePath("/visit");
+  revalidatePath("/community"); // the Record Care video URL setting renders here
   revalidatePath("/admin/settings");
 }
