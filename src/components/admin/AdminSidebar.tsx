@@ -32,6 +32,7 @@ const navItems = [
   { label: "Reviews", href: "/admin/reviews" },
   { label: "Partners", href: "/admin/partners" },
   { label: "Press Mentions", href: "/admin/press-mentions" },
+  { label: "Mission Pillars", href: "/admin/pillars" },
   { label: "Community Resources", href: "/admin/resources" },
   { label: "Instagram", href: "/admin/instagram" },
   { label: "Subscribers", href: "/admin/subscribers" },

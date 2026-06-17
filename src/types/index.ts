@@ -14,6 +14,7 @@ export type Review = typeof schema.reviews.$inferSelect;
 export type Partner = typeof schema.partners.$inferSelect;
 export type PressMention = typeof schema.pressMentions.$inferSelect;
 export type CommunityResource = typeof schema.communityResources.$inferSelect;
+export type Pillar = typeof schema.pillars.$inferSelect;
 export type Subscriber = typeof schema.subscribers.$inferSelect;
 export type ContactSubmission = typeof schema.contactSubmissions.$inferSelect;
 export type InstagramPost = typeof schema.instagramPosts.$inferSelect;

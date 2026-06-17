@@ -121,6 +121,15 @@ export const communityResources = pgTable("community_resources", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
+export const pillars = pgTable("pillars", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description").notNull(),
+  linkUrl: text("link_url"),
+  linkLabel: varchar("link_label", { length: 200 }),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 export const subscribers = pgTable("subscribers", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
